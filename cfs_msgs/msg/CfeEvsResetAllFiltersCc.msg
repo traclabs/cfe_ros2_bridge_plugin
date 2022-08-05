@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_EVS_RESET_ALL_FILTERS_CC
+string app_name

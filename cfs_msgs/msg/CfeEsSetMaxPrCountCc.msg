@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_ES_SET_MAX_PR_COUNT_CC
+uint16 max_prcount

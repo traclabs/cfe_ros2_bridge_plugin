@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_TBL_SEND_REGISTRY_CC
+string table_name

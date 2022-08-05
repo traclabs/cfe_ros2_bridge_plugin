@@ -1,0 +1,23 @@
+# cFE NAME: Table Services
+# FILE: CFE_TBL_CMD
+uint8 CFE_TBL_NOOP_CC=0
+uint8 CFE_TBL_RESET_COUNTERS_CC=1
+uint8 CFE_TBL_LOAD_CC=2
+uint8 CFE_TBL_DUMP_CC=3
+uint8 CFE_TBL_VALIDATE_CC=4
+uint8 CFE_TBL_ACTIVATE_CC=5
+uint8 CFE_TBL_DUMP_REGISTRY_CC=6
+uint8 CFE_TBL_SEND_REGISTRY_CC=7
+uint8 CFE_TBL_DELETE_CDS_CC=8
+uint8 CFE_TBL_ABORT_LOAD_CC=9
+
+uint8 cmd_id
+
+CfeTblLoadCc cfe_tbl_load_cc
+CfeTblDumpCc cfe_tbl_dump_cc
+CfeTblValidateCc cfe_tbl_validate_cc
+CfeTblActivateCc cfe_tbl_activate_cc
+CfeTblDumpRegistryCc cfe_tbl_dump_registry_cc
+CfeTblSendRegistryCc cfe_tbl_send_registry_cc
+CfeTblDeleteCdsCc cfe_tbl_delete_cds_cc
+CfeTblAbortLoadCc cfe_tbl_abort_load_cc

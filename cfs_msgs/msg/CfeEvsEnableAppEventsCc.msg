@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_EVS_ENABLE_APP_EVENTS_CC
+string app_name

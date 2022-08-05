@@ -1,0 +1,21 @@
+# cFE NAME: Software Bus
+# FILE: CFE_SB_CMD
+uint8 CFE_SB_NOOP_CC=0
+uint8 CFE_SB_RESET_COUNTERS_CC=1
+uint8 CFE_SB_SEND_SB_STATS_CC=2
+uint8 CFE_SB_SEND_ROUTING_INFO_CC=3
+uint8 CFE_SB_ENABLE_ROUTE_CC=4
+uint8 CFE_SB_DISABLE_ROUTE_CC=5
+uint8 CFE_SB_SEND_PIPE_INFO_CC=7
+uint8 CFE_SB_SEND_MAP_INFO_CC=8
+uint8 CFE_SB_ENABLE_SUB_REPORTING_CC=9
+uint8 CFE_SB_DISABLE_SUB_REPORTING_CC=10
+uint8 CFE_SB_SEND_PREV_SUBS_CC=11
+
+uint8 cmd_id
+
+CfeSbSendRoutingInfoCc cfe_sb_send_routing_info_cc
+CfeSbEnableRouteCc cfe_sb_enable_route_cc
+CfeSbDisableRouteCc cfe_sb_disable_route_cc
+CfeSbSendPipeInfoCc cfe_sb_send_pipe_info_cc
+CfeSbSendMapInfoCc cfe_sb_send_map_info_cc

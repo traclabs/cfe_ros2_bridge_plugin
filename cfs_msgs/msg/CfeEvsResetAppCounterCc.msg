@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_EVS_RESET_APP_COUNTER_CC
+string app_name

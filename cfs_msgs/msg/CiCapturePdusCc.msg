@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CI_CAPTURE_PDUS_CC
+uint32 pdumsg_id

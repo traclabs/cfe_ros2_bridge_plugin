@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_SB_SEND_ROUTING_INFO_CC
+string filename

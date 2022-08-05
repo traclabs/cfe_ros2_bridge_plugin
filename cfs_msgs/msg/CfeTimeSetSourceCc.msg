@@ -1,0 +1,2 @@
+# cFE PARAM FILE: CFE_TIME_SET_SOURCE_CC
+int16 time_source
