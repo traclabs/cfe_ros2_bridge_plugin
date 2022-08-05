@@ -3,50 +3,64 @@ import rclpy
 import sqlite3
 from sqlite3 import Error
 
+from rcl_interfaces.msg import ParameterDescriptor
+from rclpy.parameter import Parameter
+
 from fsw_ros2_bridge.fsw_plugin_interface import *
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
 from cfe_plugin.juicer_fields import JuicerFieldEntry
 from cfe_plugin.juicer_symbols import JuicerSymbolEntry
 
-class JuicerInterface(FSWPluginInterface):
-#class FSWPlugin(FSWPluginInterface):
+class JuicerInterface():
 
-    def __init__(self):
-        dbFile = "/home/tmilam/code/juicer/build/core-cpu1.sqlite"
-        self.logger = rclpy.logging.get_logger("JuicerInterface")
-        self.jsonConfigFile = "juicerConfig.json"
+    def __init__(self, node):
 
-        self.conn = self.create_connection(dbFile)
-        self.fieldNameMap = dict()
-        self.symbolNameMap = dict()
-        self.symbolIdMap = dict()
+        self.node = node
+        self.node.get_logger().info("Loading message data from Juicer SQLite databases")
 
-        self.telem_info = []
-        self.command_info = []
-        self.recv_map = {}
+        self.node.declare_parameters(
+          namespace="",
+          parameters=[
+            ('plugin_params.juicer_db', [], ParameterDescriptor(name='plugin_params.juicer_db', dynamic_typing=True))
+          ]
+        )
 
-        self.loadConfig()
-        self.loadData()
+        self.juicer_db = self.node.get_parameter('plugin_params.juicer_db').get_parameter_value().string_array_value
 
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if symbol.getShouldOutput():
-                if symbol.getIsCommand():
-                    #print("Found command " + symbol.getName())
-                    cKey = symbol.getName()
-                    cMsgType = symbol.getROSName()
-                    cTopic = symbol.getROSTopic()
-                    #c = CommandInfo(cKey, cMsgType, cTopic)
-                    #self.command_info.append(c)
-                elif symbol.getIsTelemetry():
-                    tKey = symbol.getName()
-                    tMsgType = symbol.getROSName()
-                    tTopic = symbol.getROSTopic()
-                    t = TelemInfo(tKey, tMsgType, tTopic)
-                    self.telem_info.append(t)
+        for db in self.juicer_db:
+            self.node.get_logger().info("Parsing juicer db: " + db)
 
-    def create_connection(self, db_file):
+            self.conn = self.createConnection(db)
+            self.fieldNameMap = dict()
+            self.symbolNameMap = dict()
+            self.symbolIdMap = dict()
+
+            self.telem_info = []
+            self.command_info = []
+            self.recv_map = {}
+
+            # self.loadConfig()
+            self.loadData()
+
+            for key in self.symbolNameMap.keys():
+                symbol = self.symbolNameMap[key]
+                if symbol.getShouldOutput():
+                    if symbol.getIsCommand():
+                        #print("Found command " + symbol.getName())
+                        cKey = symbol.getName()
+                        cMsgType = symbol.getROSName()
+                        cTopic = symbol.getROSTopic()
+                        #c = CommandInfo(cKey, cMsgType, cTopic)
+                        #self.command_info.append(c)
+                    elif symbol.getIsTelemetry():
+                        tKey = symbol.getName()
+                        tMsgType = symbol.getROSName()
+                        tTopic = symbol.getROSTopic()
+                        t = TelemInfo(tKey, tMsgType, tTopic)
+                        self.telem_info.append(t)
+
+    def createConnection(self, db_file):
         """ create a database connection to the SQLite database
             specified by the db_file
         :param db_file: database file
@@ -56,11 +70,11 @@ class JuicerInterface(FSWPluginInterface):
         try:
             conn = sqlite3.connect(db_file)
         except Error as e:
-            self.logger.error(e)
+            self.node.get_logger().error(e)
 
         return conn
 
-    def retrieve_all_fields(self):
+    def retrieveAllFields(self):
         """
         Query all rows in the fields table
         :return: A mapping of field name to field object
@@ -79,7 +93,7 @@ class JuicerInterface(FSWPluginInterface):
                 symbol.addField(myField)
         return self.fieldNameMap
 
-    def retrieve_all_symbols(self):
+    def retrieveAllSymbols(self):
         """
         Query all rows in the symbols table
         :return: A mapping of symbol name to symbol object
@@ -96,19 +110,19 @@ class JuicerInterface(FSWPluginInterface):
         return self.symbolIdMap
 
     def loadData(self):
-        self.retrieve_all_symbols()
-        self.retrieve_all_fields()
+        self.retrieveAllSymbols()
+        self.retrieveAllFields()
         self.pruneSymbolsAndFields()
         self.markCmdTlmSymbols()
 
-    def loadConfig(self):
-        with open(self.jsonConfigFile, "r") as jsonfile:
-            jsonConfig = json.load(jsonfile)
-            self.cmdIds = jsonConfig["commands"]
-            self.tlmIds = jsonConfig["telemetry"]
+    # def loadConfig(self):
+    #     with open(self.jsonConfigFile, "r") as jsonfile:
+    #         jsonConfig = json.load(jsonfile)
+    #         self.cmdIds = jsonConfig["commands"]
+    #         self.tlmIds = jsonConfig["telemetry"]
 
     def pruneSymbolsAndFields(self):
-        self.logger.info("Pruning out things that aren't needed.")
+        self.node.get_logger().info("Pruning out things that aren't needed.")
         self.emptySymbols = []
         for key in self.symbolNameMap.keys():
             symbol = self.symbolNameMap[key]
@@ -116,7 +130,7 @@ class JuicerInterface(FSWPluginInterface):
                 self.emptySymbols.append(symbol)
                 # for some reason some messages need to be added twice, so just automatically do it for all of them
                 self.emptySymbols.append(symbol)
-        self.logger.info("There are " + str(len(self.emptySymbols)) + " empty symbols")
+        self.node.get_logger().info("There are " + str(len(self.emptySymbols)) + " empty symbols")
         for symbol in self.emptySymbols:
             mn = symbol.getROSName()
             # if it starts with lower case then it is ROS2 native type so ignore it
@@ -127,7 +141,7 @@ class JuicerInterface(FSWPluginInterface):
                     symbol.setAlternative(altSym)
                 #else:
                     #print("Unable to find an alternative for " + symbol.getName())
-        self.logger.info("There are " + str(len(self.emptySymbols)) + " empty symbols left after pruning")
+        self.node.get_logger().info("There are " + str(len(self.emptySymbols)) + " empty symbols left after pruning")
 
     def findAlternativeSymbol(self, emptySymbol):
         #print("empty symbol " + emptySymbol.getROSName() + " from " + emptySymbol.getName())
@@ -139,10 +153,10 @@ class JuicerInterface(FSWPluginInterface):
                         #print("Should replace " + emptySymbol.getName() + " with " + symbol.getName())
                         return symbol
                     else:
-                        self.logger.warn("Can't replace " + emptySymbol.getName() + " with " + symbol.getName())
-                        self.logger.warn("wrong size " + str(emptySymbol.getSize()) + " vs " + str(symbol.getSize()))
+                        self.node.get_logger().warn("Can't replace " + emptySymbol.getName() + " with " + symbol.getName())
+                        self.node.get_logger().warn("wrong size " + str(emptySymbol.getSize()) + " vs " + str(symbol.getSize()))
             elif emptySymbol.getName() == "CFE_EVS_SetEventFormatMode_Payload_t" and symbol.getName() == "CFE_EVS_SetEventFormatCode_Payload":
-                self.logger.info("Handling the SetEventFormatMode vs SetEventFormatCode problem")
+                self.node.get_logger().info("Handling the SetEventFormatMode vs SetEventFormatCode problem")
                 return symbol
         return None
 
@@ -177,7 +191,7 @@ class JuicerInterface(FSWPluginInterface):
         return topicList
 
     def markCmdTlmSymbols(self):
-        self.logger.info("Marking symbols that are necessary for messages.")
+        self.node.get_logger().info("Marking symbols that are necessary for messages.")
         self.emptySymbols = []
         for key in self.symbolNameMap.keys():
             symbol = self.symbolNameMap[key]

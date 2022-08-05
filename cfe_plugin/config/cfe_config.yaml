@@ -1,0 +1,188 @@
+cfe_bridge:
+  ros__parameters:
+    plugin_name: cfe_plugin.cfe_plugin
+    plugin_params:
+      juicer_db: ["/home/swhart/code/juicer/core-cpu1.sqlite"]
+      telemetryPort: 1235
+      commands: ["CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESNoArgsCmd", "CFEESRestartCmd", "CFEESFileNameCmd", "CFEESOverWriteSysLogCmd", "CFEESStartApp", "CFEESAppNameCmd", "CFEESReloadAppCmd", "CFEESSetMaxPRCountCmd", "CFEESDeleteCDSCmd", "CFEESSendMemPoolStatsCmd", "CFEESDumpCDSRegistryCmd", "CFEEVSWriteLogDataFileCmd", "CFEEVSSetLogModeCmd", "CFEEVSNoArgsCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameEventIDMaskCmd", "CFESBWriteFileInfoCmd", "CFESBRouteCmd", "CFETBLNotifyCmd", "CFETBLNoArgsCmd", "CFETBLLoadCmd", "CFETBLDumpCmd", "CFETBLValidateCmd", "CFETBLActivateCmd", "CFETBLDumpRegistryCmd", "CFETBLSendRegistryCmd", "CFETBLDeleteCDSCmd", "CFETBLAbortLoadCmd", "CFETIMENoArgsCmd", "CFETIMEToneDataCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetStateCmd", "CFETIMESetSourceCmd", "CFETIMESetSignalCmd", "CFETIMETimeCmd", "CFETIMEOneHzAdjustmentCmd"]
+      telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm"]
+      command_data:
+        CFEESStartPerfDataCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEESStopPerfDataCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 1  
+        CFEESSetPerfFilterMaskCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 2  
+        CFEESSetPerfTriggerMaskCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEESNoArgsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 1  
+        CFEESRestartCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 2  
+        CFEESFileNameCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEESOverWriteSysLogCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 1  
+        CFEESStartApp:
+          cfe_mid: '0x1200'
+          cmd_code: 2  
+        CFEESAppNameCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 3  
+        CFEESReloadAppCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 4  
+        CFEESSetMaxPRCountCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 5  
+        CFEESDeleteCDSCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEESSendMemPoolStatsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 1  
+        CFEESDumpCDSRegistryCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 2  
+        CFEEVSWriteLogDataFileCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 3  
+        CFEEVSSetLogModeCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 4  
+        CFEEVSNoArgsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 5  
+        CFEEVSWriteAppDataFileCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 6  
+        CFEEVSSetEventFormatModeCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEEVSBitMaskCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEEVSAppNameCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEEVSAppNameEventIDCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEEVSAppNameBitMaskCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFEEVSAppNameEventIDMaskCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFESBWriteFileInfoCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFESBRouteCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLNotifyCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLNoArgsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLLoadCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLDumpCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLValidateCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLActivateCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLDumpRegistryCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLSendRegistryCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLDeleteCDSCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETBLAbortLoadCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMENoArgsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMEToneDataCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMESetLeapSecondsCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMESetStateCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMESetSourceCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMESetSignalCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMETimeCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+        CFETIMEOneHzAdjustmentCmd:
+          cfe_mid: '0x1200'
+          cmd_code: 0
+      telemetry_data:
+        CFEESOneAppTlm:
+          cfe_mid: '0x80B'
+          topic_name: /cfe_es_one_app_tlm
+        CFEESMemStatsTlm:
+          cfe_mid: '0x810'
+          topic_name: /cfe_es_mem_stats_tlm
+        CFEESHousekeepingTlm:
+          cfe_mid: '0x800'
+          topic_name: /cfe_es_hk_tlm
+        CFEEVSLongEventTlm:
+          cfe_mid: '0x200'
+          topic_name: /cfe_evs_long_event_tlm
+        CFEEVSHousekeepingTlm:
+          cfe_mid: '0x801'
+          topic_name: /cfe_evs_hk_tlm
+        CFEEVSShortEventTlm:
+          cfe_mid: '0x200'
+          topic_name: /cfe_evs_short_event_tlm
+        CFESBHousekeepingTlm:
+          cfe_mid: '0x803'
+          topic_name: /cfe_sb_hk_tlm
+        CFESBStatsTlm:
+          cfe_mid: '0x80A'
+          topic_name: /cfe_sb_stats_tlm
+        CFESBAllSubscriptionsTlm:
+          cfe_mid: '0x80D'
+          topic_name: /cfe_sb_all_subscriptions_tlm
+        CFESBSingleSubscriptionTlm:
+          cfe_mid: '0x80E'
+          topic_name: /cfe_sb_single_subscription_tlm
+        CFETBLHousekeepingTlm:
+          cfe_mid: '0x802'
+          topic_name: /cfe_tbl_hk_tlm
+        CFETBLTableRegistryTlm:
+          cfe_mid: '0x80C'
+          topic_name: /cfe_tbl_table_registry_tlm
+        CFETIMEHousekeepingTlm:
+          cfe_mid: '0x805'
+          topic_name: /cfe_time_hk_tlm
+        CFETIMEDiagnosticTlm:
+          cfe_mid: '0x806'
+          topic_name: /cfe_time_diagnostic_tlm
+

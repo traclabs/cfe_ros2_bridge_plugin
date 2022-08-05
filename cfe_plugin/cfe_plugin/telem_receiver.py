@@ -4,25 +4,30 @@ import rclpy
 from struct import unpack
 import importlib
 
-class JuicerTelemReceiver():
-    def __init__(self, config, rosNameMap, msgList):
-        self.rosNameMap = rosNameMap
-        self.msgList = msgList
-        self.port = config["telemetryPort"]
-        telemetrys = config["telemetry"]
-        self.tlmMap = {}
-        for tlmEntry in telemetrys:
-            self.tlmMap[tlmEntry['cfeId']] = tlmEntry['rosName']
-        self.logger = rclpy.logging.get_logger("JuicerTelemReceiver")
-        self.logger.info("telem map is " + str(self.tlmMap))
-        self.recvBuffSize = 4096
+class TelemReceiver():
+    def __init__(self, node, msg_pkg, port, telem_info, msg_list):
+        self.node = node
+        self.ros_name_map = {}
+        self.msg_list = msg_list
+        self.port = port
+        self.msg_pkg = msg_pkg
+        self.tlm_map = {}
+        self.logger = rclpy.logging.get_logger("TelemReceiver")
+        for tlm in telem_info:
+            self.node.get_logger().debug("type: " + str(tlm))
+            self.node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
+            self.node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
+            self.tlm_map[telem_info[tlm]['cfe_mid']] = tlm
+            self.ros_name_map[tlm] = telem_info[tlm]['topic_name']
+        self.logger.info("telem map is " + str(self.tlm_map))
+        self.recv_buff_size = 4096
 
         self.running = True
         self.recv_thread = threading.Thread(target=self.receiveThread)
 
         self.logger.warn("starting thread to receive CFS telemetry")
         self.recv_thread.start()
-        self.currentValue = {}
+        self.current_value = {}
 
     def stopThread(self):
         self.running = false
@@ -36,7 +41,7 @@ class JuicerTelemReceiver():
         while self.running:
             try:
                 # receive message
-                datagram, host = self.sock.recvfrom(self.recvBuffSize)
+                datagram, host = self.sock.recvfrom(self.recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)
                 if len(datagram) < 6:
@@ -49,18 +54,18 @@ class JuicerTelemReceiver():
 
     def handlePacket(self, datagram):
         packetid = self.getPktId(datagram)
-        if packetid in self.tlmMap:
-            self.logger.info("Received packet for " + self.tlmMap[packetid])
-            MsgType = getattr(importlib.import_module("tod_test.msg"), self.tlmMap[packetid])
+        if packetid in self.tlm_map:
+            self.logger.info("Received packet for " + self.tlm_map[packetid])
+            MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), self.tlm_map[packetid])
             msg = MsgType()
             setattr(msg, "seq", self.getSeqCount(datagram))
-            self.parsePacket(datagram, 0, self.tlmMap[packetid], msg)
-            symbol = self.rosNameMap[self.tlmMap[packetid]]
-            self.currentValue[symbol.getName()] = msg
+            self.parsePacket(datagram, 0, self.tlm_map[packetid], msg)
+            symbol = self.ros_name_map[self.tlm_map[packetid]]
+            self.current_value[symbol.getName()] = msg
         else:
             self.logger.warn("Don't know how to handle message id " + packetid)
 
-    def parsePacket(self, datagram, offset, rosName, msg):
+    def parsePacket(self, datagram, offset, ros_name, msg):
         symbol = self.rosNameMap[rosName]
         fields = symbol.getFields()
         for field in fields:
@@ -68,9 +73,9 @@ class JuicerTelemReceiver():
             self.logger.info("handle field " + field.getROSName() + " of type " + fsym.getROSName())
             offs = offset + field.getByteOffset()
             val = None
-            # self.msgList contains list of data types that need to be processed
-            if fsym.getROSName() in self.msgList:
-                MsgType = getattr(importlib.import_module("tod_test.msg"), fsym.getROSName())
+            # self.msg_list contains list of data types that need to be processed
+            if fsym.getROSName() in self.msg_list:
+                MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), fsym.getROSName())
                 fmsg = MsgType()
                 val = self.parsePacket(datagram, offs, fsym.getROSName(), fmsg)
             else:
@@ -84,43 +89,43 @@ class JuicerTelemReceiver():
                 else:
                     size = fsym.getSize()
                     fmt = self.getUnpackFormat(fsym.getROSName())
-                    TlmField = unpack(fmt, datagram[offs:(offs+size)])
-                    val = TlmField[0]
+                    tlm_field = unpack(fmt, datagram[offs:(offs+size)])
+                    val = tlm_field[0]
             # do something with val here
             if val != None:
                 setattr(msg, field.getROSName(), val)
 
     def getLatestData(self, key):
         retval = None
-        if key in self.currentValue:
-            retval = self.currentValue[key]
+        if key in self.current_value:
+            retval = self.current_value[key]
             #self.logger.info("Returning data for " + key)
         return None
 
-    def getUnpackFormat(self, rosName):
+    def getUnpackFormat(self, ros_name):
         retval = "B"
-        if rosName == "uint64":
+        if ros_name == "uint64":
             retval = "Q"
-        elif rosName == "uint32":
+        elif ros_name == "uint32":
             retval = "I"
-        elif rosName == "uint16":
+        elif ros_name == "uint16":
             retval = "H"
-        elif rosName == "uint8":
+        elif ros_name == "uint8":
             retval = "B"
-        elif rosName == "int64":
+        elif ros_name == "int64":
             retval = "q"
-        elif rosName == "int32":
+        elif ros_name == "int32":
             retval = "i"
-        elif rosName == "int16":
+        elif ros_name == "int16":
             retval = "h"
-        elif rosName == "int8":
+        elif ros_name == "int8":
             retval = "b"
-        elif rosName == "char":
+        elif ros_name == "char":
             retval = "s"
-        elif rosName == "bool":
+        elif ros_name == "bool":
             retval = "?"
         else:
-            self.logger.warn("Failed to get unpack format for " + rosName)
+            self.logger.warn("Failed to get unpack format for " + ros_name)
         return retval
 
     @staticmethod
