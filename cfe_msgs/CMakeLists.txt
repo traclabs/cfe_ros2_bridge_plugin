@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cfs_msgs)
+project(cfe_msgs)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
