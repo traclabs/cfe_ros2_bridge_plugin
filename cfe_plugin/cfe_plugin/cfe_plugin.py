@@ -57,8 +57,8 @@ class FSWPlugin(FSWPluginInterface):
         command_params = ["cfe_mid", "cmd_code"]
         telemetry_params = ["cfe_mid", "topic_name"]
         self.cfe_config = ParseCFEConfig(self.node, command_params, telemetry_params)
-        # self.cfe_config.printCommands()
-        # self.cfe_config.printTelemetry()
+        self.cfe_config.printCommands()
+        self.cfe_config.printTelemetry()
 
         self.command_dict = self.cfe_config.getCommandDict()
         self.telemetry_dict = self.cfe_config.getTelemetryDict()

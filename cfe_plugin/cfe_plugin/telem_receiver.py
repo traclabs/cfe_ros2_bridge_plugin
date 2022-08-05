@@ -14,9 +14,9 @@ class TelemReceiver():
         self.tlm_map = {}
         self.logger = rclpy.logging.get_logger("TelemReceiver")
         for tlm in telem_info:
-            self.node.get_logger().debug("type: " + str(tlm))
-            self.node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-            self.node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
+            self.node.get_logger().info("type: " + str(tlm))
+            self.node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
+            self.node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
             self.tlm_map[telem_info[tlm]['cfe_mid']] = tlm
             self.ros_name_map[tlm] = telem_info[tlm]['topic_name']
         self.logger.info("telem map is " + str(self.tlm_map))
