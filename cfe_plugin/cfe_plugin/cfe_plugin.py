@@ -51,17 +51,17 @@ class FSWPlugin(FSWPluginInterface):
         # self.telem_pages_info = TelemPagesInfo(self.tlmDefFile)
         # self.cmd_pages_info = CmdPagesInfo(self.cmdDefFile)
 
-        self.telem_info = self.juicer_interface.getTelemetryMessageInfo()
-        self.command_info = self.juicer_interface.getCommandMessageInfo()
+        self.telem_info = self.juicer_interface.get_telemetry_message_info()
+        self.command_info = self.juicer_interface.get_command_message_info()
 
         command_params = ["cfe_mid", "cmd_code"]
         telemetry_params = ["cfe_mid", "topic_name"]
         self.cfe_config = ParseCFEConfig(self.node, command_params, telemetry_params)
-        self.cfe_config.printCommands()
-        self.cfe_config.printTelemetry()
+        self.cfe_config.print_commands()
+        self.cfe_config.print_telemetry()
 
-        self.command_dict = self.cfe_config.getCommandDict()
-        self.telemetry_dict = self.cfe_config.getTelemetryDict()
+        self.command_dict = self.cfe_config.get_command_dict()
+        self.telemetry_dict = self.cfe_config.get_telemetry_dict()
     
 
         self.recv_map = {}
@@ -77,7 +77,7 @@ class FSWPlugin(FSWPluginInterface):
         #     t = TelemInfo(key, msgType, topicName)
         #     self.telem_info.append(t)
 
-        self.telem_receiver = TelemReceiver(self.node, self.msg_pkg, self.telemetry_port, self.telemetry_dict, self.juicer_interface.getMsgList())
+        self.telem_receiver = TelemReceiver(self.node, self.msg_pkg, self.telemetry_port, self.telemetry_dict, self.juicer_interface.getMsg_list())
 
         # self.broad_map = {}
         # for i in range(self.cmd_pages_info.getCmdMapSize()):
@@ -99,22 +99,21 @@ class FSWPlugin(FSWPluginInterface):
     #     self.RoutingService = RoutingService()
     #     self.RoutingService.start()
 
-    def getTelemetryMessageInfo(self):
+    def get_telemetry_message_info(self):
         return self.telem_info
 
-    def getCommandMessageInfo(self):
+    def get_command_message_info(self):
         return self.command_info
 
-    def getLatestData(self, key):
+    def get_latest_data(self, key):
         try :
-            return self.recv_map[key].getLatestData()
+            return self.recv_map[key].get_latest_data()
         except :
             self.node.get_logger().error("No key " + key + " in receive map")
 
-    def createROSMsgs(self, msg_dir):
-        # place holder for now
-        msgList = []
-        return msgList
+    def create_ros_msgs(self, msg_dir):
+        msg_list = []
+        return msg_list
 
-    def getMsgPackage(self):
+    def get_msg_package(self):
         return self.msg_pkg

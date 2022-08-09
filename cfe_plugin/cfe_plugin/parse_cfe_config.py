@@ -35,7 +35,7 @@ class ParseCFEConfig():
             (command_param, [], ParameterDescriptor(name=command_param, dynamic_typing=True))
           ]
         )
-        c = self.parseParameter(self.node.get_parameter(command_param))
+        c = self.parse_parameter(self.node.get_parameter(command_param))
         self.node.get_logger().debug('    ' + cp + ": " + str(c))
         params[cp] = c
       self.command_dict[cmd] = params
@@ -53,30 +53,26 @@ class ParseCFEConfig():
             (telemetry_param, [], ParameterDescriptor(name=telemetry_param, dynamic_typing=True))
           ]
         )
-        t = self.parseParameter(self.node.get_parameter(telemetry_param))
+        t = self.parse_parameter(self.node.get_parameter(telemetry_param))
         self.node.get_logger().debug('    ' + tp + ": " + str(t))
         params[tp] = t
       self.telemetry_dict[tlm] = params
 
-    # self.printCommands()
-    # self.printTelemetry()
-
-  def printCommands(self):
+  def print_commands(self):
     self.node.get_logger().info('commands: ')
     for key in self.command_dict:
       self.node.get_logger().info('  ' + key + ":")
       for pk, pv in self.command_dict[key].items():
         self.node.get_logger().info('    ' + pk + ": " + str(pv))
 
-  def printTelemetry(self):
-    # self.node.get_logger().info('telemetry port: ' + str(self.telemetry_port))
+  def print_telemetry(self):
     self.node.get_logger().info('telemetry: ')
     for key in self.telemetry_dict:
       self.node.get_logger().info('  ' + key + ":")
       for pk, pv in self.telemetry_dict[key].items():
         self.node.get_logger().info('    ' + pk + ": " + str(pv))
 
-  def parseParameter(self, p) :
+  def parse_parameter(self, p) :
     if p.type_ == Parameter.Type.STRING:
       return p.get_parameter_value().string_value
     elif p.type_ == Parameter.Type.BOOL:
@@ -95,29 +91,8 @@ class ParseCFEConfig():
       return p.get_parameter_value().double_array_value
     return 0
 
-  def getCommandDict(self) :
+  def get_command_dict(self) :
     return self.command_dict
 
-  def getTelemetryDict(self) :
+  def get_telemetry_dict(self) :
     return self.telemetry_dict
-
-  # def getTelemetryPort(self) :
-  #   return self.telemetry_port
-
-
-# def main(args=None):
-#     rclpy.init(args=args)
-
-#     command_params = ["cfeId", "cmdCode"]
-#     telemetry_params = ["cfeId"]
-
-#     parse_config = ParseCFEConfig(command_params, telemetry_params)
-
-#     rclpy.spin(parse_config)
-
-#     parse_config.destroy_node()
-#     rclpy.shutdown()
-
-
-# if __name__ == '__main__':
-#     main()

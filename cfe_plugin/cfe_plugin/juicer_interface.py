@@ -31,10 +31,10 @@ class JuicerInterface():
         for db in self.juicer_db:
             self.node.get_logger().info("Parsing juicer db: " + db)
 
-            self.conn = self.createConnection(db)
-            self.fieldNameMap = dict()
-            self.symbolNameMap = dict()
-            self.symbolIdMap = dict()
+            self.conn = self.create_connection(db)
+            self.field_name_map = dict()
+            self.symbol_name_map = dict()
+            self.symbol_id_map = dict()
 
             self.telem_info = []
             self.command_info = []
@@ -43,24 +43,24 @@ class JuicerInterface():
             # self.loadConfig()
             self.loadData()
 
-            for key in self.symbolNameMap.keys():
-                symbol = self.symbolNameMap[key]
-                if symbol.getShouldOutput():
-                    if symbol.getIsCommand():
-                        #print("Found command " + symbol.getName())
-                        cKey = symbol.getName()
-                        cMsgType = symbol.getROSName()
-                        cTopic = symbol.getROSTopic()
-                        #c = CommandInfo(cKey, cMsgType, cTopic)
+            for key in self.symbol_name_map.keys():
+                symbol = self.symbol_name_map[key]
+                if symbol.get_should_output():
+                    if symbol.get_is_command():
+                        #print("Found command " + symbol.get_name())
+                        c_key = symbol.get_name()
+                        c_msg_type = symbol.get_ros_name()
+                        c_topic = symbol.get_ros_topic()
+                        #c = CommandInfo(c_key, c_msg_type, c_topic)
                         #self.command_info.append(c)
-                    elif symbol.getIsTelemetry():
-                        tKey = symbol.getName()
-                        tMsgType = symbol.getROSName()
-                        tTopic = symbol.getROSTopic()
-                        t = TelemInfo(tKey, tMsgType, tTopic)
+                    elif symbol.get_is_telemetry():
+                        t_key = symbol.get_name()
+                        t_msg_type = symbol.get_ros_name()
+                        t_topic = symbol.get_ros_topic()
+                        t = TelemInfo(t_key, t_msg_type, t_topic)
                         self.telem_info.append(t)
 
-    def createConnection(self, db_file):
+    def create_connection(self, db_file):
         """ create a database connection to the SQLite database
             specified by the db_file
         :param db_file: database file
@@ -74,7 +74,7 @@ class JuicerInterface():
 
         return conn
 
-    def retrieveAllFields(self):
+    def retrieve_all_fields(self):
         """
         Query all rows in the fields table
         :return: A mapping of field name to field object
@@ -84,16 +84,16 @@ class JuicerInterface():
 
         rows = cur.fetchall()
         for row in rows:
-            myField = JuicerFieldEntry(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-            self.fieldNameMap[myField.getName()] = myField
-            symbol = self.symbolIdMap[myField.getSymbol()]
+            my_field = JuicerFieldEntry(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            self.field_name_map[my_field.get_name()] = my_field
+            symbol = self.symbol_id_map[my_field.getSymbol()]
             if symbol is not None:
-                typeid = myField.getType()
-                myField.setTypeSymbol(self.symbolIdMap[typeid])
-                symbol.addField(myField)
-        return self.fieldNameMap
+                typeid = my_field.get_type()
+                my_field.setTypeSymbol(self.symbol_id_map[typeid])
+                symbol.addField(my_field)
+        return self.field_name_map
 
-    def retrieveAllSymbols(self):
+    def retrieve_all_symbols(self):
         """
         Query all rows in the symbols table
         :return: A mapping of symbol name to symbol object
@@ -103,17 +103,17 @@ class JuicerInterface():
         rows = cur.fetchall()
 
         for row in rows:
-            mySymbol = JuicerSymbolEntry(row[0], row[1], row[2], row[3])
-            self.symbolIdMap[mySymbol.getId()] = mySymbol
-            if not mySymbol.getName().startswith("_"):
-                self.symbolNameMap[mySymbol.getName()] = mySymbol
-        return self.symbolIdMap
+            my_symbol = JuicerSymbolEntry(row[0], row[1], row[2], row[3])
+            self.symbol_id_map[my_symbol.getId()] = my_symbol
+            if not my_symbol.get_name().startswith("_"):
+                self.symbol_name_map[my_symbol.get_name()] = my_symbol
+        return self.symbol_id_map
 
     def loadData(self):
-        self.retrieveAllSymbols()
-        self.retrieveAllFields()
-        self.pruneSymbolsAndFields()
-        self.markCmdTlmSymbols()
+        self.retrieve_all_symbols()
+        self.retrieve_all_fields()
+        self.prune_symbols_and_fields()
+        self.mark_cmd_tlm_symbols()
 
     # def loadConfig(self):
     #     with open(self.jsonConfigFile, "r") as jsonfile:
@@ -121,49 +121,49 @@ class JuicerInterface():
     #         self.cmdIds = jsonConfig["commands"]
     #         self.tlmIds = jsonConfig["telemetry"]
 
-    def pruneSymbolsAndFields(self):
+    def prune_symbols_and_fields(self):
         self.node.get_logger().info("Pruning out things that aren't needed.")
-        self.emptySymbols = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if len(symbol.getFields()) == 0:
-                self.emptySymbols.append(symbol)
+        self.empty_symbols = []
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            if len(symbol.get_fields()) == 0:
+                self.empty_symbols.append(symbol)
                 # for some reason some messages need to be added twice, so just automatically do it for all of them
-                self.emptySymbols.append(symbol)
-        self.node.get_logger().info("There are " + str(len(self.emptySymbols)) + " empty symbols")
-        for symbol in self.emptySymbols:
-            mn = symbol.getROSName()
+                self.empty_symbols.append(symbol)
+        self.node.get_logger().info("There are " + str(len(self.empty_symbols)) + " empty symbols")
+        for symbol in self.empty_symbols:
+            mn = symbol.get_ros_name()
             # if it starts with lower case then it is ROS2 native type so ignore it
             if mn[0].isupper():
-                altSym = self.findAlternativeSymbol(symbol)
+                altSym = self.find_alternative_symbol(symbol)
                 if altSym is not None:
-                    self.emptySymbols.remove(symbol)
-                    symbol.setAlternative(altSym)
+                    self.empty_symbols.remove(symbol)
+                    symbol.set_alternative(altSym)
                 #else:
-                    #print("Unable to find an alternative for " + symbol.getName())
-        self.node.get_logger().info("There are " + str(len(self.emptySymbols)) + " empty symbols left after pruning")
+                    #print("Unable to find an alternative for " + symbol.get_name())
+        self.node.get_logger().info("There are " + str(len(self.empty_symbols)) + " empty symbols left after pruning")
 
-    def findAlternativeSymbol(self, emptySymbol):
-        #print("empty symbol " + emptySymbol.getROSName() + " from " + emptySymbol.getName())
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if emptySymbol.getName().startswith(symbol.getName()):
-                if not emptySymbol == symbol:
-                    if emptySymbol.getSize() == symbol.getSize():
-                        #print("Should replace " + emptySymbol.getName() + " with " + symbol.getName())
+    def find_alternative_symbol(self, empty_symbol):
+        #print("empty symbol " + empty_symbol.get_ros_name() + " from " + empty_symbol.get_name())
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            if empty_symbol.get_name().startswith(symbol.get_name()):
+                if not empty_symbol == symbol:
+                    if empty_symbol.getSize() == symbol.getSize():
+                        #print("Should replace " + empty_symbol.get_name() + " with " + symbol.get_name())
                         return symbol
                     else:
-                        self.node.get_logger().warn("Can't replace " + emptySymbol.getName() + " with " + symbol.getName())
-                        self.node.get_logger().warn("wrong size " + str(emptySymbol.getSize()) + " vs " + str(symbol.getSize()))
-            elif emptySymbol.getName() == "CFE_EVS_SetEventFormatMode_Payload_t" and symbol.getName() == "CFE_EVS_SetEventFormatCode_Payload":
+                        self.node.get_logger().warn("Can't replace " + empty_symbol.get_name() + " with " + symbol.get_name())
+                        self.node.get_logger().warn("wrong size " + str(empty_symbol.getSize()) + " vs " + str(symbol.getSize()))
+            elif empty_symbol.get_name() == "CFE_EVS_SetEventFormatMode_Payload_t" and symbol.get_name() == "CFE_EVS_SetEventFormatCode_Payload":
                 self.node.get_logger().info("Handling the SetEventFormatMode vs SetEventFormatCode problem")
                 return symbol
         return None
 
-    def getTelemetryMessageInfo(self):
+    def get_telemetry_message_info(self):
         return self.telem_info
 
-    def getCommandMessageInfo(self):
+    def get_command_message_info(self):
         return self.command_info
 
 # NOTE: getLatestData is in juicer_bridge.py
@@ -171,40 +171,40 @@ class JuicerInterface():
         #return self.recv_map[key].getLatestData()
 #        return None
 
-    def getMsgList(self):
-        msgList = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if len(symbol.getFields()) > 0 and symbol.getShouldOutput():
-                mn = symbol.getROSName()
+    def get_msg_list(self):
+        msg_list = []
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            if len(symbol.get_fields()) > 0 and symbol.get_should_output():
+                mn = symbol.get_ros_name()
                 if mn[0].isupper():
-                    msgList.append(mn)
-        return msgList
+                    msg_list.append(mn)
+        return msg_list
 
-    def getTopicList(self):
-        topicList = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if len(symbol.getFields()) > 0:
-                tn = symbol.getROSTopic()
-                topicList.append(tn)
-        return topicList
+    def get_topic_list(self):
+        topic_list = []
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            if len(symbol.get_fields()) > 0:
+                tn = symbol.get_ros_topic()
+                topic_list.append(tn)
+        return topic_list
 
-    def markCmdTlmSymbols(self):
+    def mark_cmd_tlm_symbols(self):
         self.node.get_logger().info("Marking symbols that are necessary for messages.")
-        self.emptySymbols = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if symbol.getIsCommand() or symbol.getIsTelemetry():
-                self.markOutputSymbol(symbol)
+        self.empty_symbols = []
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            if symbol.get_is_command() or symbol.get_is_telemetry():
+                self.mark_output_symbol(symbol)
 
-    def markOutputSymbol(self, symbol):
-        symbol.setShouldOutput(True)
-        fields = symbol.getFields()
+    def mark_output_symbol(self, symbol):
+        symbol.set_should_output(True)
+        fields = symbol.get_fields()
         for field in fields:
-            fieldSymbol = field.getTypeSymbol()
-            self.markOutputSymbol(fieldSymbol)
+            field_symbol = field.get_type_symbol()
+            self.mark_output_symbol(field_symbol)
 
-def fieldSortOrder(field):
+def field_sort_order(field):
     return field.getBitOffset()
 
