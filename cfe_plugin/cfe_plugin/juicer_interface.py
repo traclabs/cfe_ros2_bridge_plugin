@@ -12,6 +12,7 @@ from fsw_ros2_bridge.command_info import CommandInfo
 from cfe_plugin.juicer_fields import JuicerFieldEntry
 from cfe_plugin.juicer_symbols import JuicerSymbolEntry
 
+
 class JuicerInterface():
 
     def __init__(self, node):
@@ -114,7 +115,6 @@ class JuicerInterface():
         self.retrieve_all_fields()
         self.prune_symbols_and_fields()
         self.mark_cmd_tlm_symbols()
-
     # def loadConfig(self):
     #     with open(self.jsonConfigFile, "r") as jsonfile:
     #         jsonConfig = json.load(jsonfile)
@@ -140,7 +140,7 @@ class JuicerInterface():
                     self.empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
                 #else:
-                    #print("Unable to find an alternative for " + symbol.get_name())
+                #print("Unable to find an alternative for " + symbol.get_name())
         self.node.get_logger().info("There are " + str(len(self.empty_symbols)) + " empty symbols left after pruning")
 
     def find_alternative_symbol(self, empty_symbol):
@@ -165,10 +165,9 @@ class JuicerInterface():
 
     def get_command_message_info(self):
         return self.command_info
-
 # NOTE: getLatestData is in juicer_bridge.py
 #    def getLatestData(self, key):
-        #return self.recv_map[key].getLatestData()
+#return self.recv_map[key].getLatestData()
 #        return None
 
     def get_msg_list(self):
@@ -205,6 +204,6 @@ class JuicerInterface():
             field_symbol = field.get_type_symbol()
             self.mark_output_symbol(field_symbol)
 
+
 def field_sort_order(field):
     return field.getBitOffset()
-

@@ -35,8 +35,6 @@ class FSWPlugin(FSWPluginInterface):
         self.node.declare_parameter('plugin_params.telemetryPort', 0)
         self.telemetry_port = self.node.get_parameter('plugin_params.telemetryPort').get_parameter_value().integer_value
         self.node.get_logger().info('telemetryPort: ' + str(self.telemetry_port))
-
-
         # self.node.declare_parameter('cfs_root', '/home/swhart/code/cFS')
         # self.cfs_root = self.node.get_parameter('/home/swhart/code/cFS').get_parameter_value().string_value
 
@@ -47,7 +45,6 @@ class FSWPlugin(FSWPluginInterface):
         # self.cmdDefFile = f"{self.ROOTDIR}/cmdGui/command-pages.txt"
 
         self.msg_pkg = "cfe_msgs"
-
         # self.telem_pages_info = TelemPagesInfo(self.tlmDefFile)
         # self.cmd_pages_info = CmdPagesInfo(self.cmdDefFile)
 
@@ -62,7 +59,6 @@ class FSWPlugin(FSWPluginInterface):
 
         self.command_dict = self.cfe_config.get_command_dict()
         self.telemetry_dict = self.cfe_config.get_telemetry_dict()
-    
 
         self.recv_map = {}
         # for i in range(self.telem_pages_info.getTelemMapSize()):
@@ -78,7 +74,6 @@ class FSWPlugin(FSWPluginInterface):
         #     self.telem_info.append(t)
 
         self.telem_receiver = TelemReceiver(self.node, self.msg_pkg, self.telemetry_port, self.telemetry_dict, self.juicer_interface.getMsg_list())
-
         # self.broad_map = {}
         # for i in range(self.cmd_pages_info.getCmdMapSize()):
         #     key = self.cmd_pages_info.getCmdDesc(i)
@@ -95,9 +90,9 @@ class FSWPlugin(FSWPluginInterface):
 
         # self.initRoutingService()
 
-    # def initRoutingService(self):
-    #     self.RoutingService = RoutingService()
-    #     self.RoutingService.start()
+        # def initRoutingService(self):
+        #     self.RoutingService = RoutingService()
+        #     self.RoutingService.start()
 
     def get_telemetry_message_info(self):
         return self.telem_info
@@ -106,9 +101,9 @@ class FSWPlugin(FSWPluginInterface):
         return self.command_info
 
     def get_latest_data(self, key):
-        try :
+        try:
             return self.recv_map[key].get_latest_data()
-        except :
+        except:
             self.node.get_logger().error("No key " + key + " in receive map")
 
     def create_ros_msgs(self, msg_dir):

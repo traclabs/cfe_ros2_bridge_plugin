@@ -21,4 +21,3 @@ class FSWPlugin(JuicerInterface):
 
     def get_latest_data(self, key):
         return self.tlm_receiver.get_latest_data(key)
-

@@ -4,6 +4,7 @@ import rclpy
 from struct import unpack
 import importlib
 
+
 class TelemReceiver():
     def __init__(self, node, msg_pkg, port, telem_info, msg_list):
         self.node = node
@@ -83,13 +84,13 @@ class TelemReceiver():
                     # copy code from cfs_telem_receiver
                     ca = ""
                     for s in range(int(fsym.get_size())):
-                        tf = unpack('c', datagram[(offs+s):(offs+s+1)])
+                        tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
                         ca = ca + codecs.decode(tf[0], 'UTF-8')
                     val = ca
                 else:
                     size = fsym.get_size()
                     fmt = self.get_unpack_format(fsym.get_ros_name())
-                    tlm_field = unpack(fmt, datagram[offs:(offs+size)])
+                    tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
             # do something with val here
             if val != None:
@@ -136,4 +137,4 @@ class TelemReceiver():
     @staticmethod
     def get_seq_count(datagram):
         streamid = unpack(">H", datagram[2:4])
-        return streamid[0] & 0x3FFF  ## sequence count mask
+        return streamid[0] & 0x3FFF  # # sequence count mask
