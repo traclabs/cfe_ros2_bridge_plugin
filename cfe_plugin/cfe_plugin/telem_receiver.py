@@ -4,6 +4,7 @@ import rclpy
 from struct import unpack
 import importlib
 
+
 class TelemReceiver():
     def __init__(self, node, msg_pkg, port, telem_info, msg_list):
         self.node = node
@@ -37,7 +38,7 @@ class TelemReceiver():
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind(("", self.port))
 
-        socketErrCount = 0
+        socket_err_count = 0
         while self.running:
             try:
                 # receive message
@@ -47,53 +48,53 @@ class TelemReceiver():
                 if len(datagram) < 6:
                     continue
 
-                self.handlePacket(datagram)
+                self.handle_packet(datagram)
 
             except socket.error:
                 self.logger.warn("Error receiving telemetry data.")
 
-    def handlePacket(self, datagram):
-        packetid = self.getPktId(datagram)
-        if packetid in self.tlm_map:
-            self.logger.info("Received packet for " + self.tlm_map[packetid])
-            MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), self.tlm_map[packetid])
+    def handle_packet(self, datagram):
+        packet_id = self.get_pkt_id(datagram)
+        if packet_id in self.tlm_map:
+            self.logger.info("Received packet for " + self.tlm_map[packet_id])
+            MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), self.tlm_map[packet_id])
             msg = MsgType()
-            setattr(msg, "seq", self.getSeqCount(datagram))
-            self.parsePacket(datagram, 0, self.tlm_map[packetid], msg)
-            symbol = self.ros_name_map[self.tlm_map[packetid]]
+            setattr(msg, "seq", self.get_seq_count(datagram))
+            self.parse_packet(datagram, 0, self.tlm_map[packet_id], msg)
+            symbol = self.ros_name_map[self.tlm_map[packet_id]]
             self.current_value[symbol.getName()] = msg
         else:
-            self.logger.warn("Don't know how to handle message id " + packetid)
+            self.logger.warn("Don't know how to handle message id " + packet_id)
 
-    def parsePacket(self, datagram, offset, ros_name, msg):
-        symbol = self.rosNameMap[rosName]
+    def parse_packet(self, datagram, offset, ros_name, msg):
+        symbol = self.ros_name_map[rosName]
         fields = symbol.getFields()
         for field in fields:
-            fsym = field.getTypeSymbol()
-            self.logger.info("handle field " + field.getROSName() + " of type " + fsym.getROSName())
-            offs = offset + field.getByteOffset()
+            fsym = field.get_type_symbol()
+            self.logger.info("handle field " + field.get_ros_name() + " of type " + fsym.get_ros_name())
+            offs = offset + field.get_byte_offset()
             val = None
             # self.msg_list contains list of data types that need to be processed
-            if fsym.getROSName() in self.msg_list:
-                MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), fsym.getROSName())
+            if fsym.get_ros_name() in self.msg_list:
+                MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), fsym.get_ros_name())
                 fmsg = MsgType()
-                val = self.parsePacket(datagram, offs, fsym.getROSName(), fmsg)
+                val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg)
             else:
-                if (fsym.getROSName() == 'string') or (fsym.getROSName() == 'char'):
+                if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                     # copy code from cfs_telem_receiver
                     ca = ""
-                    for s in range(int(fsym.getSize())):
-                        tf = unpack('c', datagram[(offs+s):(offs+s+1)])
+                    for s in range(int(fsym.get_size())):
+                        tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
                         ca = ca + codecs.decode(tf[0], 'UTF-8')
                     val = ca
                 else:
-                    size = fsym.getSize()
-                    fmt = self.getUnpackFormat(fsym.getROSName())
-                    tlm_field = unpack(fmt, datagram[offs:(offs+size)])
+                    size = fsym.get_size()
+                    fmt = self.get_unpack_format(fsym.get_ros_name())
+                    tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
             # do something with val here
             if val != None:
-                setattr(msg, field.getROSName(), val)
+                setattr(msg, field.get_ros_name(), val)
 
     def getLatestData(self, key):
         retval = None
@@ -102,7 +103,7 @@ class TelemReceiver():
             #self.logger.info("Returning data for " + key)
         return None
 
-    def getUnpackFormat(self, ros_name):
+    def get_unpack_format(self, ros_name):
         retval = "B"
         if ros_name == "uint64":
             retval = "Q"
@@ -129,11 +130,11 @@ class TelemReceiver():
         return retval
 
     @staticmethod
-    def getPktId(datagram):
+    def get_pkt_id(datagram):
         streamid = unpack(">H", datagram[:2])
         return hex(streamid[0])
 
     @staticmethod
-    def getSeqCount(datagram):
+    def get_seq_count(datagram):
         streamid = unpack(">H", datagram[2:4])
-        return streamid[0] & 0x3FFF  ## sequence count mask
+        return streamid[0] & 0x3FFF  # # sequence count mask

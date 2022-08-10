@@ -2,7 +2,7 @@ cfe_bridge:
   ros__parameters:
     plugin_name: cfe_plugin.cfe_plugin
     plugin_params:
-      juicer_db: ["/home/swhart/code/juicer/core-cpu1.sqlite"]
+      juicer_db: ["~/code/juicer/core-cpu1.sqlite"]
       telemetryPort: 1235
       commands: ["CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESNoArgsCmd", "CFEESRestartCmd", "CFEESFileNameCmd", "CFEESOverWriteSysLogCmd", "CFEESStartApp", "CFEESAppNameCmd", "CFEESReloadAppCmd", "CFEESSetMaxPRCountCmd", "CFEESDeleteCDSCmd", "CFEESSendMemPoolStatsCmd", "CFEESDumpCDSRegistryCmd", "CFEEVSWriteLogDataFileCmd", "CFEEVSSetLogModeCmd", "CFEEVSNoArgsCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameEventIDMaskCmd", "CFESBWriteFileInfoCmd", "CFESBRouteCmd", "CFETBLNotifyCmd", "CFETBLNoArgsCmd", "CFETBLLoadCmd", "CFETBLDumpCmd", "CFETBLValidateCmd", "CFETBLActivateCmd", "CFETBLDumpRegistryCmd", "CFETBLSendRegistryCmd", "CFETBLDeleteCDSCmd", "CFETBLAbortLoadCmd", "CFETIMENoArgsCmd", "CFETIMEToneDataCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetStateCmd", "CFETIMESetSourceCmd", "CFETIMESetSignalCmd", "CFETIMETimeCmd", "CFETIMEOneHzAdjustmentCmd"]
       telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm"]

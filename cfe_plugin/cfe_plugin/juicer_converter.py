@@ -2,6 +2,7 @@ import rclpy
 #import yaml
 from brash_bridge.juicer_if import *
 
+
 class FSWPlugin(JuicerInterface):
 
     def __init__(self):
@@ -24,12 +25,12 @@ class FSWPlugin(JuicerInterface):
                 if mn[0].isupper():
                     msgList.append(mn)
                     if symbol.getIsCommand():
-                        item = {"rosName" : mn, "cfeId" : "0x1200"}
+                        item = {"rosName": mn, "cfeId": "0x1200"}
                         cmdList.append(item)
                     if symbol.getIsTelemetry():
-                        item = {"rosName" : mn, "cfeId" : "0x200"}
+                        item = {"rosName": mn, "cfeId": "0x200"}
                         tlmList.append(item)
-        cfgItems = {"commands" : cmdList, "telemetry" : tlmList }
+        cfgItems = {"commands": cmdList, "telemetry": tlmList}
         #print(yaml.dump(cfgItems))
 
         return msgList
@@ -61,4 +62,3 @@ class FSWPlugin(JuicerInterface):
                     fn = fn + "_" + str(v_names[fn])
                 f.write(typename + " " + fn + "\n")
             f.close()
-

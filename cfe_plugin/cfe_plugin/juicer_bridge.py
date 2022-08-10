@@ -12,13 +12,12 @@ class FSWPlugin(JuicerInterface):
             cfg = yaml.safe_load(ymlfile)
 
         JuicerInterface.__init__(self)
-        rosNameMap = {}
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            msgType = symbol.getROSName()
-            rosNameMap[msgType] = symbol
-        self.tlmReceiver = JuicerTelemReceiver(cfg, rosNameMap, self.getMsgList())
+        ros_name_map = {}
+        for key in self.symbol_name_map.keys():
+            symbol = self.symbol_name_map[key]
+            msg_type = symbol.getROSName()
+            ros_name_map[msg_type] = symbol
+        self.tlm_receiver = JuicerTelemReceiver(cfg, ros_name_map, self.get_msg_list())
 
-    def getLatestData(self, key):
-        return self.tlmReceiver.getLatestData(key)
-
+    def get_latest_data(self, key):
+        return self.tlm_receiver.get_latest_data(key)
