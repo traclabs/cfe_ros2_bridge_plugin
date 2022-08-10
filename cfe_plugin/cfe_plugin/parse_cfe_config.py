@@ -16,14 +16,17 @@ class ParseCFEConfig():
         self._node.get_logger().info('parsing cFE config file...')
 
         self._node.declare_parameters(
-        namespace="",
-        parameters=[
-        ('plugin_params.commands', [], ParameterDescriptor(name='plugin_params.commands', dynamic_typing=True)),
-        ('plugin_params.telemetry', [], ParameterDescriptor(name='plugin_params.telemetry', dynamic_typing=True))
-        ]
+            namespace="",
+            parameters=[
+                ('plugin_params.commands', [], ParameterDescriptor(name='plugin_params.commands',
+                                                                   dynamic_typing=True)),
+                ('plugin_params.telemetry', [], ParameterDescriptor(name='plugin_params.telemetry',
+                                                                    dynamic_typing=True))
+                ]
         )
 
-        commands = self._node.get_parameter('plugin_params.commands').get_parameter_value().string_array_value
+        commands = self._node.get_parameter('plugin_params.commands').get_parameter_value().\
+            string_array_value
         self._node.get_logger().debug('commands: ')
         for cmd in commands:
             self._node.get_logger().debug('  ' + cmd)
@@ -31,17 +34,19 @@ class ParseCFEConfig():
             for cp in command_params:
                 command_param = "plugin_params.command_data." + cmd + "." + cp
                 self._node.declare_parameters(
-                namespace="",
-                parameters=[
-                (command_param, [], ParameterDescriptor(name=command_param, dynamic_typing=True))
-                ]
+                    namespace="",
+                    parameters=[
+                        (command_param, [], ParameterDescriptor(name=command_param,
+                                                                dynamic_typing=True))
+                    ]
                 )
                 c = self.parse_parameter(self._node.get_parameter(command_param))
                 self._node.get_logger().debug('    ' + cp + ": " + str(c))
                 params[cp] = c
             self._command_dict[cmd] = params
 
-        telemetry = self._node.get_parameter('plugin_params.telemetry').get_parameter_value().string_array_value
+        telemetry = self._node.get_parameter('plugin_params.telemetry').get_parameter_value().\
+            string_array_value
         self._node.get_logger().debug('telemetry: ')
         for tlm in telemetry:
             self._node.get_logger().debug('  ' + tlm)
@@ -49,10 +54,11 @@ class ParseCFEConfig():
             for tp in telemetry_params:
                 telemetry_param = "plugin_params.telemetry_data." + tlm + "." + tp
                 self._node.declare_parameters(
-                namespace="",
-                parameters=[
-                (telemetry_param, [], ParameterDescriptor(name=telemetry_param, dynamic_typing=True))
-                ]
+                    namespace="",
+                    parameters=[
+                        (telemetry_param, [], ParameterDescriptor(name=telemetry_param,
+                                                                  dynamic_typing=True))
+                    ]
                 )
                 t = self.parse_parameter(self._node.get_parameter(telemetry_param))
                 self._node.get_logger().debug('    ' + tp + ": " + str(t))

@@ -1,16 +1,12 @@
-import json
-import rclpy
-import sqlite3
+from rcl_interfaces.msg import ParameterDescriptor
 from sqlite3 import Error
 
-from rcl_interfaces.msg import ParameterDescriptor
-from rclpy.parameter import Parameter
-
-from fsw_ros2_bridge.fsw_plugin_interface import *
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
 from cfe_plugin.juicer_fields import JuicerFieldEntry
 from cfe_plugin.juicer_symbols import JuicerSymbolEntry
+
+import sqlite3
 
 
 class JuicerInterface():
@@ -23,11 +19,13 @@ class JuicerInterface():
         self._node.declare_parameters(
           namespace="",
           parameters=[
-            ('plugin_params.juicer_db', [], ParameterDescriptor(name='plugin_params.juicer_db', dynamic_typing=True))
+            ('plugin_params.juicer_db', [], ParameterDescriptor(name='plugin_params.juicer_db',
+                                                                dynamic_typing=True))
           ]
         )
 
-        self._juicer_db = self._node.get_parameter('plugin_params.juicer_db').get_parameter_value().string_array_value
+        self._juicer_db = self._node.get_parameter('plugin_params.juicer_db').\
+            get_parameter_value().string_array_value
 
         for db in self._juicer_db:
             self._node.get_logger().info("Parsing juicer db: " + db)
@@ -48,12 +46,12 @@ class JuicerInterface():
                 symbol = self._symbol_name_map[key]
                 if symbol.get_should_output():
                     if symbol.get_is_command():
-                        #print("Found command " + symbol.get_name())
+                        # print("Found command " + symbol.get_name())
                         c_key = symbol.get_name()
                         c_msg_type = symbol.get_ros_name()
                         c_topic = symbol.get_ros_topic()
-                        #c = CommandInfo(c_key, c_msg_type, c_topic)
-                        #self._command_info.append(c)
+                        c = CommandInfo(c_key, c_msg_type, c_topic, None)
+                        self._command_info.append(c)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_name()
                         t_msg_type = symbol.get_ros_name()
@@ -85,7 +83,8 @@ class JuicerInterface():
 
         rows = cur.fetchall()
         for row in rows:
-            my_field = JuicerFieldEntry(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            my_field = JuicerFieldEntry(row[0], row[1], row[2], row[3],
+                                        row[4], row[5], row[6], row[7])
             self._field_name_map[my_field.get_name()] = my_field
             symbol = self._symbol_id_map[my_field.getSymbol()]
             if symbol is not None:
@@ -104,7 +103,7 @@ class JuicerInterface():
         rows = cur.fetchall()
 
         for row in rows:
-            my_symbol = JuicerSymbolEntry(row[0], row[1], row[2], row[3])
+            my_symbol = JuicerSymbolEntry(self._node, row[0], row[1], row[2], row[3])
             self._symbol_id_map[my_symbol.getId()] = my_symbol
             if not my_symbol.get_name().startswith("_"):
                 self._symbol_name_map[my_symbol.get_name()] = my_symbol
@@ -128,9 +127,11 @@ class JuicerInterface():
             symbol = self._symbol_name_map[key]
             if len(symbol.get_fields()) == 0:
                 self._empty_symbols.append(symbol)
-                # for some reason some messages need to be added twice, so just automatically do it for all of them
+                # for some reason some messages need to be added twice,
+                # so just automatically do it for all of them
                 self._empty_symbols.append(symbol)
-        self._node.get_logger().info("There are " + str(len(self._empty_symbols)) + " empty symbols")
+        self._node.get_logger().info("There are " + str(len(self._empty_symbols))
+                                     + " empty symbols")
         for symbol in self._empty_symbols:
             mn = symbol.get_ros_name()
             # if it starts with lower case then it is ROS2 native type so ignore it
@@ -139,24 +140,28 @@ class JuicerInterface():
                 if altSym is not None:
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
-                #else:
-                #print("Unable to find an alternative for " + symbol.get_name())
-        self._node.get_logger().info("There are " + str(len(self._empty_symbols)) + " empty symbols left after pruning")
+                # else:
+                # print("Unable to find an alternative for " + symbol.get_name())
+        self._node.get_logger().info("There are " + str(len(self._empty_symbols)) +
+                                     " empty symbols left after pruning")
 
     def find_alternative_symbol(self, empty_symbol):
-        #print("empty symbol " + empty_symbol.get_ros_name() + " from " + empty_symbol.get_name())
+        # print("empty symbol " + empty_symbol.get_ros_name() + ", " + empty_symbol.get_name())
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
             if empty_symbol.get_name().startswith(symbol.get_name()):
                 if not empty_symbol == symbol:
                     if empty_symbol.getSize() == symbol.getSize():
-                        #print("Should replace " + empty_symbol.get_name() + " with " + symbol.get_name())
+                        # print("Replace " + empty_symbol.get_name() + "." + symbol.get_name())
                         return symbol
                     else:
-                        self._node.get_logger().warn("Can't replace " + empty_symbol.get_name() + " with " + symbol.get_name())
-                        self._node.get_logger().warn("wrong size " + str(empty_symbol.getSize()) + " vs " + str(symbol.getSize()))
-            elif empty_symbol.get_name() == "CFE_EVS_SetEventFormatMode_Payload_t" and symbol.get_name() == "CFE_EVS_SetEventFormatCode_Payload":
-                self._node.get_logger().info("Handling the SetEventFormatMode vs SetEventFormatCode problem")
+                        self._node.get_logger().warn("Can't replace " + empty_symbol.get_name()
+                                                     + " with " + symbol.get_name())
+                        self._node.get_logger().warn("wrong size " + str(empty_symbol.getSize())
+                                                     + " vs " + str(symbol.getSize()))
+            elif empty_symbol.get_name() == "CFE_EVS_SetEventFormatMode_Payload_t" and \
+                    symbol.get_name() == "CFE_EVS_SetEventFormatCode_Payload":
+                self._node.get_logger().info("Handling SetEventFormatMode vs SetEventFormatCode ")
                 return symbol
         return None
 
@@ -167,7 +172,7 @@ class JuicerInterface():
         return self._command_info
 # NOTE: getLatestData is in juicer_bridge.py
 #    def getLatestData(self, key):
-#return self._recv_map[key].getLatestData()
+# return self._recv_map[key].getLatestData()
 #        return None
 
     def get_msg_list(self):

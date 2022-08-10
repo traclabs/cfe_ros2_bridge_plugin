@@ -1,8 +1,10 @@
 import threading
 import socket
 import rclpy
-from struct import unpack
 import importlib
+
+from struct import unpack
+import codecs
 
 
 class TelemReceiver():
@@ -31,14 +33,14 @@ class TelemReceiver():
         self._current_value = {}
 
     def stop_thread(self):
-        self._running = false
+        self._running = False
         self._recv_thread.join()
 
     def receive_thread(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
 
-        socket_err_count = 0
+        self._socket_err_count = 0
         while self._running:
             try:
                 # receive message
@@ -57,7 +59,8 @@ class TelemReceiver():
         packet_id = self.get_pkt_id(datagram)
         if packet_id in self._tlm_map:
             self.__logger.info("Received packet for " + self._tlm_map[packet_id])
-            MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"), self.tlm_map[packet_id])
+            MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
+                              self.tlm_map[packet_id])
             msg = MsgType()
             setattr(msg, "seq", self.get_seq_count(datagram))
             self.parse_packet(datagram, 0, self._tlm_map[packet_id], msg)
@@ -67,16 +70,17 @@ class TelemReceiver():
             self._logger.warn("Don't know how to handle message id " + packet_id)
 
     def parse_packet(self, datagram, offset, ros_name, msg):
-        symbol = self._ros_name_map[rosName]
+        symbol = self._ros_name_map[ros_name]
         fields = symbol.getFields()
         for field in fields:
             fsym = field.get_type_symbol()
-            self._logger.info("handle field " + field.get_ros_name() + " of type " + fsym.get_ros_name())
+            self._logger.info("handle field " + field.get_ros_name() + "." + fsym.get_ros_name())
             offs = offset + field.get_byte_offset()
             val = None
             # self._msg_list contains list of data types that need to be processed
             if fsym.get_ros_name() in self._msg_list:
-                MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"), fsym.get_ros_name())
+                MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
+                                  fsym.get_ros_name())
                 fmsg = MsgType()
                 val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg)
             else:
@@ -93,15 +97,15 @@ class TelemReceiver():
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
             # do something with val here
-            if val != None:
+            if val is not None:
                 setattr(msg, field.get_ros_name(), val)
 
-    def getLatestData(self, key):
+    def get_latest_data(self, key):
         retval = None
         if key in self._current_value:
             retval = self._current_value[key]
-            #self._logger.info("Returning data for " + key)
-        return None
+            # self._logger.info("Returning data for " + key)
+        return retval
 
     def get_unpack_format(self, ros_name):
         retval = "B"
