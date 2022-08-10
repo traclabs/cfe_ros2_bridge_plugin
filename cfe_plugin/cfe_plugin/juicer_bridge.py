@@ -17,7 +17,7 @@ class FSWPlugin(JuicerInterface):
             symbol = self.symbol_name_map[key]
             msg_type = symbol.getROSName()
             ros_name_map[msg_type] = symbol
-        self.tlm_receiver = JuicerTelemReceiver(cfg, ros_name_map, self.get_msg_list())
+        self._tlm_receiver = JuicerTelemReceiver(cfg, ros_name_map, self.get_msg_list())
 
     def get_latest_data(self, key):
-        return self.tlm_receiver.get_latest_data(key)
+        return self._tlm_receiver.get_latest_data(key)

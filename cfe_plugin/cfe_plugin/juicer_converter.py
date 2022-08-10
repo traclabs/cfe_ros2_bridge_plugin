@@ -6,20 +6,20 @@ from brash_bridge.juicer_if import *
 class FSWPlugin(JuicerInterface):
 
     def __init__(self):
-        self.logger = rclpy.logging.get_logger("JuicerConverter")
+        self._logger = rclpy.logging.get_logger("JuicerConverter")
         JuicerInterface.__init__(self)
 
     def createROSMsgs(self, msgs_dir):
-        for key in self.symbolNameMap.keys():
-            #self.outputROSMsgFile(self.symbolNameMap[key], msgs_dir)
-            if self.symbolNameMap[key].getShouldOutput():
-                self.outputROSMsgFile(self.symbolNameMap[key], msgs_dir)
+        for key in self._symbolNameMap.keys():
+            #self.outputROSMsgFile(self._symbolNameMap[key], msgs_dir)
+            if self._symbolNameMap[key].getShouldOutput():
+                self.outputROSMsgFile(self._symbolNameMap[key], msgs_dir)
 
         msgList = []
         cmdList = []
         tlmList = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
+        for key in self._symbolNameMap.keys():
+            symbol = self._symbolNameMap[key]
             if len(symbol.getFields()) > 0 and symbol.getShouldOutput():
                 mn = symbol.getROSName()
                 if mn[0].isupper():

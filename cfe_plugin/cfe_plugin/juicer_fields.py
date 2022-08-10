@@ -6,49 +6,49 @@ import re
 class JuicerFieldEntry():
 
     def __init__(self, my_id, symbol, name, byte_offset, my_type, little_endian, bit_size, bit_offset):
-        self.my_id = my_id
-        self.symbol = symbol
-        self.name = name
-        self.byte_offset = byte_offset
-        self.myt_ype = my_type
-        self.little_endian = little_endian
-        self.bit_size = bit_size
-        self.bit_offset = bit_offset
-        self.ros_name = generate_ros_field_name(name)
-        self.type_symbol = None
+        self._my_id = my_id
+        self._symbol = symbol
+        self._name = name
+        self._byte_offset = byte_offset
+        self._myt_ype = my_type
+        self._little_endian = little_endian
+        self._bit_size = bit_size
+        self._bit_offset = bit_offset
+        self._ros_name = generate_ros_field_name(name)
+        self._type_symbol = None
 
     def get_name(self):
-        return self.name
+        return self._name
 
     def get_symbol(self):
-        return self.symbol
+        return self._symbol
 
     def get_id(self):
-        return self.my_id
+        return self._my_id
 
     def get_type(self):
-        return self.my_type
+        return self._my_type
 
     def get_ros_name(self):
-        return self.ros_name
+        return self._ros_name
 
     def get_byte_offset(self):
-        return self.byte_offset
+        return self._byte_offset
 
     def get_bit_offset(self):
-        return self.bit_offset
+        return self._bit_offset
 
     def get_type_name(self):
-        symbol = self.type_symbol
+        symbol = self._type_symbol
         if symbol.get_alternative():
             symbol = symbol.get_alternative()
         return symbol.get_ros_name()
 
     def set_type_symbol(self, symbol):
-        self.type_symbol = symbol
+        self._type_symbol = symbol
 
     def get_type_symbol(self):
-        symbol = self.type_symbol
+        symbol = self._type_symbol
         if symbol.get_alternative():
             symbol = symbol.get_alternative()
         return symbol
