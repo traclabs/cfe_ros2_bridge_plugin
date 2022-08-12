@@ -2,10 +2,10 @@ import rclpy
 from rclpy.node import Node
 import os
 
-# from juicer_util.juicer_fields import JuicerFieldEntry
-# from juicer_util.juicer_symbols import JuicerSymbolEntry
+from ament_index_python.packages import get_package_share_directory
 
-from juicer_util.juicer_fields import field_sort_order
+from juicer_util.juicer_interface import JuicerInterface
+from juicer_util.juicer_interface import field_sort_order
 
 
 class CfeMsgConverter(Node):
@@ -17,6 +17,20 @@ class CfeMsgConverter(Node):
         if '~' in self._cfs_root:
             self._cfs_root = os.path.expanduser(self._cfs_root)
         self.get_logger().info("cfs_root: " + self._cfs_root)
+
+        self._cfe_msgs_dir = get_package_share_directory("cfe_msgs")
+        self.get_logger().info("cfe_msgs_dir: " + self._cfe_msgs_dir)
+
+        pkg_name = "cfe_msg_converter"
+        self._resource_path = get_package_share_directory(pkg_name) + "/resource"
+        self.get_logger().info("resource_path: " + self._resource_path)
+
+        self._cmake_template = self._resource_path + "/CMakeLists.template"
+        self.get_logger().info("CMakeListsTemplate: " + self._cmake_template)
+
+        self._juicer_interface = JuicerInterface(self)
+        self._symbol_name_map = self._juicer_interface.get_symbol_name_map()
+        self._msgs_list = self.create_messages(self._cfe_msgs_dir)
 
     def create_messages(self, msgs_dir):
         for key in self._symbol_name_map.keys():
@@ -58,12 +72,39 @@ class CfeMsgConverter(Node):
                 f.write(typename + " " + fn + "\n")
             f.close()
 
+    def write_cmake_lists_file(self):
+        mpkg_name = "src/cfe_plugin/"
+        pkg_name = "cfe_msgs/"
+        p_up = "/../../../../"
+        cmake_file = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name + "CMakeLists.txt"
+        outf = open(cmake_file, 'w')
+
+        msg_list = []
+
+        with open(self._cmake_template) as inf:
+            for l in inf.readlines():
+                if l == "# add dependencies here\n":
+                    outf.write("rosidl_generate_interfaces(${PROJECT_NAME}\n")
+
+                    self.get_logger().info("Adding Juicer Msgs to CMakeLists.txt")
+                    for m in self._msgs_list :
+                        if m not in msg_list:
+                            outf.write("\t\"msg/" + m + ".msg\"\n")
+                            msg_list.append(m)
+
+                    outf.write(")\n")
+
+                else :
+                    outf.write(l)
+
+        inf.close()
+        outf.close()
 
 def main(args=None):
     rclpy.init(args=args)
     converter = CfeMsgConverter()
-    # converter.writeCMakeListsFile()
-    converter.desroy_node()
+    converter.write_cmake_lists_file()
+    converter.destroy_node()
     rclpy.shutdown()
 
 
