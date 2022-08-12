@@ -2,8 +2,11 @@ import rclpy
 from rclpy.node import Node
 import os
 
-from juicer_util.juicer_fields import JuicerFieldEntry
-from juicer_util.juicer_symbols import JuicerSymbolEntry
+# from juicer_util.juicer_fields import JuicerFieldEntry
+# from juicer_util.juicer_symbols import JuicerSymbolEntry
+
+from juicer_util.juicer_fields import field_sort_order
+
 
 class CfeMsgConverter(Node):
     def __init__(self):
@@ -44,7 +47,7 @@ class CfeMsgConverter(Node):
                 f.write("int32 seq" + "\n")
             fields = symbol.get_fields()
             fields.sort(key=field_sort_order)
-            for field in symbold.get_fields():
+            for field in symbol.get_fields():
                 typename = field.get_type_name()
                 fn = field.get_ros_name()
                 if fn not in v_names.keys():
@@ -55,12 +58,14 @@ class CfeMsgConverter(Node):
                 f.write(typename + " " + fn + "\n")
             f.close()
 
+
 def main(args=None):
     rclpy.init(args=args)
     converter = CfeMsgConverter()
-    #converter.writeCMakeListsFile()
+    # converter.writeCMakeListsFile()
     converter.desroy_node()
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

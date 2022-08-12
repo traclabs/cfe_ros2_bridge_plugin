@@ -12,14 +12,12 @@
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
 
+  <depend>cfe_msgs</depend>
+  <depend>cfe_plugin</depend>
+  <depend>fsw_ros2_bridge</depend>
+
   <export>
     <build_type>ament_python</build_type>
   </export>
 
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>cfe_msgs</exec_depend>
-  <exec_depend>cfe_plugin</exec_depend>
-
-  <exec_depend>fsw_ros2_bridge</exec_depend>
 </package>

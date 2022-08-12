@@ -19,13 +19,12 @@ setup(
     zip_safe=True,
     maintainer='tmilam',
     maintainer_email='tmilam@traclabs.com',
-    description='Conversion tool to create ROS2 messages based on the Juicer output from cFE executables',
+    description='Conversion tool to create ROS2 msgs from Juicer output on cFE executables',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
                 'cfe_msg_converter = cfe_msg_converter.cfe_msg_converter:main'
-            
         ],
     },
 )
