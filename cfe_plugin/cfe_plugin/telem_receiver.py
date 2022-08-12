@@ -1,48 +1,50 @@
 import threading
 import socket
 import rclpy
-from struct import unpack
 import importlib
+
+from struct import unpack
+import codecs
 
 
 class TelemReceiver():
     def __init__(self, node, msg_pkg, port, telem_info, msg_list):
-        self.node = node
-        self.ros_name_map = {}
-        self.msg_list = msg_list
-        self.port = port
-        self.msg_pkg = msg_pkg
-        self.tlm_map = {}
-        self.logger = rclpy.logging.get_logger("TelemReceiver")
+        self._node = node
+        self._ros_name_map = {}
+        self._msg_list = msg_list
+        self._port = port
+        self._msg_pkg = msg_pkg
+        self._tlm_map = {}
+        self._logger = rclpy.logging.get_logger("TelemReceiver")
         for tlm in telem_info:
-            self.node.get_logger().info("type: " + str(tlm))
-            self.node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-            self.node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
-            self.tlm_map[telem_info[tlm]['cfe_mid']] = tlm
-            self.ros_name_map[tlm] = telem_info[tlm]['topic_name']
-        self.logger.info("telem map is " + str(self.tlm_map))
-        self.recv_buff_size = 4096
+            self._node.get_logger().info("type: " + str(tlm))
+            self._node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
+            self._node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
+            self._tlm_map[telem_info[tlm]['cfe_mid']] = tlm
+            self._ros_name_map[tlm] = telem_info[tlm]['topic_name']
+        self._logger.info("telem map is " + str(self._tlm_map))
+        self._recv_buff_size = 4096
 
-        self.running = True
-        self.recv_thread = threading.Thread(target=self.receiveThread)
+        self._running = True
+        self._recv_thread = threading.Thread(target=self.receive_thread)
 
-        self.logger.warn("starting thread to receive CFS telemetry")
-        self.recv_thread.start()
-        self.current_value = {}
+        self._logger.warn("starting thread to receive CFS telemetry")
+        self._recv_thread.start()
+        self._current_value = {}
 
-    def stopThread(self):
-        self.running = false
-        self.recv_thread.join()
+    def stop_thread(self):
+        self._running = False
+        self._recv_thread.join()
 
-    def receiveThread(self):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(("", self.port))
+    def receive_thread(self):
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._sock.bind(("", self._port))
 
-        socket_err_count = 0
-        while self.running:
+        self._socket_err_count = 0
+        while self._running:
             try:
                 # receive message
-                datagram, host = self.sock.recvfrom(self.recv_buff_size)
+                datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)
                 if len(datagram) < 6:
@@ -51,32 +53,34 @@ class TelemReceiver():
                 self.handle_packet(datagram)
 
             except socket.error:
-                self.logger.warn("Error receiving telemetry data.")
+                self._logger.warn("Error receiving telemetry data.")
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
-        if packet_id in self.tlm_map:
-            self.logger.info("Received packet for " + self.tlm_map[packet_id])
-            MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), self.tlm_map[packet_id])
+        if packet_id in self._tlm_map:
+            self.__logger.info("Received packet for " + self._tlm_map[packet_id])
+            MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
+                              self.tlm_map[packet_id])
             msg = MsgType()
             setattr(msg, "seq", self.get_seq_count(datagram))
-            self.parse_packet(datagram, 0, self.tlm_map[packet_id], msg)
-            symbol = self.ros_name_map[self.tlm_map[packet_id]]
-            self.current_value[symbol.getName()] = msg
+            self.parse_packet(datagram, 0, self._tlm_map[packet_id], msg)
+            symbol = self._ros_name_map[self._tlm_map[packet_id]]
+            self._current_value[symbol.getName()] = msg
         else:
-            self.logger.warn("Don't know how to handle message id " + packet_id)
+            self._logger.warn("Don't know how to handle message id " + packet_id)
 
     def parse_packet(self, datagram, offset, ros_name, msg):
-        symbol = self.ros_name_map[rosName]
+        symbol = self._ros_name_map[ros_name]
         fields = symbol.getFields()
         for field in fields:
             fsym = field.get_type_symbol()
-            self.logger.info("handle field " + field.get_ros_name() + " of type " + fsym.get_ros_name())
+            self._logger.info("handle field " + field.get_ros_name() + "." + fsym.get_ros_name())
             offs = offset + field.get_byte_offset()
             val = None
-            # self.msg_list contains list of data types that need to be processed
-            if fsym.get_ros_name() in self.msg_list:
-                MsgType = getattr(importlib.import_module(self.msg_pkg + ".msg"), fsym.get_ros_name())
+            # self._msg_list contains list of data types that need to be processed
+            if fsym.get_ros_name() in self._msg_list:
+                MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
+                                  fsym.get_ros_name())
                 fmsg = MsgType()
                 val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg)
             else:
@@ -93,15 +97,15 @@ class TelemReceiver():
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
             # do something with val here
-            if val != None:
+            if val is not None:
                 setattr(msg, field.get_ros_name(), val)
 
-    def getLatestData(self, key):
+    def get_latest_data(self, key):
         retval = None
-        if key in self.current_value:
-            retval = self.current_value[key]
-            #self.logger.info("Returning data for " + key)
-        return None
+        if key in self._current_value:
+            retval = self._current_value[key]
+            # self._logger.info("Returning data for " + key)
+        return retval
 
     def get_unpack_format(self, ros_name):
         retval = "B"
@@ -126,7 +130,7 @@ class TelemReceiver():
         elif ros_name == "bool":
             retval = "?"
         else:
-            self.logger.warn("Failed to get unpack format for " + ros_name)
+            self._logger.warn("Failed to get unpack format for " + ros_name)
         return retval
 
     @staticmethod

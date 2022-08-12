@@ -1,64 +1,63 @@
 import rclpy
-#import yaml
-from brash_bridge.juicer_if import *
+from brash_bridge.juicer_interface import JuicerInterface, field_sort_order
 
 
 class FSWPlugin(JuicerInterface):
 
     def __init__(self):
-        self.logger = rclpy.logging.get_logger("JuicerConverter")
+        self._logger = rclpy.logging.get_logger("JuicerConverter")
         JuicerInterface.__init__(self)
 
-    def createROSMsgs(self, msgs_dir):
-        for key in self.symbolNameMap.keys():
-            #self.outputROSMsgFile(self.symbolNameMap[key], msgs_dir)
-            if self.symbolNameMap[key].getShouldOutput():
-                self.outputROSMsgFile(self.symbolNameMap[key], msgs_dir)
+    def create_ros_msgs(self, msgs_dir):
+        for key in self._symbol_name_map.keys():
+            # self.output_ros_msg_file(self._symbol_name_map[key], msgs_dir)
+            if self._symbol_name_map[key].get_should_output():
+                self.output_ros_msg_file(self._symbol_name_map[key], msgs_dir)
 
-        msgList = []
-        cmdList = []
-        tlmList = []
-        for key in self.symbolNameMap.keys():
-            symbol = self.symbolNameMap[key]
-            if len(symbol.getFields()) > 0 and symbol.getShouldOutput():
-                mn = symbol.getROSName()
+        msg_list = []
+        cmd_list = []
+        tlm_list = []
+        for key in self._symbol_name_map.keys():
+            symbol = self._symbol_name_map[key]
+            if len(symbol.get_fields()) > 0 and symbol.get_should_output():
+                mn = symbol.get_ros_name()
                 if mn[0].isupper():
-                    msgList.append(mn)
-                    if symbol.getIsCommand():
-                        item = {"rosName": mn, "cfeId": "0x1200"}
-                        cmdList.append(item)
-                    if symbol.getIsTelemetry():
-                        item = {"rosName": mn, "cfeId": "0x200"}
-                        tlmList.append(item)
-        cfgItems = {"commands": cmdList, "telemetry": tlmList}
-        #print(yaml.dump(cfgItems))
+                    msg_list.append(mn)
+                    if symbol.get_is_command():
+                        item = {"ros_name": mn, "cfe_mid": "0x1200"}
+                        cmd_list.append(item)
+                    if symbol.get_is_telemetry():
+                        item = {"ros_name": mn, "cfe_mid": "0x200"}
+                        tlm_list.append(item)
+        # cfg_items = {"commands": cmd_list, "telemetry": tlm_list}
+        # print(yaml.dump(cfg_items))
 
-        return msgList
+        return msg_list
 
-    def outputROSMsgFile(self, symbol, msgs_dir):
-        if len(symbol.getFields()) > 0:
+    def output_ros_msg_file(self, symbol, msgs_dir):
+        if len(symbol.get_fields()) > 0:
             v_names = {}
-            mn = symbol.getROSName()
+            mn = symbol.get_ros_name()
             fn = msgs_dir + "/msg/" + mn + ".msg"
             f = open(fn, "w")
-            f.write("# cFE NAME: " + symbol.getName() + "\n")
-            f.write("# ROS topic: " + symbol.getROSTopic() + "\n")
-            if symbol.getIsCommand():
+            f.write("# cFE NAME: " + symbol.get_name() + "\n")
+            f.write("# ROS topic: " + symbol.get_ros_topic() + "\n")
+            if symbol.get_is_command():
                 f.write("# Command message" + "\n")
-            if symbol.getIsTelemetry():
+            if symbol.get_is_telemetry():
                 f.write("# Telemetry message" + "\n")
                 f.write("int32 seq" + "\n")
-            #f.write("int32 seq\n")
-            fields = symbol.getFields()
-            fields.sort(key=fieldSortOrder)
-            for field in symbol.getFields():
-                typename = field.getTypeName()
-                fn = field.getROSName()
+            # f.write("int32 seq\n")
+            fields = symbol.get_fields()
+            fields.sort(key=field_sort_order)
+            for field in symbol.get_fields():
+                typename = field.get_type_name()
+                fn = field.get_ros_name()
                 if fn not in v_names.keys():
                     v_names[fn] = 0
                 else:
                     v_names[fn] += 1
-                    #print(mn + " has duplicate field name " + fn)
+                    # print(mn + " has duplicate field name " + fn)
                     fn = fn + "_" + str(v_names[fn])
                 f.write(typename + " " + fn + "\n")
             f.close()
