@@ -9,8 +9,8 @@ from rclpy.parameter import Parameter
 from fsw_ros2_bridge.fsw_plugin_interface import *
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
-from cfe_plugin.juicer_fields import JuicerFieldEntry
-from cfe_plugin.juicer_symbols import JuicerSymbolEntry
+from juicer_util.juicer_fields import JuicerFieldEntry
+from juicer_util.juicer_symbols import JuicerSymbolEntry
 
 
 class JuicerInterface():
