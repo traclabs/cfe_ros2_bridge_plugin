@@ -19,6 +19,12 @@ class CfeMsgConverter(Node):
         self.get_logger().info("cfs_root: " + self._cfs_root)
 
         self._cfs_msgs_dir = get_package_share_directory("cfe_msgs")
+
+        mpkg_name = "src/cfe_ros2_bridge_plugin/"
+        pkg_name = "cfe_msgs/"
+        p_up = "/../../../../"
+        self._msgs_src_dir = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name
+
         self.get_logger().info("cfe_msgs_dir: " + self._cfs_msgs_dir)
 
         pkg_name = "cfe_msg_converter"
@@ -26,11 +32,11 @@ class CfeMsgConverter(Node):
         self.get_logger().info("resource_path: " + self._resource_path)
 
         self._cmake_template = self._resource_path + "/CMakeLists.template"
-        self.get_logger().info("CMakeListsTemplate: " + self._cmake_template)
+        self.get_logger().info("CMakeLists Template: " + self._cmake_template)
 
         self._juicer_interface = JuicerInterface(self)
         self._symbol_name_map = self._juicer_interface.get_symbol_name_map()
-        self._msgs_list = self.create_messages(self._cfs_msgs_dir)
+        self._msgs_list = self.create_messages(self._msgs_src_dir)
 
     def create_messages(self, msgs_dir):
         for key in self._symbol_name_map.keys():
@@ -51,54 +57,64 @@ class CfeMsgConverter(Node):
             v_names = {}
             mn = symbol.get_ros_name()
             fn = msgs_dir + "/msg/" + mn + ".msg"
-            f = open(fn, "w")
-            f.write("# cFE NAME: " + symbol.get_name() + "\n")
-            f.write("# ROS topic: " + symbol.get_ros_topic() + "\n")
-            if symbol.get_is_command():
-                f.write("# Command message" + "\n")
-            if symbol.get_is_telemetry():
-                f.write("# Telemetry message" + "\n")
-                f.write("int32 seq" + "\n")
-            fields = symbol.get_fields()
-            fields.sort(key=field_sort_order)
-            for field in symbol.get_fields():
-                typename = field.get_type_name()
-                fn = field.get_ros_name()
-                if fn not in v_names.keys():
-                    v_names[fn] = 0
-                else:
-                    v_names[fn] += 1
-                    fn = fn + "_" + str(v_names[fn])
-                f.write(typename + " " + fn + "\n")
-            f.close()
+
+            try:
+                self.get_logger().info("writing: " + mn + ".msg")
+                f = open(fn, "w")
+                f.write("# cFE NAME: " + symbol.get_name() + "\n")
+                f.write("# ROS topic: " + symbol.get_ros_topic() + "\n")
+                if symbol.get_is_command():
+                    f.write("# Command message" + "\n")
+                if symbol.get_is_telemetry():
+                    f.write("# Telemetry message" + "\n")
+                    f.write("int32 seq" + "\n")
+                fields = symbol.get_fields()
+                fields.sort(key=field_sort_order)
+                for field in symbol.get_fields():
+                    typename = field.get_type_name()
+                    fn = field.get_ros_name()
+                    if fn not in v_names.keys():
+                        v_names[fn] = 0
+                    else:
+                        v_names[fn] += 1
+                        fn = fn + "_" + str(v_names[fn])
+                    f.write(typename + " " + fn + "\n")
+                f.close()
+
+            except (IOError):
+                self.get_logger().error("error writing msg file: " + fn)
 
     def write_cmake_lists_file(self):
         mpkg_name = "src/cfe_ros2_bridge_plugin/"
         pkg_name = "cfe_msgs/"
         p_up = "/../../../../"
         cmake_file = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name + "CMakeLists.txt"
-        outf = open(cmake_file, 'w')
 
-        msg_list = []
+        try:
+            outf = open(cmake_file, 'w')
+            msg_list = []
 
-        with open(self._cmake_template) as inf:
-            for ln in inf.readlines():
-                if ln == "# add dependencies here\n":
-                    outf.write("rosidl_generate_interfaces(${PROJECT_NAME}\n")
+            with open(self._cmake_template) as inf:
+                for ln in inf.readlines():
+                    if ln == "# add dependencies here\n":
+                        outf.write("rosidl_generate_interfaces(${PROJECT_NAME}\n")
 
-                    self.get_logger().info("Adding Juicer Msgs to CMakeLists.txt")
-                    for m in self._msgs_list:
-                        if m not in msg_list:
-                            outf.write("\t\"msg/" + m + ".msg\"\n")
-                            msg_list.append(m)
+                        self.get_logger().info("Adding Juicer Msgs to CMakeLists.txt")
+                        for m in self._msgs_list:
+                            if m not in msg_list:
+                                outf.write("  \"msg/" + m + ".msg\"\n")
+                                msg_list.append(m)
 
-                    outf.write(")\n")
+                        outf.write(")\n")
 
-                else:
-                    outf.write(ln)
+                    else:
+                        outf.write(ln)
 
-        inf.close()
-        outf.close()
+            inf.close()
+            outf.close()
+
+        except (IOError):
+            self.get_logger().error("error writing CMakeLists.txt")
 
 
 def main(args=None):

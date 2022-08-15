@@ -110,8 +110,8 @@ class JuicerDatabase():
                     else:
                         self._node.get_logger().warn("Can't replace " + empty_symbol.get_name() +
                                                      " with " + symbol.get_name())
-                        self._node.get_logger().warn("wrong size " + str(empty_symbol.getSize()) +
-                                                     " vs " + str(symbol.getSize()))
+                        self._node.get_logger().warn("wrong size " + str(empty_symbol.get_size()) +
+                                                     " vs " + str(symbol.get_size()))
             elif empty_symbol.get_name() == "CFE_EVS_SetEventFormatMode_Payload_t" and \
                     symbol.get_name() == "CFE_EVS_SetEventFormatCode_Payload":
                 self._node.get_logger().info("Handling SetEventFormatMode vs SetEventFormatCode ")

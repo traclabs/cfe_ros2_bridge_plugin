@@ -90,4 +90,4 @@ class JuicerInterface():
 
 
 def field_sort_order(field):
-    return field.getBitOffset()
+    return field.get_bit_offset()

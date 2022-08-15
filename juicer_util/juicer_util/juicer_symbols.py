@@ -65,7 +65,7 @@ class JuicerSymbolEntry():
     def get_is_telemetry(self):
         return self._is_telemetry
 
-    def get_ghould_output(self):
+    def get_should_output(self):
         return self._should_output
 
     def set_should_output(self, output):

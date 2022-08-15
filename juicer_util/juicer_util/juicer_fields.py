@@ -18,6 +18,13 @@ class JuicerFieldEntry():
         self._ros_name = generate_ros_field_name(name)
         self._type_symbol = None
 
+        # # print("---------- self._symbol: " + self._symbol)
+        # print("---------- self._name: " + self._name)
+
+        # if self._name == "virtual":
+        #     print("---------- self._name: " + self._name)
+        #     self._name = "virt"
+
     def get_name(self):
         return self._name
 
@@ -75,4 +82,10 @@ def generate_ros_field_name(name):
         if n.startswith("_"):
             retval = n.strip("_")
 
-    return retval
+    return replace_keywords(retval)
+
+
+def replace_keywords(name):
+    if name == "virtual":
+        return "virt"
+    return name
