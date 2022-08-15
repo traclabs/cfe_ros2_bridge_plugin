@@ -18,8 +18,8 @@ class CfeMsgConverter(Node):
             self._cfs_root = os.path.expanduser(self._cfs_root)
         self.get_logger().info("cfs_root: " + self._cfs_root)
 
-        self._cfe_msgs_dir = get_package_share_directory("cfe_msgs")
-        self.get_logger().info("cfe_msgs_dir: " + self._cfe_msgs_dir)
+        self._cfs_msgs_dir = get_package_share_directory("cfe_msgs")
+        self.get_logger().info("cfe_msgs_dir: " + self._cfs_msgs_dir)
 
         pkg_name = "cfe_msg_converter"
         self._resource_path = get_package_share_directory(pkg_name) + "/resource"
@@ -30,7 +30,7 @@ class CfeMsgConverter(Node):
 
         self._juicer_interface = JuicerInterface(self)
         self._symbol_name_map = self._juicer_interface.get_symbol_name_map()
-        self._msgs_list = self.create_messages(self._cfe_msgs_dir)
+        self._msgs_list = self.create_messages(self._cfs_msgs_dir)
 
     def create_messages(self, msgs_dir):
         for key in self._symbol_name_map.keys():
@@ -73,7 +73,7 @@ class CfeMsgConverter(Node):
             f.close()
 
     def write_cmake_lists_file(self):
-        mpkg_name = "src/cfe_plugin/"
+        mpkg_name = "src/cfe_ros2_bridge_plugin/"
         pkg_name = "cfe_msgs/"
         p_up = "/../../../../"
         cmake_file = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name + "CMakeLists.txt"
