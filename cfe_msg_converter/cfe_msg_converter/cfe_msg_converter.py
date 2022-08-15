@@ -82,23 +82,24 @@ class CfeMsgConverter(Node):
         msg_list = []
 
         with open(self._cmake_template) as inf:
-            for l in inf.readlines():
-                if l == "# add dependencies here\n":
+            for ln in inf.readlines():
+                if ln == "# add dependencies here\n":
                     outf.write("rosidl_generate_interfaces(${PROJECT_NAME}\n")
 
                     self.get_logger().info("Adding Juicer Msgs to CMakeLists.txt")
-                    for m in self._msgs_list :
+                    for m in self._msgs_list:
                         if m not in msg_list:
                             outf.write("\t\"msg/" + m + ".msg\"\n")
                             msg_list.append(m)
 
                     outf.write(")\n")
 
-                else :
-                    outf.write(l)
+                else:
+                    outf.write(ln)
 
         inf.close()
         outf.close()
+
 
 def main(args=None):
     rclpy.init(args=args)

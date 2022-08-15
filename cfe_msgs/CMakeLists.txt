@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cfe_msg_converter)
+project(cfe_msgs)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -25,8 +25,7 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-)
+# add dependencies here
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
