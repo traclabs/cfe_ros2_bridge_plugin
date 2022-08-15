@@ -3,7 +3,7 @@ from rcl_interfaces.msg import ParameterDescriptor
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
 
-import JuicerDatabase
+from juicer_util.juicer_database import JuicerDatabase
 
 
 class JuicerInterface():
