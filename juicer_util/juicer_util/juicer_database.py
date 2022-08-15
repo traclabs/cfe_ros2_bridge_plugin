@@ -40,7 +40,7 @@ class JuicerDatabase():
 
         for row in rows:
             my_symbol = JuicerSymbolEntry(self._node, row[0], row[1], row[2], row[3])
-            self._symbol_id_map[my_symbol.getId()] = my_symbol
+            self._symbol_id_map[my_symbol.get_id()] = my_symbol
             if not my_symbol.get_name().startswith("_"):
                 self._symbol_name_map[my_symbol.get_name()] = my_symbol
         cur.close()
@@ -59,11 +59,11 @@ class JuicerDatabase():
             my_field = JuicerFieldEntry(row[0], row[1], row[2], row[3],
                                         row[4], row[5], row[6], row[7])
             self._field_name_map[my_field.get_name()] = my_field
-            symbol = self._symbol_id_map[my_field.getSymbol()]
+            symbol = self._symbol_id_map[my_field.get_symbol()]
             if symbol is not None:
                 typeid = my_field.get_type()
-                my_field.setTypeSymbol(self._symbol_id_map[typeid])
-                symbol.addField(my_field)
+                my_field.set_type_symbol(self._symbol_id_map[typeid])
+                symbol.add_field(my_field)
         cur.close()
         return self._field_name_map
 
@@ -105,7 +105,7 @@ class JuicerDatabase():
             symbol = self._symbol_name_map[key]
             if empty_symbol.get_name().startswith(symbol.get_name()):
                 if not empty_symbol == symbol:
-                    if empty_symbol.getSize() == symbol.getSize():
+                    if empty_symbol.get_size() == symbol.get_size():
                         return symbol
                     else:
                         self._node.get_logger().warn("Can't replace " + empty_symbol.get_name() +

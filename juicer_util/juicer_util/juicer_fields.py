@@ -11,7 +11,7 @@ class JuicerFieldEntry():
         self._symbol = symbol
         self._name = name
         self._byte_offset = byte_offset
-        self._myt_ype = my_type
+        self._my_type = my_type
         self._little_endian = little_endian
         self._bit_size = bit_size
         self._bit_offset = bit_offset

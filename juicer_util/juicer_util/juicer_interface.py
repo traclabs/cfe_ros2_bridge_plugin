@@ -1,3 +1,5 @@
+import os
+
 from rcl_interfaces.msg import ParameterDescriptor
 
 from fsw_ros2_bridge.telem_info import TelemInfo
@@ -26,9 +28,13 @@ class JuicerInterface():
             get_parameter_value().string_array_value
 
         for db in self._juicer_db:
+
+            if '~' in db:
+                db = os.path.expanduser(db)
+
             self._node.get_logger().info("Parsing juicer db: " + db)
 
-            self._db_data = JuicerDatabase(db)
+            self._db_data = JuicerDatabase(node, db)
             self._db_data.load_data()
             self._field_name_map = self._db_data.get_field_name_map()
             self._symbol_name_map = self._db_data.get_symbol_name_map()
