@@ -3,7 +3,7 @@ from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 # from fsw_ros2_bridge.telem_info import TelemInfo
 # from fsw_ros2_bridge.command_info import CommandInfo
 
-from cfe_plugin.juicer_interface import JuicerInterface
+from juicer_util.juicer_interface import JuicerInterface
 
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
@@ -68,7 +68,7 @@ class FSWPlugin(FSWPluginInterface):
 
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
-                                             self._juicer_interface.getMsg_list())
+                                             self._juicer_interface.get_msg_list())
         # self.broad_map = {}
         # for i in range(self.cmd_pages_info.getCmdMapSize()):
         #     key = self.cmd_pages_info.getCmdDesc(i)
