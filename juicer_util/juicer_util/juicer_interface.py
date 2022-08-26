@@ -23,10 +23,13 @@ class JuicerInterface():
           ]
         )
 
-        self._symbol_name_map = {}
         self._juicer_db = self._node.get_parameter('plugin_params.juicer_db').\
             get_parameter_value().string_array_value
 
+        self._telem_info = []
+        self._command_info = []
+        self._field_name_map = dict()
+        self._symbol_name_map = dict()
         for db in self._juicer_db:
 
             if '~' in db:
@@ -36,13 +39,29 @@ class JuicerInterface():
 
             self._db_data = JuicerDatabase(node, db)
             self._db_data.load_data()
-            self._field_name_map = self._db_data.get_field_name_map()
-            self._symbol_name_map = self._db_data.get_symbol_name_map()
-            self._telem_info = []
-            self._command_info = []
+            db_field_name_map = self._db_data.get_field_name_map()
+            db_symbol_name_map = self._db_data.get_symbol_name_map()
+            # field_name_map needs to be combined
+            for key in db_field_name_map.keys():
+                # TODO: check name and ros_name to see if they need to be updated
+                # for now just add it to the combined list
+                field = db_field_name_map[key]
+                if key in self._field_name_map.keys():
+                    self._node.get_logger().info("field name collision with " + key)
+                else:
+                    self._field_name_map[key] = field
 
-            for key in self._symbol_name_map.keys():
-                symbol = self._symbol_name_map[key]
+            for key in db_symbol_name_map.keys():
+                symbol = db_symbol_name_map[key]
+                # TODO: do we want to change the name to make it unique?
+                #       problem with that is some are default structs
+                #       for example CFE_MSG_CommandHeader
+                #       for now just keep the first one that we get
+                if key in self._symbol_name_map.keys():
+                    self._node.get_logger().info("symbol name collision with " + key)
+                else:
+                    self._symbol_name_map[key] = symbol
+
                 if symbol.get_should_output():
                     if symbol.get_is_command():
                         c_key = symbol.get_name()
@@ -50,12 +69,17 @@ class JuicerInterface():
                         c_topic = symbol.get_ros_topic()
                         c = CommandInfo(c_key, c_msg_type, c_topic, None)
                         self._command_info.append(c)
+                        #self._node.get_logger().info("adding command: " + c_key)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_name()
                         t_msg_type = symbol.get_ros_name()
                         t_topic = symbol.get_ros_topic()
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
+                        #self._node.get_logger().info("adding telem: " + t_key)
+            #self._node.get_logger().info("Done parsing juicer db: " + db)
+        #self._node.get_logger().info("Added " + str(len(self._telem_info)) + " telemetry items.")
+        #self._node.get_logger().info("Added " + str(len(self._command_info)) + " command items.")
 
     def get_telemetry_message_info(self):
         return self._telem_info

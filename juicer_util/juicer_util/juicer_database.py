@@ -56,7 +56,7 @@ class JuicerDatabase():
 
         rows = cur.fetchall()
         for row in rows:
-            my_field = JuicerFieldEntry(row[0], row[1], row[2], row[3],
+            my_field = JuicerFieldEntry(self._node, row[0], row[1], row[2], row[3],
                                         row[4], row[5], row[6], row[7])
             self._field_name_map[my_field.get_name()] = my_field
             symbol = self._symbol_id_map[my_field.get_symbol()]
@@ -64,6 +64,9 @@ class JuicerDatabase():
                 typeid = my_field.get_type()
                 my_field.set_type_symbol(self._symbol_id_map[typeid])
                 symbol.add_field(my_field)
+            else:
+                self._node.get_logger().info("Can't find symbol for field " + my_field.get_name())
+
         cur.close()
         return self._field_name_map
 
@@ -93,6 +96,7 @@ class JuicerDatabase():
             if mn[0].isupper():
                 altSym = self.find_alternative_symbol(symbol)
                 if altSym is not None:
+                    #self._node.get_logger().info("Removing " + symbol.get_name())
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
                 # else:

@@ -12,17 +12,23 @@ class JuicerSymbolEntry():
         self._is_command = False
         self._is_telemetry = False
         self._should_output = False
-        self._ros_rame = generate_ros_rame(self._name)
-        if self._ros_rame == "Bool":
+        self._ros_name = generate_ros_name(self._name)
+        if self._ros_name == "Bool":
             # not sure why other checks don't fix this
-            self._ros_rame = "bool"
+            self._ros_name = "bool"
         self._alternative = None
 
     def get_name(self):
         return self._name
 
+    def set_name(self, new_name):
+        self._name = new_name
+
     def get_ros_name(self):
-        return self._ros_rame
+        return self._ros_name
+
+    def set_ros_name(self, name):
+        self._ros_name = name
 
     def get_size(self):
         return self._byte_size
@@ -47,7 +53,7 @@ class JuicerSymbolEntry():
     def add_field(self, field):
         if not field.get_ros_name():
             t = str(field.get_type())
-            self._node.get_logger().info("Skipping field " + field.get_name() + ", " + t)
+            #self._node.get_logger().info("Skipping field " + field.get_name() + ", " + t)
         else:
             self._fields.append(field)
             field_type = field.get_type_name()
@@ -72,7 +78,7 @@ class JuicerSymbolEntry():
         self._should_output = output
 
 
-def generate_ros_rame(symbol_name):
+def generate_ros_name(symbol_name):
     n = symbol_name
     if n.endswith('*'):
         # indicates a pointer of size 8 bytes
@@ -139,6 +145,12 @@ def handle_lower_case_name(lc_name, symbol_name):
         n = 'int32'
     elif n.startswith('int16'):
         n = 'int16'
+    elif n.startswith('int8'):
+        n = 'int8'
+    elif n == 'float':
+        n = 'float32'
+    elif n == 'double':
+        n = 'float64'
     elif n == 'padding8':
         n = 'uint8'
     elif n == 'padding16':
