@@ -1,0 +1,19 @@
+# cFE NAME: CFE_SB_HousekeepingTlm_Payload
+# ROS topic: cfe_sb_housekeepingtlm_payload
+uint8 command_counter
+uint8 command_error_counter
+uint8 no_subscribers_counter
+uint8 msg_send_error_counter
+uint8 msg_receive_error_counter
+uint8 internal_error_counter
+uint8 create_pipe_error_counter
+uint8 subscribe_error_counter
+uint8 pipe_opts_error_counter
+uint8 duplicate_subscriptions_counter
+uint8 get_pipe_id_by_name_error_counter
+uint8 spare_align
+uint16 pipe_overflow_error_counter
+uint16 msg_limit_error_counter
+uint32 mem_pool_handle
+uint32 mem_in_use
+uint32 unmarked_mem
