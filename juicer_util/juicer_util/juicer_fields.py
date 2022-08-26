@@ -18,7 +18,6 @@ class JuicerFieldEntry():
         self._bit_offset = bit_offset
         self._ros_name = generate_ros_field_name(name)
         self._type_symbol = None
-
         #self._node.get_logger().info("field " + self._name + " has ros field name = " + self._ros_name)
 
     def get_name(self):
@@ -63,9 +62,11 @@ def generate_ros_field_name(name):
 
     if any(ele.isupper() for ele in name):
         n = name
+
         # handle strings of caps - change them to one cap followed by lowercase
         # so that it will be one "word" in final result
-        def callback(m): m.group(0).capitalize()
+        def callback(m):
+            m.group(0).capitalize()
         n = re.sub(r'[A-Z](?:[A-Z]*(?![a-z]))', callback, n)
         # split into list of words by capital letters
         w = re.findall('([A-Z][a-z]*)', n)

@@ -23,7 +23,7 @@ class JuicerInterface():
           ]
         )
 
-        self._juicer_db = self._node.get_parameter('plugin_params.juicer_db').\
+        self._juicer_db = self._node.get_parameter('plugin_params.juicer_db'). \
             get_parameter_value().string_array_value
 
         self._telem_info = []
@@ -77,9 +77,6 @@ class JuicerInterface():
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
                         #self._node.get_logger().info("adding telem: " + t_key)
-            #self._node.get_logger().info("Done parsing juicer db: " + db)
-        #self._node.get_logger().info("Added " + str(len(self._telem_info)) + " telemetry items.")
-        #self._node.get_logger().info("Added " + str(len(self._command_info)) + " command items.")
 
     def get_telemetry_message_info(self):
         return self._telem_info
