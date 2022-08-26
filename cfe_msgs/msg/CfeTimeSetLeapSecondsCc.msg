@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_TIME_SET_LEAP_SECONDS_CC
-int16 leap_seconds

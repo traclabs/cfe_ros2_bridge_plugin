@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_TIME_SET_STATE_CC
-int16 clock_state

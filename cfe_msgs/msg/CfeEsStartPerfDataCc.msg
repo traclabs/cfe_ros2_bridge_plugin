@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_ES_START_PERF_DATA_CC
-uint32 trigger_mode

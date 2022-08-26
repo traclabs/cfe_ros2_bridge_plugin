@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_EVS_DISABLE_APP_EVENTS_CC
-string app_name
