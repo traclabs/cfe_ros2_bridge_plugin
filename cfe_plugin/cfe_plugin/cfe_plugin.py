@@ -1,5 +1,4 @@
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
-
 # from fsw_ros2_bridge.telem_info import TelemInfo
 # from fsw_ros2_bridge.command_info import CommandInfo
 
@@ -22,7 +21,7 @@ class FSWPlugin(FSWPluginInterface):
         # self.RoutingService = None
 
         self._node.declare_parameter('plugin_params.telemetryPort', 0)
-        self._telemetry_port = self._node.get_parameter('plugin_params.telemetryPort').\
+        self._telemetry_port = self._node.get_parameter('plugin_params.telemetryPort'). \
             get_parameter_value().integer_value
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
         # self._node.declare_parameter('cfs_root', '/home/swhart/code/cFS')

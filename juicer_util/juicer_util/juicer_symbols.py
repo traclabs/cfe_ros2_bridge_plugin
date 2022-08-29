@@ -55,7 +55,7 @@ class JuicerSymbolEntry():
     def add_field(self, field):
         if not field.get_ros_name():
             t = str(field.get_type())
-            #self._node.get_logger().info("Skipping field " + field.get_name() + ", " + t)
+            self._node.get_logger().info("Skipping field " + field.get_name() + ", " + t)
         else:
             self._fields.append(field)
             field_type = field.get_type_name()
