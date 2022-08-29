@@ -9,6 +9,7 @@ from cfe_plugin.parse_cfe_config import ParseCFEConfig
 
 # from pathlib import Path
 
+
 class FSWPlugin(FSWPluginInterface):
 
     def __init__(self, node):
