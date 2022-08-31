@@ -69,14 +69,14 @@ class JuicerInterface():
                         c_topic = symbol.get_ros_topic()
                         c = CommandInfo(c_key, c_msg_type, c_topic, None)
                         self._command_info.append(c)
-                        #self._node.get_logger().info("adding command: " + c_key)
+                        # self._node.get_logger().info("adding command: " + c_key)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_name()
                         t_msg_type = symbol.get_ros_name()
                         t_topic = symbol.get_ros_topic()
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
-                        #self._node.get_logger().info("adding telem: " + t_key)
+                        # self._node.get_logger().info("adding telem: " + t_key)
 
     def get_telemetry_message_info(self):
         return self._telem_info
