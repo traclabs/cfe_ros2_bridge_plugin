@@ -18,8 +18,8 @@ class JuicerFieldEntry():
         self._bit_offset = bit_offset
         self._ros_name = generate_ros_field_name(name)
         self._type_symbol = None
-        # self._node.get_logger().info("field " + self._name + \
-        #    " has ros field name = " + self._ros_name)
+        # self._node.get_logger().info("field " + self._name
+        # + " has ros field name = " + self._ros_name)
 
     def get_name(self):
         return self._name

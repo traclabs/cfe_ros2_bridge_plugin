@@ -25,7 +25,7 @@ class ParseCFEConfig():
                 ]
         )
 
-        commands = self._node.get_parameter('plugin_params.commands').get_parameter_value().\
+        commands = self._node.get_parameter('plugin_params.commands').get_parameter_value(). \
             string_array_value
         self._node.get_logger().debug('commands: ')
         for cmd in commands:
@@ -45,7 +45,7 @@ class ParseCFEConfig():
                 params[cp] = c
             self._command_dict[cmd] = params
 
-        telemetry = self._node.get_parameter('plugin_params.telemetry').get_parameter_value().\
+        telemetry = self._node.get_parameter('plugin_params.telemetry').get_parameter_value(). \
             string_array_value
         self._node.get_logger().debug('telemetry: ')
         for tlm in telemetry:
