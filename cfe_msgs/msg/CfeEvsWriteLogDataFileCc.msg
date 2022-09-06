@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_EVS_WRITE_LOG_DATA_FILE_CC
-string log_filename

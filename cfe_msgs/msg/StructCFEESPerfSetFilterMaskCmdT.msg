@@ -1,3 +1,0 @@
-# cFE PARAM FILE: struct_c_f_e___e_s___perf_set_filter_mask_cmd__t
-uint32 filter_mask_num
-uint32 filter_mask

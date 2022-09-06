@@ -1,0 +1,18 @@
+# cFE NAME: CFE_SB_StatsTlm_Payload
+# ROS topic: cfe_sb_statstlm_payload
+uint32 msg_ids_in_use
+uint32 peak_msg_ids_in_use
+uint32 max_msg_ids_allowed
+uint32 pipes_in_use
+uint32 peak_pipes_in_use
+uint32 max_pipes_allowed
+uint32 mem_in_use
+uint32 peak_mem_in_use
+uint32 max_mem_allowed
+uint32 subscriptions_in_use
+uint32 peak_subscriptions_in_use
+uint32 max_subscriptions_allowed
+uint32 buffers_in_use
+uint32 peak_buffers_in_use
+uint32 max_pipe_depth_allowed
+CFESBPipeDepthStats pipe_depth_stats

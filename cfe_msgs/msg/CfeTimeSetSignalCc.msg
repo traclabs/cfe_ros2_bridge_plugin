@@ -1,2 +1,0 @@
-# cFE PARAM FILE: CFE_TIME_SET_SIGNAL_CC
-int16 tone_source

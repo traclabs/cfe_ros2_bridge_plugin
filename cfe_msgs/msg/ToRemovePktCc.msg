@@ -1,2 +1,0 @@
-# cFE PARAM FILE: TO_REMOVE_PKT_CC
-uint32 stream

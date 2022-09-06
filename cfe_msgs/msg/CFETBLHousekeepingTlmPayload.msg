@@ -1,0 +1,23 @@
+# cFE NAME: CFE_TBL_HousekeepingTlm_Payload
+# ROS topic: cfe_tbl_housekeepingtlm_payload
+uint8 command_counter
+uint8 command_error_counter
+uint16 num_tables
+uint16 num_load_pending
+uint16 validation_counter
+uint32 last_val_crc
+int32 last_val_status
+bool active_buffer
+string last_val_table_name
+uint8 success_val_counter
+uint8 failed_val_counter
+uint8 num_val_requests
+uint8 num_free_shared_bufs
+uint8 byte_align_pad
+uint16 spare0
+uint32 mem_pool_handle
+CFETIMESysTime last_update_time
+string last_updated_table
+string last_file_loaded
+string last_file_dumped
+string last_table_loaded
