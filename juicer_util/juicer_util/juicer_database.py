@@ -55,9 +55,13 @@ class JuicerDatabase():
         cur.execute("SELECT * FROM fields")
 
         rows = cur.fetchall()
+        last_id = 0
+        last_endian = 0
         for row in rows:
             my_field = JuicerFieldEntry(self._node, row[0], row[1], row[2], row[3],
                                         row[4], row[5], row[6], row[7])
+            last_id = my_field.get_id()
+            last_endian = my_field.get_endian()
             self._field_name_map[my_field.get_name()] = my_field
             symbol = self._symbol_id_map[my_field.get_symbol()]
             if symbol is not None:
@@ -68,6 +72,23 @@ class JuicerDatabase():
                 self._node.get_logger().info("Can't find symbol for field " + my_field.get_name())
 
         cur.close()
+        # Need to add a field of type CCSDS_SpacePacket_t and add it to CFE_MSG_Message symbol
+        symbol = self._symbol_name_map["CFE_MSG_Message"]
+        fid = last_id+1
+        container_symbol = symbol.get_id()
+        fname = "CCSDS"
+        foffset = 0
+        fsymbol = self._symbol_name_map["CCSDS_SpacePacket_t"]
+        ftype = fsymbol.get_id()
+        fendian = last_endian
+        fbit_size = 0
+        fbit_offset = 0
+        my_field = JuicerFieldEntry(self._node, fid, container_symbol, fname, foffset, ftype,
+                                    fendian, fbit_size, fbit_offset)
+        self._field_name_map[my_field.get_name()] = my_field
+        typeid = my_field.get_type()
+        my_field.set_type_symbol(self._symbol_id_map[typeid])
+        symbol.add_field(my_field)
         return self._field_name_map
 
     def load_data(self):
@@ -96,11 +117,11 @@ class JuicerDatabase():
             if mn[0].isupper():
                 altSym = self.find_alternative_symbol(symbol)
                 if altSym is not None:
-                    # self._node.get_logger().info("Removing " + symbol.get_name())
+                    # self._node.get_logger().info("Removing " + symbol.get_name() + " for alt symbol " + altSym.get_name())
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
                 # else:
-                # print("Unable to find an alternative for " + symbol.get_name())
+                # self._node.get_logger().info("Unable to find an alternative for " + symbol.get_name())
         self._node.get_logger().info("There are " + str(len(self._empty_symbols)) +
                                      " empty symbols left after pruning")
 

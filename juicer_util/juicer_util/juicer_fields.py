@@ -57,6 +57,9 @@ class JuicerFieldEntry():
             symbol = symbol.get_alternative()
         return symbol
 
+    def get_endian(self):
+        return self._little_endian
+
 
 def generate_ros_field_name(name):
     retval = name
@@ -85,6 +88,8 @@ def generate_ros_field_name(name):
         retval = 'dest_ip'
     elif name == 'tlm_dest_IP':
         retval = 'tlm_dest_ip'
+    elif name == 'CCSDS':
+        retval = 'ccsds'
 
     return replace_keywords(retval)
 
