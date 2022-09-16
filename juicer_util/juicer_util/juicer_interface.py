@@ -1,6 +1,8 @@
 import os
+import importlib
 
 from rcl_interfaces.msg import ParameterDescriptor
+from struct import unpack
 
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
@@ -30,6 +32,7 @@ class JuicerInterface():
         self._command_info = []
         self._field_name_map = dict()
         self._symbol_name_map = dict()
+        self._symbol_ros_name_map = dict()
         for db in self._juicer_db:
 
             if '~' in db:
@@ -61,6 +64,8 @@ class JuicerInterface():
                     self._node.get_logger().info("symbol name collision with " + key)
                 else:
                     self._symbol_name_map[key] = symbol
+                    ros_name = symbol.get_ros_name()
+                    self._symbol_ros_name_map[ros_name] = symbol
 
                 if symbol.get_should_output():
                     if symbol.get_is_command():
@@ -77,6 +82,7 @@ class JuicerInterface():
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
                         # self._node.get_logger().info("adding telem: " + t_key)
+        self._msg_list = self.set_up_msg_list()
 
     def get_telemetry_message_info(self):
         return self._telem_info
@@ -85,6 +91,9 @@ class JuicerInterface():
         return self._command_info
 
     def get_msg_list(self):
+        return self._msg_list
+
+    def set_up_msg_list(self):
         msg_list = []
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
@@ -108,6 +117,63 @@ class JuicerInterface():
 
     def get_field_name_map(self):
         return self._field_name_map
+
+    def parse_packet(self, datagram, offset, ros_name, msg, msg_pkg):
+        symbol = self._symbol_ros_name_map[ros_name]
+        fields = symbol.get_fields()
+        for field in fields:
+            fsym = field.get_type_symbol()
+            self._node.get_logger().info("handle field " + field.get_ros_name() + "." + fsym.get_ros_name())
+            offs = offset + field.get_byte_offset()
+            val = None
+            # self._msg_list contains list of data types that need to be processed
+            if fsym.get_ros_name() in self._msg_list:
+                MsgType = getattr(importlib.import_module(msg_pkg + ".msg"),
+                                  fsym.get_ros_name())
+                fmsg = MsgType()
+                val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
+            else:
+                if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
+                    # copy code from cfs_telem_receiver
+                    ca = ""
+                    for s in range(int(fsym.get_size())):
+                        tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
+                        ca = ca + codecs.decode(tf[0], 'UTF-8')
+                    val = ca
+                else:
+                    size = fsym.get_size()
+                    fmt = self.get_unpack_format(fsym.get_ros_name())
+                    tlm_field = unpack(fmt, datagram[offs:(offs + size)])
+                    val = tlm_field[0]
+            # do something with val here
+            if val is not None:
+                setattr(msg, field.get_ros_name(), val)
+
+    def get_unpack_format(self, ros_name):
+        retval = "B"
+        if ros_name == "uint64":
+            retval = "Q"
+        elif ros_name == "uint32":
+            retval = "I"
+        elif ros_name == "uint16":
+            retval = "H"
+        elif ros_name == "uint8":
+            retval = "B"
+        elif ros_name == "int64":
+            retval = "q"
+        elif ros_name == "int32":
+            retval = "i"
+        elif ros_name == "int16":
+            retval = "h"
+        elif ros_name == "int8":
+            retval = "b"
+        elif ros_name == "char":
+            retval = "s"
+        elif ros_name == "bool":
+            retval = "?"
+        else:
+            self._logger.warn("Failed to get unpack format for " + ros_name)
+        return retval
 
 
 def field_sort_order(field):

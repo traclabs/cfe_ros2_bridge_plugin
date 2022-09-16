@@ -74,7 +74,7 @@ class JuicerDatabase():
         cur.close()
         # Need to add a field of type CCSDS_SpacePacket_t and add it to CFE_MSG_Message symbol
         symbol = self._symbol_name_map["CFE_MSG_Message"]
-        fid = last_id+1
+        fid = last_id + 1
         container_symbol = symbol.get_id()
         fname = "CCSDS"
         foffset = 0
