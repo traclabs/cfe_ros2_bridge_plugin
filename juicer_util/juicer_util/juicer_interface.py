@@ -76,7 +76,7 @@ class JuicerInterface():
                         self._command_info.append(c)
                         # self._node.get_logger().info("adding command: " + c_key)
                     elif symbol.get_is_telemetry():
-                        t_key = symbol.get_name()
+                        t_key = symbol.get_ros_name()
                         t_msg_type = symbol.get_ros_name()
                         t_topic = symbol.get_ros_topic()
                         t = TelemInfo(t_key, t_msg_type, t_topic)
@@ -123,7 +123,8 @@ class JuicerInterface():
         fields = symbol.get_fields()
         for field in fields:
             fsym = field.get_type_symbol()
-            self._node.get_logger().info("handle field " + field.get_ros_name() + "." + fsym.get_ros_name())
+            debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
+            self._node.get_logger().info("handle field " + debug_name)
             offs = offset + field.get_byte_offset()
             val = None
             # self._msg_list contains list of data types that need to be processed
@@ -132,6 +133,7 @@ class JuicerInterface():
                                   fsym.get_ros_name())
                 fmsg = MsgType()
                 val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
+                self._node.get_logger().info("Got value from recursive call for " + debug_name)
             else:
                 if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                     # copy code from cfs_telem_receiver
@@ -140,14 +142,20 @@ class JuicerInterface():
                         tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
                         ca = ca + codecs.decode(tf[0], 'UTF-8')
                     val = ca
+                    self._node.get_logger().info("Got value as a string - " + debug_name)
                 else:
                     size = fsym.get_size()
                     fmt = self.get_unpack_format(fsym.get_ros_name())
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
+                    self._node.get_logger().info("Unpacked value - " + debug_name)
             # do something with val here
             if val is not None:
                 setattr(msg, field.get_ros_name(), val)
+                self._node.get_logger().info("Set " + field.get_ros_name() + " to value " + str(val))
+                return msg
+            else:
+                self._node.get_logger().info("Value for " + debug_name + " set through recursive call")
 
     def get_unpack_format(self, ros_name):
         retval = "B"
