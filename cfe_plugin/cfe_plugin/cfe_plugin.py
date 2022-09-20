@@ -7,6 +7,8 @@ from juicer_util.juicer_interface import JuicerInterface
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
 
+from rcl_interfaces.msg import SetParametersResult
+
 # from pathlib import Path
 
 
@@ -91,6 +93,17 @@ class FSWPlugin(FSWPluginInterface):
         #     self.RoutingService = RoutingService()
         #     self.RoutingService.start()
 
+        self._node.add_on_set_parameters_callback(self.parameters_callback)
+
+    def parameters_callback(self, params):
+        self._node.get_logger().warn("param callback!")
+        for param in params:
+            if param.name == "plugin_params.telemetryPort":
+                self._telemetry_port = param.value
+                self._node.get_logger().info('Got a telemetryPort update: '
+                                             + str(self._telemetry_port))
+        return SetParametersResult(successful=True)
+
     def get_telemetry_message_info(self):
         return self._telem_info
 
@@ -101,7 +114,8 @@ class FSWPlugin(FSWPluginInterface):
         try:
             return self._recv_map[key].get_latest_data()
         except (KeyError):
-            self._node.get_logger().error("No key " + key + " in receive map")
+            pass
+            # self._node.get_logger().error("No key " + key + " in receive map")
 
     def create_ros_msgs(self, msg_dir):
         msg_list = []
