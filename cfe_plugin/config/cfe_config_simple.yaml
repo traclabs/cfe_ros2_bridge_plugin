@@ -2,4 +2,4 @@ cfe_bridge:
   ros__parameters:
     plugin_name: cfe_plugin.cfe_plugin
     plugin_params:
-      telemetryPort: '1240'
+      telemetryPort: '1235'
