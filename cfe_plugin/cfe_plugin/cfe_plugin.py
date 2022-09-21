@@ -34,8 +34,6 @@ class FSWPlugin(FSWPluginInterface):
         self._command_dict = self._cfe_config.get_command_dict()
         self._telemetry_dict = self._cfe_config.get_telemetry_dict()
 
-        self._recv_map = {}
-
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
                                              self._juicer_interface)

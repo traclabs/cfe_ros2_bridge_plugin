@@ -11,7 +11,7 @@ import juicer_util.juicer_interface
 class TelemReceiver():
     def __init__(self, node, msg_pkg, port, telem_info, juicer_interface):
         self._node = node
-        self._ros_name_map = {}
+        self._ros_topic_map = {}
         self._juicer_interface = juicer_interface
         self._port = port
         self._msg_pkg = msg_pkg
@@ -22,7 +22,7 @@ class TelemReceiver():
             self._node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
             self._node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
             self._tlm_map[telem_info[tlm]['cfe_mid']] = tlm
-            self._ros_name_map[tlm] = telem_info[tlm]['topic_name']
+            self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
         self._logger.info("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
@@ -74,8 +74,8 @@ class TelemReceiver():
         retval = None
         if key in self._current_value:
             retval = self._current_value[key]
-        else:
-            self._logger.info("Can't find data for " + key)
+        # else:
+        #     self._logger.info("Can't find data for " + key)
         return retval
 
     @staticmethod
