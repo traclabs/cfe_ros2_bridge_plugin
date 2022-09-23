@@ -37,8 +37,6 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   cfe_plugin/cfe_plugin.py
   cfe_plugin/__init__.py
-  cfe_plugin/juicer_bridge.py
-  cfe_plugin/juicer_converter.py
   cfe_plugin/parse_cfe_config.py
   cfe_plugin/telem_receiver.py
   DESTINATION lib/${PROJECT_NAME})
