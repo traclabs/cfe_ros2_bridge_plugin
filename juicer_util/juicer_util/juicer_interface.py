@@ -153,9 +153,9 @@ class JuicerInterface():
             if val is not None:
                 setattr(msg, field.get_ros_name(), val)
                 self._node.get_logger().info("Set " + field.get_ros_name() + " to value " + str(val))
-                return msg
             else:
                 self._node.get_logger().info("Value for " + debug_name + " set through recursive call")
+        return msg
 
     def get_unpack_format(self, ros_name):
         retval = "B"
