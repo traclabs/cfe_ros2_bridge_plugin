@@ -5,16 +5,7 @@ from juicer_util.juicer_interface import JuicerInterface
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 82ef8efa1be914ce55a3418491469fe7325f4214
 from rcl_interfaces.msg import SetParametersResult
-
-# from pathlib import Path
-
->>>>>>> remotes/origin/galactic-devel
 
 class FSWPlugin(FSWPluginInterface):
 
