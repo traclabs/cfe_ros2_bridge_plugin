@@ -5,6 +5,13 @@ from juicer_util.juicer_interface import JuicerInterface
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
 
+<<<<<<< HEAD
+=======
+from rcl_interfaces.msg import SetParametersResult
+
+# from pathlib import Path
+
+>>>>>>> remotes/origin/galactic-devel
 
 class FSWPlugin(FSWPluginInterface):
 
@@ -37,6 +44,17 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
                                              self._juicer_interface)
+
+        self._node.add_on_set_parameters_callback(self.parameters_callback)
+
+    def parameters_callback(self, params):
+        self._node.get_logger().warn("param callback!")
+        for param in params:
+            if param.name == "plugin_params.telemetryPort":
+                self._telemetry_port = param.value
+                self._node.get_logger().info('Got a telemetryPort update: '
+                                             + str(self._telemetry_port))
+        return SetParametersResult(successful=True)
 
     def get_telemetry_message_info(self):
         return self._telem_info
