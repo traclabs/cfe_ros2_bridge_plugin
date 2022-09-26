@@ -1,5 +1,6 @@
 import os
 import importlib
+import codecs
 
 from rcl_interfaces.msg import ParameterDescriptor
 from struct import unpack
