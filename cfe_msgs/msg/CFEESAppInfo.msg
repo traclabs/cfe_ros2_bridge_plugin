@@ -11,8 +11,8 @@ uint32 code_address
 uint32 code_size
 uint32 data_address
 uint32 data_size
-uint32 address
-uint32 size
+uint32 bss_address
+uint32 bss_size
 uint32 start_address
 uint8 exception_action
 uint8 spare0
