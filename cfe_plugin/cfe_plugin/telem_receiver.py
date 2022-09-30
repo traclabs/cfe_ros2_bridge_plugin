@@ -16,7 +16,7 @@ class TelemReceiver():
         self._port = port
         self._msg_pkg = msg_pkg
         self._tlm_map = {}
-        self._logger = rclpy.logging.get_logger("TelemReceiver")
+        self._logger = self._node.get_logger()
         for tlm in telem_info:
             self._node.get_logger().info("type: " + str(tlm))
             self._node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))

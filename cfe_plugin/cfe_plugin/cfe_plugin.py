@@ -4,8 +4,10 @@ from juicer_util.juicer_interface import JuicerInterface
 
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
+from cfe_plugin.command_handler import CommandHandler
 
 from rcl_interfaces.msg import SetParametersResult
+
 
 class FSWPlugin(FSWPluginInterface):
 
@@ -39,16 +41,9 @@ class FSWPlugin(FSWPluginInterface):
                                              self._telemetry_dict,
                                              self._juicer_interface)
 
-        self._node.add_on_set_parameters_callback(self.parameters_callback)
-
-    def parameters_callback(self, params):
-        self._node.get_logger().warn("param callback!")
-        for param in params:
-            if param.name == "plugin_params.telemetryPort":
-                self._telemetry_port = param.value
-                self._node.get_logger().info('Got a telemetryPort update: '
-                                             + str(self._telemetry_port))
-        return SetParametersResult(successful=True)
+        for ci in self._command_info:
+            ch = CommandHandler(self._node, ci, self.command_callback)
+            ci.set_callback_func(ch.process_callback)
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 
@@ -60,6 +55,14 @@ class FSWPlugin(FSWPluginInterface):
                 self._node.get_logger().info('Got a telemetryPort update: '
                                              + str(self._telemetry_port))
         return SetParametersResult(successful=True)
+
+    def command_callback(self, command_info, message):
+        ros_name = command_info.get_msg_type()
+        self._node.get_logger().info('Handling cmd ' + ros_name)
+        cmd_ids = self._command_dict[ros_name]
+        self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
+        packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
+        # TODO send packet to cFE
 
     def get_telemetry_message_info(self):
         return self._telem_info

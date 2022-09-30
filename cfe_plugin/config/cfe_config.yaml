@@ -4,7 +4,7 @@ cfe_bridge:
     plugin_params:
       juicer_db: ["~/code/juicer/core-cpu1.sqlite"]
       telemetryPort: 1235
-      commands: ["CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESNoArgsCmd", "CFEESRestartCmd", "CFEESFileNameCmd", "CFEESOverWriteSysLogCmd", "CFEESStartApp", "CFEESAppNameCmd", "CFEESReloadAppCmd", "CFEESSetMaxPRCountCmd", "CFEESDeleteCDSCmd", "CFEESSendMemPoolStatsCmd", "CFEESDumpCDSRegistryCmd", "CFEEVSWriteLogDataFileCmd", "CFEEVSSetLogModeCmd", "CFEEVSNoArgsCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameEventIDMaskCmd", "CFESBWriteFileInfoCmd", "CFESBRouteCmd", "CFETBLNotifyCmd", "CFETBLNoArgsCmd", "CFETBLLoadCmd", "CFETBLDumpCmd", "CFETBLValidateCmd", "CFETBLActivateCmd", "CFETBLDumpRegistryCmd", "CFETBLSendRegistryCmd", "CFETBLDeleteCDSCmd", "CFETBLAbortLoadCmd", "CFETIMENoArgsCmd", "CFETIMEToneDataCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetStateCmd", "CFETIMESetSourceCmd", "CFETIMESetSignalCmd", "CFETIMETimeCmd", "CFETIMEOneHzAdjustmentCmd"]
+      commands: ["CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESNoArgsCmd", "CFEESRestartCmd", "CFEESFileNameCmd", "CFEESOverWriteSysLogCmd", "CFEESStartApp", "CFEESAppNameCmd", "CFEESReloadAppCmd", "CFEESSetMaxPRCountCmd", "CFEESDeleteCDSCmd", "CFEESSendMemPoolStatsCmd", "CFEESDumpCDSRegistryCmd", "CFEEVSWriteLogDataFileCmd", "CFEEVSSetLogModeCmd", "CFEEVSNoArgsCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameEventIDMaskCmd", "CFESBWriteFileInfoCmd", "CFESBRouteCmd", "CFETBLNotifyCmd", "CFETBLNoArgsCmd", "CFETBLLoadCmd", "CFETBLDumpCmd", "CFETBLValidateCmd", "CFETBLActivateCmd", "CFETBLDumpRegistryCmd", "CFETBLSendRegistryCmd", "CFETBLDeleteCDSCmd", "CFETBLAbortLoadCmd", "CFETIMENoArgsCmd", "CFETIMEToneDataCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetStateCmd", "CFETIMESetSourceCmd", "CFETIMESetSignalCmd", "CFETIMETimeCmd", "CFETIMEOneHzAdjustmentCmd", "TOLABEnableOutputCmdt"]
       telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm"]
       command_data:
         CFEESStartPerfDataCmd:
@@ -142,6 +142,9 @@ cfe_bridge:
         CFETIMEOneHzAdjustmentCmd:
           cfe_mid: '0x1200'
           cmd_code: 0
+        TOLABEnableOutputCmdt:
+          cfe_mid: '0x1200'
+          cmd_code: 0
       telemetry_data:
         CFEESOneAppTlm:
           cfe_mid: '0x80B'
@@ -174,7 +177,7 @@ cfe_bridge:
           cfe_mid: '0x80E'
           topic_name: /cfe_sb_single_subscription_tlm
         CFETBLHousekeepingTlm:
-          cfe_mid: '0x802'
+          cfe_mid: '0x804'
           topic_name: /cfe_tbl_hk_tlm
         CFETBLTableRegistryTlm:
           cfe_mid: '0x80C'

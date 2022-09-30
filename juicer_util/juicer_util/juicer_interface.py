@@ -158,6 +158,19 @@ class JuicerInterface():
                 self._node.get_logger().info("Value for " + debug_name + " set through recursive call")
         return msg
 
+    def parse_command(self, command_info, message, mid, code):
+        self._node.get_logger().info("Handling command for " + command_info.get_key())
+        symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
+        packet = bytearray()
+        pri_header = self.assemble_pri_header(message)
+        packet.extend(pri_header)
+        return packet
+
+    def assemble_pri_header(self, message):
+        ccsds_pri = bytearray(6)
+        ccsds_pri[:2] = pkt_id.to_bytes(2, byteorder='big')
+        return ccsds_pri
+
     def get_unpack_format(self, ros_name):
         retval = "B"
         if ros_name == "uint64":
