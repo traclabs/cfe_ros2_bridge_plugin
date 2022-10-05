@@ -25,6 +25,14 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
 
+        self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
+            get_parameter_value().integer_value
+        self._node.get_logger().info('commandPort: ' + str(self._command_port))
+
+        self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
+            get_parameter_value().string_value
+        self._node.get_logger().info('commandPort: ' + str(self._command_host))
+
         self._msg_pkg = "cfe_msgs"
 
         self._telem_info = self._juicer_interface.get_telemetry_message_info()
@@ -68,18 +76,16 @@ class FSWPlugin(FSWPluginInterface):
         cmd_ids = self._command_dict[ros_name]
         self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
-        send_success = self.send_cmd_packet(packet)
+        send_success = self.send_cmd_packet(packet, self._command_host, self._command_port)
         if send_success:
             self._node.get_logger().info('Sent packet to cFE.')
         else:
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
-    def send_cmd_packet(self, packet):
+    def send_cmd_packet(self, packet, cmd_host, cmd_port):
         # TODO send packet to cFE
         self._node.get_logger().info('Got packet to send to cFE!')
         cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        cmd_host = '127.0.0.1'
-        cmd_port = 1234
         bytes_sent = cmd_sock.sendto(packet, (cmd_host, cmd_port))
         self._node.get_logger().info('Sent ' + str(bytes_sent) + ' bytes out of ' + str(len(packet)))
         cmd_sock.close()
