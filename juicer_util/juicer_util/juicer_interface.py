@@ -159,17 +159,47 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().info("Handling command for " + command_info.get_key())
+        self._node.get_logger().info("Handling command for " + command_info.get_msg_type())
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
-        packet = bytearray()
-        pri_header = self.assemble_pri_header(message)
-        packet.extend(pri_header)
+        packet = self.encode_command(symbol, message, mid, code)
         return packet
 
-    def assemble_pri_header(self, message):
-        ccsds_pri = bytearray(6)
-        ccsds_pri[:2] = pkt_id.to_bytes(2, byteorder='big')
-        return ccsds_pri
+    def encode_command(self, symbol, message, mid, code):
+        packet = bytearray()
+        fields = symbol.get_fields()
+        for field in fields:
+            fsym = field.get_type_symbol()
+            fmsg = getattr(message, field.get_ros_name(), 0)
+            debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
+            if len(fsym.get_fields()) == 0:
+                self._node.get_logger().info("Storing concrete value for " + debug_name)
+                fpacket = self.encode_data(field, fsym, fmsg)
+                packet.extend(fpacket)
+            else:
+                self._node.get_logger().info("handle field " + debug_name)
+                fpacket = self.encode_command(fsym, fmsg, mid, code)
+                packet.extend(fpacket)
+
+        return packet
+
+    def encode_data(self, field, fsym, fmsg):
+        packet_size = fsym.get_size()
+        packet = bytearray(packet_size)
+        # process differently if string vs numeric?
+        ros_name = fsym.get_ros_name()
+        if ros_name.startswith("string") or ros_name.startswith("char"):
+            # handle string
+            string_b = fmsg.encode()
+            packet[:fsym.get_size()] = string_b
+        else:
+            # handle numeric
+            endian = 'big'
+            if field.get_endian():
+                endian = 'little'
+            packet = fmsg.to_bytes(packet_size, endian)
+            # TODO: need to handle floating point types differently
+
+        return packet
 
     def get_unpack_format(self, ros_name):
         retval = "B"

@@ -143,8 +143,8 @@ cfe_bridge:
           cfe_mid: '0x1200'
           cmd_code: 0
         TOLABEnableOutputCmdt:
-          cfe_mid: '0x1200'
-          cmd_code: 0
+          cfe_mid: '0x1880'
+          cmd_code: 6
       telemetry_data:
         CFEESOneAppTlm:
           cfe_mid: '0x80B'

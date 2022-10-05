@@ -1,8 +1,10 @@
+import socket
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 
 from juicer_util.juicer_interface import JuicerInterface
 
 from cfe_plugin.telem_receiver import TelemReceiver
+# from cfe_plugin.cmd_receiver import CmdReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
 from cfe_plugin.command_handler import CommandHandler
 
@@ -40,6 +42,10 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
                                              self._juicer_interface)
+        # self._command_port = 1234
+        # self._cmd_receiver = CmdReceiver(self._node, self._msg_pkg, self._command_port,
+        #                                      self._command_dict,
+        #                                      self._juicer_interface)
 
         for ci in self._command_info:
             ch = CommandHandler(self._node, ci, self.command_callback)
@@ -62,7 +68,22 @@ class FSWPlugin(FSWPluginInterface):
         cmd_ids = self._command_dict[ros_name]
         self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
+        send_success = self.send_cmd_packet(packet)
+        if send_success:
+            self._node.get_logger().info('Sent packet to cFE.')
+        else:
+            self._node.get_logger().warn('Failed to send packet to cFE!')
+
+    def send_cmd_packet(self, packet):
         # TODO send packet to cFE
+        self._node.get_logger().info('Got packet to send to cFE!')
+        cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        cmd_host = '127.0.0.1'
+        cmd_port = 1234
+        bytes_sent = cmd_sock.sendto(packet, (cmd_host, cmd_port))
+        self._node.get_logger().info('Sent ' + str(bytes_sent) + ' bytes out of ' + str(len(packet)))
+        cmd_sock.close()
+        return bytes_sent > 0
 
     def get_telemetry_message_info(self):
         return self._telem_info
