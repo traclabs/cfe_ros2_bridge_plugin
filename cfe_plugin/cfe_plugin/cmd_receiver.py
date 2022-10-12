@@ -59,6 +59,8 @@ class CmdReceiver():
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
+        seq = self.get_seq_count(datagram)
+        self._logger.warn("Sequence count = " + str(seq))
         if packet_id in self._cmd_map:
             self._logger.warn("Handling command message id " + packet_id)
             ros_name = self._cmd_map[packet_id]

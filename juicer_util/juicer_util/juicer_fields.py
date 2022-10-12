@@ -60,6 +60,9 @@ class JuicerFieldEntry():
     def get_endian(self):
         return self._little_endian
 
+    def set_little_endian(self, endian):
+        self._little_endian = endian
+
 
 def generate_ros_field_name(name):
     retval = name

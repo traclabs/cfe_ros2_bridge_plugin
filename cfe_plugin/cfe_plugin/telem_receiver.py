@@ -40,6 +40,7 @@ class TelemReceiver():
     def receive_thread(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
+        # self._sock = socket.create_server(("", self._port), socket.AF_INET, None, True)
 
         self._socket_err_count = 0
         while self._running:

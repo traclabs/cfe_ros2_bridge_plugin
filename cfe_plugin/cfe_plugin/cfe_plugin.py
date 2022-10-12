@@ -4,7 +4,7 @@ from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 from juicer_util.juicer_interface import JuicerInterface
 
 from cfe_plugin.telem_receiver import TelemReceiver
-# from cfe_plugin.cmd_receiver import CmdReceiver
+from cfe_plugin.cmd_receiver import CmdReceiver
 from cfe_plugin.parse_cfe_config import ParseCFEConfig
 from cfe_plugin.command_handler import CommandHandler
 
@@ -25,13 +25,15 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
 
+        self._node.declare_parameter('plugin_params.commandPort', 1234)
         self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
             get_parameter_value().integer_value
         self._node.get_logger().info('commandPort: ' + str(self._command_port))
 
+        self._node.declare_parameter('plugin_params.commandHost', '127.0.0.1')
         self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
             get_parameter_value().string_value
-        self._node.get_logger().info('commandPort: ' + str(self._command_host))
+        self._node.get_logger().info('commandHost: ' + str(self._command_host))
 
         self._msg_pkg = "cfe_msgs"
 
@@ -50,7 +52,6 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
                                              self._juicer_interface)
-        # self._command_port = 1234
         # self._cmd_receiver = CmdReceiver(self._node, self._msg_pkg, self._command_port,
         #                                      self._command_dict,
         #                                      self._juicer_interface)
@@ -83,7 +84,7 @@ class FSWPlugin(FSWPluginInterface):
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
     def send_cmd_packet(self, packet, cmd_host, cmd_port):
-        # TODO send packet to cFE
+        # send packet to cFE
         self._node.get_logger().info('Got packet to send to cFE!')
         cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         bytes_sent = cmd_sock.sendto(packet, (cmd_host, cmd_port))
