@@ -57,7 +57,9 @@ class FSWPlugin(FSWPluginInterface):
         #                                      self._juicer_interface)
 
         for ci in self._command_info:
-            ch = CommandHandler(self._node, ci, self.command_callback)
+            ros_name = ci.get_msg_type()
+            cmd_ids = self._command_dict[ros_name]
+            ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'])
             ci.set_callback_func(ch.process_callback)
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
