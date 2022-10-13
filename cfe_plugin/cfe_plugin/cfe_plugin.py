@@ -10,6 +10,8 @@ from cfe_plugin.command_handler import CommandHandler
 
 from rcl_interfaces.msg import SetParametersResult
 
+from ament_index_python.packages import get_package_share_directory
+
 
 class FSWPlugin(FSWPluginInterface):
 
@@ -18,7 +20,8 @@ class FSWPlugin(FSWPluginInterface):
         self._node = node
         self._node.get_logger().info("Setting up cFE plugin")
 
-        self._juicer_interface = JuicerInterface(self._node)
+        resource_path = get_package_share_directory("cfe_plugin") + "/resource/"
+        self._juicer_interface = JuicerInterface(self._node, resource_path)
 
         self._node.declare_parameter('plugin_params.telemetryPort', 0)
         self._telemetry_port = self._node.get_parameter('plugin_params.telemetryPort'). \

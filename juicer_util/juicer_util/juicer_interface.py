@@ -13,7 +13,7 @@ from juicer_util.juicer_database import JuicerDatabase
 
 class JuicerInterface():
 
-    def __init__(self, node):
+    def __init__(self, node, database_path):
 
         self._node = node
         self._node.get_logger().info("Loading message data from Juicer SQLite databases")
@@ -38,6 +38,8 @@ class JuicerInterface():
 
             if '~' in db:
                 db = os.path.expanduser(db)
+            else:
+                db = database_path + db
 
             self._node.get_logger().info("Parsing juicer db: " + db)
 
