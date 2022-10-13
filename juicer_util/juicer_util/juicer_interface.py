@@ -83,7 +83,7 @@ class JuicerInterface():
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
                         # self._node.get_logger().info("adding telem: " + t_key)
-            # need to fix fields for CCSDSPrimaryHeader
+                        # need to fix fields for CCSDSPrimaryHeader
             ccsds_prim_hdr = self._symbol_ros_name_map["CCSDSPrimaryHeader"]
             if ccsds_prim_hdr != None:
                 two_bytes = self._symbol_ros_name_map["uint16"]
