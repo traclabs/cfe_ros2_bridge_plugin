@@ -117,11 +117,13 @@ class JuicerDatabase():
             if mn[0].isupper():
                 altSym = self.find_alternative_symbol(symbol)
                 if altSym is not None:
-                    # self._node.get_logger().info("Removing " + symbol.get_name() + " for alt symbol " + altSym.get_name())
+                    # self._node.get_logger().info("Removing " + symbol.get_name() +
+                    # " for alt symbol " + altSym.get_name())
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
                 # else:
-                # self._node.get_logger().info("Unable to find an alternative for " + symbol.get_name())
+                # self._node.get_logger().info("Unable to find an alternative for " +
+                # symbol.get_name())
         self._node.get_logger().info("There are " + str(len(self._empty_symbols)) +
                                      " empty symbols left after pruning")
 

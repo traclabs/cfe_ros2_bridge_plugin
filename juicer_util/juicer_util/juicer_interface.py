@@ -87,7 +87,7 @@ class JuicerInterface():
                         # self._node.get_logger().info("adding telem: " + t_key)
                         # need to fix fields for CCSDSPrimaryHeader
             ccsds_prim_hdr = self._symbol_ros_name_map["CCSDSPrimaryHeader"]
-            if ccsds_prim_hdr != None:
+            if ccsds_prim_hdr is not None:
                 two_bytes = self._symbol_ros_name_map["uint16"]
                 for field in ccsds_prim_hdr.get_fields():
                     field.set_type_symbol(two_bytes)
@@ -159,13 +159,16 @@ class JuicerInterface():
                     fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
-                    self._node.get_logger().info("Unpacked value - " + debug_name + " using format " + fmt)
+                    self._node.get_logger().info("Unpacked value - " + debug_name +
+                            " using format " + fmt)
             # do something with val here
             if val is not None:
                 setattr(msg, field.get_ros_name(), val)
-                self._node.get_logger().info("Set " + field.get_ros_name() + " to value " + str(val))
+                self._node.get_logger().info("Set " + field.get_ros_name() +
+                        " to value " + str(val))
             else:
-                self._node.get_logger().info("Value for " + debug_name + " set through recursive call")
+                self._node.get_logger().info("Value for " + debug_name +
+                        " set through recursive call")
         return msg
 
     def parse_command(self, command_info, message, mid, code):
@@ -221,7 +224,8 @@ class JuicerInterface():
                 endian = 'little'
             packet = fmsg.to_bytes(packet_size, endian)
             # TODO: need to handle floating point types differently
-            self._node.get_logger().info("Storing " + str(fmsg) + " into " + field.get_ros_name() + " with endian " + endian)
+            self._node.get_logger().info("Storing " + str(fmsg) + " into " + field.get_ros_name() +
+                    " with endian " + endian)
 
         return packet
 

@@ -6,6 +6,7 @@ import subprocess
 
 class RunMultipleFiles():
 
+
     def __init__(self):
         self.files = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
                       'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
