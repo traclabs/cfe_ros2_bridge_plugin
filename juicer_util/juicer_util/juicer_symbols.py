@@ -58,6 +58,7 @@ class JuicerSymbolEntry():
             self._node.get_logger().info("Skipping field " + field.get_name() + ", " + t)
         else:
             self._fields.append(field)
+            self._fields.sort(key=field_byte_order)
             field_type = field.get_type_name()
             if "TelemetryHeader" in field_type:
                 self._is_telemetry = True
@@ -169,3 +170,7 @@ def handle_lower_case_name(lc_name, symbol_name):
         n = n.capitalize()
         # print("Capitalized " + n)
     return n
+
+
+def field_byte_order(field):
+    return field.get_byte_offset()

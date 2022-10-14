@@ -8,28 +8,28 @@ import codecs
 import juicer_util.juicer_interface
 
 
-class TelemReceiver():
-    def __init__(self, node, msg_pkg, port, telem_info, juicer_interface):
+class CmdReceiver():
+    def __init__(self, node, msg_pkg, port, command_info, juicer_interface):
         self._node = node
-        self._ros_topic_map = {}
+        self._cmd_code_map = {}
         self._juicer_interface = juicer_interface
         self._port = port
         self._msg_pkg = msg_pkg
-        self._tlm_map = {}
+        self._cmd_map = {}
         self._logger = self._node.get_logger()
-        for tlm in telem_info:
-            self._node.get_logger().info("type: " + str(tlm))
-            self._node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-            self._node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
-            self._tlm_map[telem_info[tlm]['cfe_mid']] = tlm
-            self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
-        self._logger.info("telem map is " + str(self._tlm_map))
+        for cmd in command_info:
+            self._node.get_logger().info("type: " + str(cmd))
+            self._node.get_logger().info("  cfe_mid: " + str(command_info[cmd]['cfe_mid']))
+            self._node.get_logger().info("  cmd_code: " + str(command_info[cmd]['cmd_code']))
+            self._cmd_map[command_info[cmd]['cfe_mid']] = cmd
+            self._cmd_code_map[cmd] = command_info[cmd]['cmd_code']
+        self._logger.info("command map is " + str(self._cmd_map))
         self._recv_buff_size = 4096
 
         self._running = True
         self._recv_thread = threading.Thread(target=self.receive_thread)
 
-        self._logger.warn("starting thread to receive CFS telemetry")
+        self._logger.warn("starting thread to receive CFS command")
         self._recv_thread.start()
         self._current_value = {}
 
@@ -39,8 +39,8 @@ class TelemReceiver():
 
     def receive_thread(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._logger.warn("binding to port " + str(self._port))
         self._sock.bind(("", self._port))
-        # self._sock = socket.create_server(("", self._port), socket.AF_INET, None, True)
 
         self._socket_err_count = 0
         while self._running:
@@ -55,21 +55,24 @@ class TelemReceiver():
                 self.handle_packet(datagram)
 
             except socket.error:
-                self._logger.warn("Error receiving telemetry data.")
+                self._logger.warn("Error receiving command data.")
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
-        if packet_id in self._tlm_map:
-            ros_name = self._tlm_map[packet_id]
+        seq = self.get_seq_count(datagram)
+        self._logger.warn("Sequence count = " + str(seq))
+        if packet_id in self._cmd_map:
+            self._logger.warn("Handling command message id " + packet_id)
+            ros_name = self._cmd_map[packet_id]
             self._logger.info("Received packet for " + ros_name)
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
-                              self._tlm_map[packet_id])
+                              self._cmd_map[packet_id])
             msg = MsgType()
-            setattr(msg, "seq", self.get_seq_count(datagram))
-            self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
+            self._juicer_interface.parse_packet(datagram, 0, self._cmd_map[packet_id], msg, self._msg_pkg)
             self._current_value[ros_name] = msg
+            self._logger.info("Parsed cmd: " + str(msg))
         else:
-            self._logger.warn("Don't know how to handle message id " + packet_id)
+            self._logger.warn("Don't know how to handle command message id " + packet_id)
 
     def get_latest_data(self, key):
         retval = None

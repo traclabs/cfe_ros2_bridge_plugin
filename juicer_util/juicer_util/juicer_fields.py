@@ -57,6 +57,12 @@ class JuicerFieldEntry():
             symbol = symbol.get_alternative()
         return symbol
 
+    def get_endian(self):
+        return self._little_endian
+
+    def set_little_endian(self, endian):
+        self._little_endian = endian
+
 
 def generate_ros_field_name(name):
     retval = name
@@ -67,7 +73,7 @@ def generate_ros_field_name(name):
         # handle strings of caps - change them to one cap followed by lowercase
         # so that it will be one "word" in final result
         def callback(m):
-            m.group(0).capitalize()
+            return m.group(0).capitalize()
         n = re.sub(r'[A-Z](?:[A-Z]*(?![a-z]))', callback, n)
         # split into list of words by capital letters
         w = re.findall('([A-Z][a-z]*)', n)
@@ -85,6 +91,8 @@ def generate_ros_field_name(name):
         retval = 'dest_ip'
     elif name == 'tlm_dest_IP':
         retval = 'tlm_dest_ip'
+    elif name == 'CCSDS':
+        retval = 'ccsds'
 
     return replace_keywords(retval)
 

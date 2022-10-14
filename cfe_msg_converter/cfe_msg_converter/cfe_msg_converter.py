@@ -5,7 +5,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from juicer_util.juicer_interface import JuicerInterface
-from juicer_util.juicer_interface import field_sort_order
+from juicer_util.juicer_symbols import field_byte_order
 
 
 class CfeMsgConverter(Node):
@@ -69,7 +69,7 @@ class CfeMsgConverter(Node):
                     f.write("# Telemetry message" + "\n")
                     f.write("int32 seq" + "\n")
                 fields = symbol.get_fields()
-                fields.sort(key=field_sort_order)
+                fields.sort(key=field_byte_order)
                 for field in symbol.get_fields():
                     typename = field.get_type_name()
                     fn = field.get_ros_name()

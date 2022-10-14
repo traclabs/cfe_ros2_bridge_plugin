@@ -12,7 +12,7 @@ uint32 max_mem_allowed
 uint32 subscriptions_in_use
 uint32 peak_subscriptions_in_use
 uint32 max_subscriptions_allowed
-uint32 buffers_in_use
-uint32 peak_buffers_in_use
+uint32 sb_buffers_in_use
+uint32 peak_sb_buffers_in_use
 uint32 max_pipe_depth_allowed
 CFESBPipeDepthStats pipe_depth_stats

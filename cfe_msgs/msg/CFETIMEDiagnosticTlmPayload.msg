@@ -1,16 +1,16 @@
 # cFE NAME: CFE_TIME_DiagnosticTlm_Payload
 # ROS topic: cfe_time_diagnostictlm_payload
-CFETIMESysTime at_tone
-CFETIMESysTime at_tone_1
+CFETIMESysTime at_tone_met
+CFETIMESysTime at_tone_stcf
 CFETIMESysTime at_tone_delay
 CFETIMESysTime at_tone_latch
 int16 at_tone_leap_seconds
-uint16 clock_state
+uint16 clock_state_api
 CFETIMESysTime time_since_tone
 CFETIMESysTime current_latch
-CFETIMESysTime current
-CFETIMESysTime current_1
-CFETIMESysTime current_2
+CFETIMESysTime current_met
+CFETIMESysTime current_tai
+CFETIMESysTime current_utc
 int16 clock_set_state
 int16 clock_fly_state
 int16 clock_source
@@ -35,7 +35,7 @@ uint32 tone_task_counter
 uint32 version_counter
 uint32 local_int_counter
 uint32 local_task_counter
-uint32 virt
+uint32 virtual_met
 uint32 min_elapsed
 uint32 max_elapsed
 CFETIMESysTime max_local_clock

@@ -32,6 +32,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CFETIMESysTime.msg"
   "msg/CFEMSGTelemetryHeader.msg"
   "msg/CFEMSGTelemetrySecondaryHeadert.msg"
+  "msg/CCSDSPrimaryHeader.msg"
+  "msg/CCSDSSpacePackett.msg"
   "msg/CFEESOneAppTlmPayload.msg"
   "msg/CFEESOneAppTlm.msg"
   "msg/CFEESPoolStatsTlmPayload.msg"
@@ -175,6 +177,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TOLABRemovePacketCmdt.msg"
   "msg/TOLABEnableOutputPayloadt.msg"
   "msg/TOLABEnableOutputCmdt.msg"
+  "msg/CFEMSGMessage.msg"
 )
 
 if(BUILD_TESTING)
