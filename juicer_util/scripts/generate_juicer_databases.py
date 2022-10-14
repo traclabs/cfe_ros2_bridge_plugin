@@ -4,8 +4,8 @@ import subprocess
 
 # This script runs juicer over a list of input files.
 
-class RunMultipleFiles():
 
+class RunMultipleFiles():
 
     def __init__(self):
         self.files = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',

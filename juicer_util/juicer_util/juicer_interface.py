@@ -160,15 +160,15 @@ class JuicerInterface():
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
                     self._node.get_logger().info("Unpacked value - " + debug_name +
-                            " using format " + fmt)
+                                                 " using format " + fmt)
             # do something with val here
             if val is not None:
                 setattr(msg, field.get_ros_name(), val)
                 self._node.get_logger().info("Set " + field.get_ros_name() +
-                        " to value " + str(val))
+                                             " to value " + str(val))
             else:
                 self._node.get_logger().info("Value for " + debug_name +
-                        " set through recursive call")
+                                             " set through recursive call")
         return msg
 
     def parse_command(self, command_info, message, mid, code):
@@ -225,7 +225,7 @@ class JuicerInterface():
             packet = fmsg.to_bytes(packet_size, endian)
             # TODO: need to handle floating point types differently
             self._node.get_logger().info("Storing " + str(fmsg) + " into " + field.get_ros_name() +
-                    " with endian " + endian)
+                                         " with endian " + endian)
 
         return packet
 
