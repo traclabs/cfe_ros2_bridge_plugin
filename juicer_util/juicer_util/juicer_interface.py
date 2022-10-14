@@ -91,8 +91,7 @@ class JuicerInterface():
                 two_bytes = self._symbol_ros_name_map["uint16"]
                 for field in ccsds_prim_hdr.get_fields():
                     field.set_type_symbol(two_bytes)
-                    if field.get_ros_name() == 'stream_id':
-                        field.set_little_endian(False)
+                    field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()
 
