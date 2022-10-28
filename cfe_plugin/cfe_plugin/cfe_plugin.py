@@ -2,10 +2,10 @@ import socket
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 
 from juicer_util.juicer_interface import JuicerInterface
+from juicer_util.parse_cfe_config import ParseCFEConfig
 
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.cmd_receiver import CmdReceiver
-from cfe_plugin.parse_cfe_config import ParseCFEConfig
 from cfe_plugin.command_handler import CommandHandler
 
 from rcl_interfaces.msg import SetParametersResult
