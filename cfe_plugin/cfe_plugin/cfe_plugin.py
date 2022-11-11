@@ -43,7 +43,7 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_info = self._juicer_interface.get_telemetry_message_info()
         self._command_info = self._juicer_interface.get_command_message_info()
 
-        command_params = ["structure", "cfe_mid", "cmd_code"]
+        command_params = ["structure", "cfe_mid", "cmd_code", "topic_name"]
         telemetry_params = ["cfe_mid", "topic_name"]
         self._cfe_config = ParseCFEConfig(self._node, command_params, telemetry_params)
         self._cfe_config.print_commands()
