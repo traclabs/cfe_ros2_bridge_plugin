@@ -6,84 +6,129 @@ cfe_bridge:
       commandPort: 1234
       commandHost: "127.0.0.7"
       telemetryPort: 1235
-      commands: ["CFEESAppNameCmd", "CFEESDeleteCDSCmd", "CFEESDumpCDSRegistryCmd", "CFEESQueryAllCmd", "CFEESNoArgsCmd", "CFEESOverWriteSysLogCmd", "CFEESReloadAppCmd", "CFEESRestartCmd", "CFEESSendMemPoolStatsCmd", "CFEESSetMaxPRCountCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESStartApp", "CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameEventIDMaskCmd", "CFEEVSBitMaskCmd", "CFEEVSNoArgsCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSSetLogModeCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSWriteLogDataFileCmd", "CFESBRouteCmd", "CFESBWriteFileInfoCmd", "CFETBLAbortLoadCmd", "CFETBLActivateCmd", "CFETBLDeleteCDSCmd", "CFETBLDumpCmd", "CFETBLDumpRegistryCmd", "CFETBLLoadCmd", "CFETBLNoArgsCmd", "CFETBLNotifyCmd", "CFETBLSendRegistryCmd", "CFETBLValidateCmd", "CFETIMENoArgsCmd", "CFETIMEOneHzAdjustmentCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetSignalCmd", "CFETIMESetSourceCmd", "CFETIMESetStateCmd", "CFETIMETimeCmd", "CFETIMEToneDataCmd", "CILABNoArgsCmdt", "ROSAPPNoArgsCmdt", "SAMPLEAPPNoArgsCmdt", "SCHLABStateEntryt", "TOLABAddPacketCmdt", "TOLABEnableOutputCmd", "TOLABNoArgsCmdt", "TOLABRemovePacketCmdt"]
+      commands: ["CFEESStopAppCmd", "CFEESRestartAppCmd", "CFEESQueryOneCmd", "CFEESDeleteCDSCmd", "CFEESDumpCDSRegistryCmd", "CFEESQueryAllCmd", "CFEESQueryAllTasksCmd", "CFEESWriteSysLogCmd", "CFEESWriteERLogCmd", "CFEESNoopCmd", "CFEESResetCountersCmd", "CFEESClearSysLogCmd", "CFEESClearERLogCmd", "CFEESResetPRCountCmd", "CFEESOverWriteSysLogCmd", "CFEESReloadAppCmd", "CFEESRestartCmd", "CFEESSendMemPoolStatsCmd", "CFEESSetMaxPRCountCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESStartApp", "CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameEventIDMaskCmd", "CFEEVSBitMaskCmd", "CFEEVSNoArgsCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSSetLogModeCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSWriteLogDataFileCmd", "CFESBRouteCmd", "CFESBWriteFileInfoCmd", "CFETBLAbortLoadCmd", "CFETBLActivateCmd", "CFETBLDeleteCDSCmd", "CFETBLDumpCmd", "CFETBLDumpRegistryCmd", "CFETBLLoadCmd", "CFETBLNoArgsCmd", "CFETBLNotifyCmd", "CFETBLSendRegistryCmd", "CFETBLValidateCmd", "CFETIMENoArgsCmd", "CFETIMEOneHzAdjustmentCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetSignalCmd", "CFETIMESetSourceCmd", "CFETIMESetStateCmd", "CFETIMETimeCmd", "CFETIMEToneDataCmd", "CILABNoArgsCmdt", "ROSAPPNoArgsCmdt", "SAMPLEAPPNoArgsCmdt", "SCHLABStateEntryt", "TOLABAddPacketCmdt", "TOLABEnableOutputCmd", "TOLABNoArgsCmdt", "TOLABRemovePacketCmdt"]
       
       telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm"]
       command_data:
-        CFEESAppNameCmd:
+        CFEESStopAppCmd:
           structure: CFEESAppNameCmd
-          cfe_mid: '0x1200'
-          cmd_code: 3  
-          topic_name: /cfe_es_app_name_cmd
+          cfe_mid: '0x1806'
+          cmd_code: 5
+          topic_name: /cfe_es_stop_app_cmd
+        CFEESRestartAppCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 6
+          topic_name: /cfe_es_restart_app_cmd
+        CFEESQueryOneCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 8
+          topic_name: /cfe_es_query_one_cmd
         CFEESDeleteCDSCmd:
           structure: CFEESDeleteCDSCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 21
           topic_name: /cfe_es_delete_cds_cmd
         CFEESDumpCDSRegistryCmd:
           structure: CFEESDumpCDSRegistryCmd
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 23 
           topic_name: /cfe_es_dump_cds_registry_cmd
         CFEESQueryAllCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 9  
           topic_name: /cfe_es_query_all_cmd
-        CFEESNoArgsCmd:
+        CFEESQueryAllTasksCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 24
+          topic_name: /cfe_es_query_all_tasks_cmd
+        CFEESWriteSysLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 11
+          topic_name: /cfe_es_write_sys_log_cmd
+        CFEESWriteERLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 13
+          topic_name: /cfe_es_write_er_log_cmd
+        CFEESNoopCmd:
           structure: CFEESNoArgsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
-          topic_name: /cfe_es_no_args_cmd
+          cfe_mid: '0x1806'
+          cmd_code: 0
+          topic_name: /cfe_es_noop_cmd
+        CFEESResetCountersCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 1
+          topic_name: /cfe_es_reset_counters_cmd
+        CFEESClearSysLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 10
+          topic_name: /cfe_es_clear_sys_log_cmd
+        CFEESClearERLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 12
+          topic_name: /cfe_es_clear_er_log_cmd
+        CFEESResetPRCountCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 19
+          topic_name: /cfe_es_reset_pr_count_cmd
         CFEESOverWriteSysLogCmd:
           structure: CFEESOverWriteSysLogCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 18 
           topic_name: /cfe_es_over_write_sys_log_cmd
         CFEESReloadAppCmd:
           structure: CFEESReloadAppCmd
-          cfe_mid: '0x1200'
-          cmd_code: 4  
+          cfe_mid: '0x1806'
+          cmd_code: 7  
           topic_name: /cfe_es_reload_app_cmd
         CFEESRestartCmd:
           structure: CFEESRestartCmd
-          cfe_mid: '0x1200'
+          cfe_mid: '0x1806'
           cmd_code: 2  
           topic_name: /cfe_es_restart_cmd
         CFEESSendMemPoolStatsCmd:
           structure: CFEESSendMemPoolStatsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 22
           topic_name: /cfe_es_send_mem_pool_stats_cmd
         CFEESSetMaxPRCountCmd:
           structure: CFEESSetMaxPRCountCmd
-          cfe_mid: '0x1200'
-          cmd_code: 5  
+          cfe_mid: '0x1806'
+          cmd_code: 20
           topic_name: /cfe_es_set_max_pr_count_cmd
         CFEESSetPerfFilterMaskCmd:
           structure: CFEESSetPerfFilterMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 16
           topic_name: /cfe_es_set_perf_filter_mask_cmd
         CFEESSetPerfTriggerMaskCmd:
           structure: CFEESSetPerfTriggerMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 17
           topic_name: /cfe_es_set_perf_trigger_mask_cmd
         CFEESStartApp:
           structure: CFEESStartApp
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 4  
           topic_name: /cfe_es_start_app
         CFEESStartPerfDataCmd:
           structure: CFEESStartPerfDataCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 14
           topic_name: /cfe_es_start_perf_data_cmd
         CFEESStopPerfDataCmd:
           structure: CFEESStopPerfDataCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 15
           topic_name: /cfe_es_stop_perf_data_cmd
         CFEEVSAppNameBitMaskCmd:
           structure: CFEEVSAppNameBitMaskCmd
