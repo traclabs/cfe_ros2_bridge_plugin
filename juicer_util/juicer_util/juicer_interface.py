@@ -99,6 +99,20 @@ class JuicerInterface():
     def get_command_message_info(self):
         return self._command_info
 
+    def reconcile_command_info(self, cmd_info, cmd_dict):
+        # need to create new CommandInfo entries for each entry in cmd_dict
+        command_info = []
+        for key in cmd_dict.keys():
+            cd = cmd_dict[key]
+            struct_name = cd["structure"]
+            c_key = key
+            c_msg_type = struct_name
+            symbol = self._symbol_ros_name_map[struct_name]
+            c_topic = symbol.get_ros_topic()
+            c = CommandInfo(c_key, c_msg_type, c_topic, None)
+            command_info.append(c)
+        return command_info
+
     def get_msg_list(self):
         return self._msg_list
 
@@ -170,7 +184,7 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().debug("Handling command for " + command_info.get_msg_type())
+        self._node.get_logger().debug("Handling command for " + command_info.get_key() + " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
