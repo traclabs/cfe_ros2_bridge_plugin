@@ -18,18 +18,18 @@ class CmdReceiver():
         self._cmd_map = {}
         self._logger = self._node.get_logger()
         for cmd in command_info:
-            self._node.get_logger().info("type: " + str(cmd))
-            self._node.get_logger().info("  cfe_mid: " + str(command_info[cmd]['cfe_mid']))
-            self._node.get_logger().info("  cmd_code: " + str(command_info[cmd]['cmd_code']))
+            self._node.get_logger().debug("type: " + str(cmd))
+            self._node.get_logger().debug("  cfe_mid: " + str(command_info[cmd]['cfe_mid']))
+            self._node.get_logger().debug("  cmd_code: " + str(command_info[cmd]['cmd_code']))
             self._cmd_map[command_info[cmd]['cfe_mid']] = cmd
             self._cmd_code_map[cmd] = command_info[cmd]['cmd_code']
-        self._logger.info("command map is " + str(self._cmd_map))
+        self._logger.debug("command map is " + str(self._cmd_map))
         self._recv_buff_size = 4096
 
         self._running = True
         self._recv_thread = threading.Thread(target=self.receive_thread)
 
-        self._logger.warn("starting thread to receive CFS command")
+        self._logger.info("starting thread to receive CFS command")
         self._recv_thread.start()
         self._current_value = {}
 
@@ -39,7 +39,7 @@ class CmdReceiver():
 
     def receive_thread(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._logger.warn("binding to port " + str(self._port))
+        self._logger.info("binding to port " + str(self._port))
         self._sock.bind(("", self._port))
 
         self._socket_err_count = 0
@@ -60,26 +60,24 @@ class CmdReceiver():
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
         seq = self.get_seq_count(datagram)
-        self._logger.warn("Sequence count = " + str(seq))
+        self._logger.debug("Sequence count = " + str(seq))
         if packet_id in self._cmd_map:
-            self._logger.warn("Handling command message id " + packet_id)
+            self._logger.debug("Handling command message id " + packet_id)
             ros_name = self._cmd_map[packet_id]
-            self._logger.info("Received packet for " + ros_name)
+            self._logger.debug("Received packet for " + ros_name)
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
                               self._cmd_map[packet_id])
             msg = MsgType()
             self._juicer_interface.parse_packet(datagram, 0, self._cmd_map[packet_id], msg, self._msg_pkg)
             self._current_value[ros_name] = msg
-            self._logger.info("Parsed cmd: " + str(msg))
+            self._logger.debug("Parsed cmd: " + str(msg))
         else:
-            self._logger.warn("Don't know how to handle command message id " + packet_id)
+            self._logger.info("Don't know how to handle command message id " + packet_id)
 
     def get_latest_data(self, key):
         retval = None
         if key in self._current_value:
             retval = self._current_value[key]
-        # else:
-        #     self._logger.info("Can't find data for " + key)
         return retval
 
     @staticmethod

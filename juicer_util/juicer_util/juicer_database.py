@@ -9,7 +9,7 @@ class JuicerDatabase():
     def __init__(self, node, db_file):
 
         self._node = node
-        self._node.get_logger().info("Loading message data from Juicer SQLite databases")
+        self._node.get_logger().debug("Loading message data from Juicer SQLite databases")
         self._db_file = db_file
         self._field_name_map = dict()
         self._symbol_name_map = dict()
@@ -69,7 +69,7 @@ class JuicerDatabase():
                 my_field.set_type_symbol(self._symbol_id_map[typeid])
                 symbol.add_field(my_field)
             else:
-                self._node.get_logger().info("Can't find symbol for field " + my_field.get_name())
+                self._node.get_logger().debug("Can't find symbol for field " + my_field.get_name())
 
         cur.close()
         # Need to add a field of type CCSDS_SpacePacket_t and add it to CFE_MSG_Message symbol
@@ -100,7 +100,7 @@ class JuicerDatabase():
         self.mark_cmd_tlm_symbols()
 
     def prune_symbols_and_fields(self):
-        self._node.get_logger().info("Pruning out things that aren't needed.")
+        self._node.get_logger().debug("Pruning out things that aren't needed.")
         self._empty_symbols = []
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
@@ -109,7 +109,7 @@ class JuicerDatabase():
                 # for some reason some messages need to be added twice,
                 # so just automatically do it for all of them
                 self._empty_symbols.append(symbol)
-        self._node.get_logger().info("There are " + str(len(self._empty_symbols))
+        self._node.get_logger().debug("There are " + str(len(self._empty_symbols))
                                      + " empty symbols")
         for symbol in self._empty_symbols:
             mn = symbol.get_ros_name()
@@ -117,14 +117,9 @@ class JuicerDatabase():
             if mn[0].isupper():
                 altSym = self.find_alternative_symbol(symbol)
                 if altSym is not None:
-                    # self._node.get_logger().info("Removing " + symbol.get_name() +
-                    # " for alt symbol " + altSym.get_name())
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
-                # else:
-                # self._node.get_logger().info("Unable to find an alternative for " +
-                # symbol.get_name())
-        self._node.get_logger().info("There are " + str(len(self._empty_symbols)) +
+        self._node.get_logger().debug("There are " + str(len(self._empty_symbols)) +
                                      " empty symbols left after pruning")
 
     def find_alternative_symbol(self, empty_symbol):
@@ -142,12 +137,12 @@ class JuicerDatabase():
             # handle special case where message name was misspelled (Mode vs Code)
             elif empty_symbol.get_name() == "CFE_EVS_SetEventFormatMode_Payload_t" and \
                     symbol.get_name() == "CFE_EVS_SetEventFormatCode_Payload":
-                self._node.get_logger().info("Handling SetEventFormatMode vs SetEventFormatCode ")
+                self._node.get_logger().debug("Handling SetEventFormatMode vs SetEventFormatCode ")
                 return symbol
         return None
 
     def mark_cmd_tlm_symbols(self):
-        self._node.get_logger().info("Marking symbols that are necessary for messages.")
+        self._node.get_logger().debug("Marking symbols that are necessary for messages.")
         self._empty_symbols = []
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]

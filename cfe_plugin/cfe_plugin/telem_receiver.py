@@ -18,18 +18,18 @@ class TelemReceiver():
         self._tlm_map = {}
         self._logger = self._node.get_logger()
         for tlm in telem_info:
-            self._node.get_logger().info("type: " + str(tlm))
-            self._node.get_logger().info("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-            self._node.get_logger().info("  topic_name: " + telem_info[tlm]['topic_name'])
+            self._node.get_logger().debug("type: " + str(tlm))
+            self._node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
+            self._node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
             self._tlm_map[telem_info[tlm]['cfe_mid']] = tlm
             self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
-        self._logger.info("telem map is " + str(self._tlm_map))
+        self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
         self._running = True
         self._recv_thread = threading.Thread(target=self.receive_thread)
 
-        self._logger.warn("starting thread to receive CFS telemetry")
+        self._logger.info("starting thread to receive CFS telemetry")
         self._recv_thread.start()
         self._current_value = {}
 
@@ -61,7 +61,7 @@ class TelemReceiver():
         packet_id = self.get_pkt_id(datagram)
         if packet_id in self._tlm_map:
             ros_name = self._tlm_map[packet_id]
-            self._logger.info("Received packet for " + ros_name)
+            self._logger.debug("Received packet for " + ros_name)
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
                               self._tlm_map[packet_id])
             msg = MsgType()
@@ -69,14 +69,12 @@ class TelemReceiver():
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             self._current_value[ros_name] = msg
         else:
-            self._logger.warn("Don't know how to handle message id " + packet_id)
+            self._logger.info("Don't know how to handle message id " + packet_id)
 
     def get_latest_data(self, key):
         retval = None
         if key in self._current_value:
             retval = self._current_value[key]
-        # else:
-        #     self._logger.info("Can't find data for " + key)
         return retval
 
     @staticmethod

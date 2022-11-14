@@ -16,7 +16,7 @@ class JuicerInterface():
     def __init__(self, node, database_path):
 
         self._node = node
-        self._node.get_logger().info("Loading message data from Juicer SQLite databases")
+        self._node.get_logger().debug("Loading message data from Juicer")
 
         self._node.declare_parameters(
           namespace="",
@@ -41,7 +41,7 @@ class JuicerInterface():
             else:
                 db = database_path + db
 
-            self._node.get_logger().info("Parsing juicer db: " + db)
+            self._node.get_logger().debug("Parsing juicer db: " + db)
 
             self._db_data = JuicerDatabase(node, db)
             self._db_data.load_data()
@@ -53,7 +53,7 @@ class JuicerInterface():
                 # for now just add it to the combined list
                 field = db_field_name_map[key]
                 if key in self._field_name_map.keys():
-                    self._node.get_logger().info("field name collision with " + key)
+                    self._node.get_logger().debug("field name collision with " + key)
                 else:
                     self._field_name_map[key] = field
 
@@ -64,7 +64,7 @@ class JuicerInterface():
                 #       for example CFE_MSG_CommandHeader
                 #       for now just keep the first one that we get
                 if key in self._symbol_name_map.keys():
-                    self._node.get_logger().info("symbol name collision with " + key)
+                    self._node.get_logger().debug("symbol name collision with " + key)
                 else:
                     self._symbol_name_map[key] = symbol
                     ros_name = symbol.get_ros_name()
@@ -77,14 +77,12 @@ class JuicerInterface():
                         c_topic = symbol.get_ros_topic()
                         c = CommandInfo(c_key, c_msg_type, c_topic, None)
                         self._command_info.append(c)
-                        # self._node.get_logger().info("adding command: " + c_key)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_ros_name()
                         t_msg_type = symbol.get_ros_name()
                         t_topic = symbol.get_ros_topic()
                         t = TelemInfo(t_key, t_msg_type, t_topic)
                         self._telem_info.append(t)
-                        # self._node.get_logger().info("adding telem: " + t_key)
             ccsds_prim_hdr = self._symbol_ros_name_map["CCSDSPrimaryHeader"]
             # need to fix fields for CCSDSPrimaryHeader
             if ccsds_prim_hdr is not None:
@@ -135,7 +133,7 @@ class JuicerInterface():
         for field in fields:
             fsym = field.get_type_symbol()
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
-            self._node.get_logger().info("handle field " + debug_name)
+            self._node.get_logger().debug("handle field " + debug_name)
             offs = offset + field.get_byte_offset()
             val = None
             # self._msg_list contains list of data types that need to be processed
@@ -144,7 +142,7 @@ class JuicerInterface():
                                   fsym.get_ros_name())
                 fmsg = MsgType()
                 val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
-                self._node.get_logger().info("Got value from recursive call for " + debug_name)
+                self._node.get_logger().debug("Got value from recursive call for " + debug_name)
             else:
                 if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                     # copy code from cfs_telem_receiver
@@ -153,56 +151,47 @@ class JuicerInterface():
                         tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
                         ca = ca + codecs.decode(tf[0], 'UTF-8')
                     val = ca
-                    self._node.get_logger().info("Got value as a string - " + debug_name)
+                    self._node.get_logger().debug("Got value as a string - " + debug_name)
                 else:
                     size = fsym.get_size()
                     fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
                     tlm_field = unpack(fmt, datagram[offs:(offs + size)])
                     val = tlm_field[0]
-                    self._node.get_logger().info("Unpacked value - " + debug_name +
+                    self._node.get_logger().debug("Unpacked value - " + debug_name +
                                                  " using format " + fmt)
             # do something with val here
             if val is not None:
                 setattr(msg, field.get_ros_name(), val)
-                self._node.get_logger().info("Set " + field.get_ros_name() +
+                self._node.get_logger().debug("Set " + field.get_ros_name() +
                                              " to value " + str(val))
             else:
-                self._node.get_logger().info("Value for " + debug_name +
+                self._node.get_logger().debug("Value for " + debug_name +
                                              " set through recursive call")
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().info("Handling command for " + command_info.get_msg_type())
-        self._node.get_logger().info("Message: " + str(message))
+        self._node.get_logger().debug("Handling command for " + command_info.get_msg_type())
+        self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
-        # for debugging - get the packet id
-        # packetid = unpack(">H", packet[:2])
-        # self._node.get_logger().info("packetid: " + str(packetid))
         return packet
 
     def encode_command(self, symbol, message, mid, code):
         packet = bytearray()
         fields = symbol.get_fields()
         fields.sort(key=field_sort_order)
-        # start debug
-        # mylist = " "
-        # for field in fields:
-        #     mylist += field.get_ros_name() + ":" + str(field.get_byte_offset()) + ", "
-        # self._node.get_logger().info("---Doing fields " + mylist)
-        # end debug
         for field in fields:
             fsym = field.get_type_symbol()
             fmsg = getattr(message, field.get_ros_name(), 0)
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
             if len(fsym.get_fields()) == 0:
-                self._node.get_logger().info("Storing concrete value for " + debug_name)
+                self._node.get_logger().debug("Storing concrete value for " + debug_name)
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
-                self._node.get_logger().info("handle field " + debug_name)
+                self._node.get_logger().debug("handle field " + debug_name)
                 fpacket = self.encode_command(fsym, fmsg, mid, code)
-                self._node.get_logger().info("Appending " + debug_name)
+                self._node.get_logger().debug("Appending " + debug_name)
                 packet.extend(fpacket)
 
         return packet
@@ -216,7 +205,7 @@ class JuicerInterface():
             # handle string
             string_b = fmsg.encode()
             packet[:fsym.get_size()] = string_b
-            self._node.get_logger().info("Storing " + fmsg + " into " + field.get_ros_name())
+            self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
         else:
             # handle numeric
             endian = 'big'
@@ -224,7 +213,7 @@ class JuicerInterface():
                 endian = 'little'
             packet = fmsg.to_bytes(packet_size, endian)
             # TODO: need to handle floating point types differently
-            self._node.get_logger().info("Storing " + str(fmsg) + " into " + field.get_ros_name() +
+            self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name() +
                                          " with endian " + endian)
 
         return packet

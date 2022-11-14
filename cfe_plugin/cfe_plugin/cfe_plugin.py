@@ -2,10 +2,10 @@ import socket
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 
 from juicer_util.juicer_interface import JuicerInterface
+from juicer_util.parse_cfe_config import ParseCFEConfig
 
 from cfe_plugin.telem_receiver import TelemReceiver
 from cfe_plugin.cmd_receiver import CmdReceiver
-from cfe_plugin.parse_cfe_config import ParseCFEConfig
 from cfe_plugin.command_handler import CommandHandler
 
 from rcl_interfaces.msg import SetParametersResult
@@ -78,22 +78,22 @@ class FSWPlugin(FSWPluginInterface):
 
     def command_callback(self, command_info, message):
         ros_name = command_info.get_msg_type()
-        self._node.get_logger().info('Handling cmd ' + ros_name)
+        self._node.get_logger().debug('Handling cmd ' + ros_name)
         cmd_ids = self._command_dict[ros_name]
-        self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
+        self._node.get_logger().debug('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
         send_success = self.send_cmd_packet(packet, self._command_host, self._command_port)
         if send_success:
-            self._node.get_logger().info('Sent packet to cFE.')
+            self._node.get_logger().debug('Sent packet to cFE.')
         else:
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
     def send_cmd_packet(self, packet, cmd_host, cmd_port):
         # send packet to cFE
-        self._node.get_logger().info('Got packet to send to cFE!')
+        self._node.get_logger().debug('Got packet to send to cFE!')
         cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         bytes_sent = cmd_sock.sendto(packet, (cmd_host, cmd_port))
-        self._node.get_logger().info('Sent ' + str(bytes_sent) + ' bytes out of ' + str(len(packet)))
+        self._node.get_logger().debug('Sent ' + str(bytes_sent) + ' bytes out of ' + str(len(packet)))
         cmd_sock.close()
         return bytes_sent > 0
 
