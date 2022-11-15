@@ -184,7 +184,8 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().debug("Handling command for " + command_info.get_key() + " of type " + command_info.get_msg_type())
+        self._node.get_logger().debug("Handling command for " + command_info.get_key() +
+                                      " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
