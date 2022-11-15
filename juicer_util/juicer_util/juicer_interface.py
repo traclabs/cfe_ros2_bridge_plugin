@@ -107,7 +107,7 @@ class JuicerInterface():
             struct_name = cd["structure"]
             c_key = key
             c_msg_type = struct_name
-            symbol = self._symbol_ros_name_map[struct_name]
+            # symbol = self._symbol_ros_name_map[struct_name]
             c_topic = cd["topic_name"]
             c = CommandInfo(c_key, c_msg_type, c_topic, None)
             command_info.append(c)
