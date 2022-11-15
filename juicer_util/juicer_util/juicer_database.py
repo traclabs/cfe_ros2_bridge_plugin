@@ -110,7 +110,7 @@ class JuicerDatabase():
                 # so just automatically do it for all of them
                 self._empty_symbols.append(symbol)
         self._node.get_logger().debug("There are " + str(len(self._empty_symbols))
-                                     + " empty symbols")
+                                      + " empty symbols")
         for symbol in self._empty_symbols:
             mn = symbol.get_ros_name()
             # if it starts with lower case then it is ROS2 native type so ignore it
@@ -119,8 +119,8 @@ class JuicerDatabase():
                 if altSym is not None:
                     self._empty_symbols.remove(symbol)
                     symbol.set_alternative(altSym)
-        self._node.get_logger().debug("There are " + str(len(self._empty_symbols)) +
-                                     " empty symbols left after pruning")
+        self._node.get_logger().debug("There are " + str(len(self._empty_symbols))
+                                      + " empty symbols left after pruning")
 
     def find_alternative_symbol(self, empty_symbol):
         for key in self._symbol_name_map.keys():
