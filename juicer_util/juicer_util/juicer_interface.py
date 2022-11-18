@@ -107,7 +107,7 @@ class JuicerInterface():
             struct_name = cd["structure"]
             c_key = key
             c_msg_type = struct_name
-            symbol = self._symbol_ros_name_map[struct_name]
+            # symbol = self._symbol_ros_name_map[struct_name]
             c_topic = cd["topic_name"]
             c = CommandInfo(c_key, c_msg_type, c_topic, None)
             command_info.append(c)
@@ -184,7 +184,8 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().debug("Handling command for " + command_info.get_key() + " of type " + command_info.get_msg_type())
+        self._node.get_logger().debug("Handling command for " + command_info.get_key() +
+                                      " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
