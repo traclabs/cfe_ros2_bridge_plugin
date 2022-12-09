@@ -11,466 +11,559 @@
           cfe_mid: '0x1806'
           cmd_code: 5
           topic_name: /cfe_es_stop_app_cmd
+          port: 1234
         CFEESRestartAppCmd:
           structure: CFEESAppNameCmd
           cfe_mid: '0x1806'
           cmd_code: 6
           topic_name: /cfe_es_restart_app_cmd
+          port: 1234
         CFEESQueryOneCmd:
           structure: CFEESAppNameCmd
           cfe_mid: '0x1806'
           cmd_code: 8
           topic_name: /cfe_es_query_one_cmd
+          port: 1234
         CFEESDeleteCDSCmd:
           structure: CFEESDeleteCDSCmd
           cfe_mid: '0x1806'
           cmd_code: 21
           topic_name: /cfe_es_delete_cds_cmd
+          port: 1234
         CFEESDumpCDSRegistryCmd:
           structure: CFEESDumpCDSRegistryCmd
           cfe_mid: '0x1806'
           cmd_code: 23 
           topic_name: /cfe_es_dump_cds_registry_cmd
+          port: 1234
         CFEESQueryAllCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 9  
           topic_name: /cfe_es_query_all_cmd
+          port: 1234
         CFEESQueryAllTasksCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 24
           topic_name: /cfe_es_query_all_tasks_cmd
+          port: 1234
         CFEESWriteSysLogCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 11
           topic_name: /cfe_es_write_sys_log_cmd
+          port: 1234
         CFEESWriteERLogCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 13
           topic_name: /cfe_es_write_er_log_cmd
+          port: 1234
         CFEESNoopCmd:
           structure: CFEESNoArgsCmd
           cfe_mid: '0x1806'
           cmd_code: 0
           topic_name: /cfe_es_noop_cmd
+          port: 1234
         CFEESResetCountersCmd:
           structure: CFEESNoArgsCmd
           cfe_mid: '0x1806'
           cmd_code: 1
           topic_name: /cfe_es_reset_counters_cmd
+          port: 1234
         CFEESClearSysLogCmd:
           structure: CFEESNoArgsCmd
           cfe_mid: '0x1806'
           cmd_code: 10
           topic_name: /cfe_es_clear_sys_log_cmd
+          port: 1234
         CFEESClearERLogCmd:
           structure: CFEESNoArgsCmd
           cfe_mid: '0x1806'
           cmd_code: 12
           topic_name: /cfe_es_clear_er_log_cmd
+          port: 1234
         CFEESResetPRCountCmd:
           structure: CFEESNoArgsCmd
           cfe_mid: '0x1806'
           cmd_code: 19
           topic_name: /cfe_es_reset_pr_count_cmd
+          port: 1234
         CFEESOverWriteSysLogCmd:
           structure: CFEESOverWriteSysLogCmd
           cfe_mid: '0x1806'
           cmd_code: 18 
           topic_name: /cfe_es_over_write_sys_log_cmd
+          port: 1234
         CFEESReloadAppCmd:
           structure: CFEESReloadAppCmd
           cfe_mid: '0x1806'
           cmd_code: 7  
           topic_name: /cfe_es_reload_app_cmd
+          port: 1234
         CFEESRestartCmd:
           structure: CFEESRestartCmd
           cfe_mid: '0x1806'
           cmd_code: 2  
           topic_name: /cfe_es_restart_cmd
+          port: 1234
         CFEESSendMemPoolStatsCmd:
           structure: CFEESSendMemPoolStatsCmd
           cfe_mid: '0x1806'
           cmd_code: 22
           topic_name: /cfe_es_send_mem_pool_stats_cmd
+          port: 1234
         CFEESSetMaxPRCountCmd:
           structure: CFEESSetMaxPRCountCmd
           cfe_mid: '0x1806'
           cmd_code: 20
           topic_name: /cfe_es_set_max_pr_count_cmd
+          port: 1234
         CFEESSetPerfFilterMaskCmd:
           structure: CFEESSetPerfFilterMaskCmd
           cfe_mid: '0x1806'
           cmd_code: 16
           topic_name: /cfe_es_set_perf_filter_mask_cmd
+          port: 1234
         CFEESSetPerfTriggerMaskCmd:
           structure: CFEESSetPerfTriggerMaskCmd
           cfe_mid: '0x1806'
           cmd_code: 17
           topic_name: /cfe_es_set_perf_trigger_mask_cmd
+          port: 1234
         CFEESStartApp:
           structure: CFEESStartApp
           cfe_mid: '0x1806'
           cmd_code: 4  
           topic_name: /cfe_es_start_app
+          port: 1234
         CFEESStartPerfDataCmd:
           structure: CFEESStartPerfDataCmd
           cfe_mid: '0x1806'
           cmd_code: 14
           topic_name: /cfe_es_start_perf_data_cmd
+          port: 1234
         CFEESStopPerfDataCmd:
           structure: CFEESStopPerfDataCmd
           cfe_mid: '0x1806'
           cmd_code: 15
           topic_name: /cfe_es_stop_perf_data_cmd
+          port: 1234
         CFEEVSEnableAppEventTypeCmd:
           structure: CFEEVSAppNameBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 2
           topic_name: /cfe_evs_enable_app_event_type_cmd
+          port: 1234
         CFEEVSDisableAppEventTypeCmd:
           structure: CFEEVSAppNameBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 3
           topic_name: /cfe_evs_disable_app_event_type_cmd
+          port: 1234
         CFEEVSEnableAppEventsCmd:
           structure: CFEEVSAppNameCmd
           cfe_mid: '0x1801'
           cmd_code: 7
           topic_name: /cfe_evs_enable_app_events_cmd
+          port: 1234
         CFEEVSDisableAppEventsCmd:
           structure: CFEEVSAppNameCmd
           cfe_mid: '0x1801'
           cmd_code: 8
           topic_name: /cfe_evs_disable_app_events_cmd
+          port: 1234
         CFEEVSResetAppCounterCmd:
           structure: CFEEVSAppNameCmd
           cfe_mid: '0x1801'
           cmd_code: 9
           topic_name: /cfe_evs_reset_app_counter_cmd
+          port: 1234
         CFEEVSResetAllFiltersCmd:
           structure: CFEEVSAppNameCmd
           cfe_mid: '0x1801'
           cmd_code: 14
           topic_name: /cfe_evs_reset_all_filters_cmd
+          port: 1234
         CFEEVSResetFilterCmd:
           structure: CFEEVSAppNameEventIDCmd
           cfe_mid: '0x1801'
           cmd_code: 13
           topic_name: /cfe_evs_reset_filter_cmd
+          port: 1234
         CFEEVSDeleteEventFilterCmd:
           structure: CFEEVSAppNameEventIDCmd
           cfe_mid: '0x1801'
           cmd_code: 16
           topic_name: /cfe_evs_delete_event_filter_cmd
+          port: 1234
         CFEEVSAddEventFilterCmd:
           structure: CFEEVSAppNameEventIDMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 15
           topic_name: /cfe_evs_add_event_filter_cmd
+          port: 1234
         CFEEVSSetFilterCmd:
           structure: CFEEVSAppNameEventIDMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 10
           topic_name: /cfe_evs_set_filter_cmd
+          port: 1234
         CFEEVSEnablePortsCmd:
           structure: CFEEVSBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 11
           topic_name: /cfe_evs_enable_ports_cmd
+          port: 1234
         CFEEVSDisablePortsCmd:
           structure: CFEEVSBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 12
           topic_name: /cfe_evs_disable_ports_cmd
+          port: 1234
         CFEEVSEnableEventTypeCmd:
           structure: CFEEVSBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 2
           topic_name: /cfe_evs_enable_event_type_cmd
+          port: 1234
         CFEEVSDisableEventTypeCmd:
           structure: CFEEVSBitMaskCmd
           cfe_mid: '0x1801'
           cmd_code: 3
           topic_name: /cfe_evs_disable_event_type_cmd
+          port: 1234
         CFEEVSNoopCmd:
           structure: CFEEVSNoArgsCmd
           cfe_mid: '0x1801'
           cmd_code: 0  
           topic_name: /cfe_evs_noop_cmd
+          port: 1234
         CFEEVSResetCountersCmd:
           structure: CFEEVSNoArgsCmd
           cfe_mid: '0x1801'
           cmd_code: 1
           topic_name: /cfe_evs_reset_counters_cmd
+          port: 1234
         CFEEVSClearLogCmd:
           structure: CFEEVSNoArgsCmd
           cfe_mid: '0x1801'
           cmd_code: 20
           topic_name: /cfe_evs_clear_log_cmd
+          port: 1234
         CFEEVSSetEventFormatModeCmd:
           structure: CFEEVSSetEventFormatModeCmd
           cfe_mid: '0x1801'
           cmd_code: 4
           topic_name: /cfe_evs_set_event_format_mode_cmd
+          port: 1234
         CFEEVSSetLogModeCmd:
           structure: CFEEVSSetLogModeCmd
           cfe_mid: '0x1801'
           cmd_code: 19
           topic_name: /cfe_evs_set_log_mode_cmd
+          port: 1234
         CFEEVSWriteAppDataFileCmd:
           structure: CFEEVSWriteAppDataFileCmd
           cfe_mid: '0x1801'
           cmd_code: 17
           topic_name: /cfe_evs_write_app_data_file_cmd
+          port: 1234
         CFEEVSWriteLogDataFileCmd:
           structure: CFEEVSWriteLogDataFileCmd
           cfe_mid: '0x1801'
           cmd_code: 18
           topic_name: /cfe_evs_write_log_data_file_cmd
+          port: 1234
         CFESBEnableRouteCmd:
           structure: CFESBRouteCmd
           cfe_mid: '0x1803'
           cmd_code: 4
           topic_name: /cfe_sb_enable_route_cmd
+          port: 1234
         CFESBDisableRouteCmd:
           structure: CFESBRouteCmd
           cfe_mid: '0x1803'
           cmd_code: 5
           topic_name: /cfe_sb_disable_route_cmd
+          port: 1234
         CFESBNoopCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 0
           topic_name: /cfe_sb_noop_cmd
+          port: 1234
         CFESBResetCountersCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 1
           topic_name: /cfe_sb_reset_counters_cmd
+          port: 1234
         CFESBEnableSubReportingCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 9
           topic_name: /cfe_sb_enable_sub_reporting_cmd
+          port: 1234
         CFESBDisableSubReportingCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 10
           topic_name: /cfe_sb_disable_sub_reporting_cmd
+          port: 1234
         CFESBSendSbStatsCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 2
           topic_name: /cfe_sb_send_sb_stats_cmd
+          port: 1234
         CFESBSendPrevSubsCmd:
           structure: CFEMSGCommandHeader
           cfe_mid: '0x1803'
           cmd_code: 11
           topic_name: /cfe_sb_send_prev_subs_cmd
+          port: 1234
         CFESBWriteRoutingInfoCmd:
           structure: CFESBWriteFileInfoCmd
           cfe_mid: '0x1803'
           cmd_code: 3
           topic_name: /cfe_sb_write_routing_info_cmd
+          port: 1234
         CFESBWritePipeInfoCmd:
           structure: CFESBWriteFileInfoCmd
           cfe_mid: '0x1803'
           cmd_code: 7
           topic_name: /cfe_sb_write_pipe_info_cmd
+          port: 1234
         CFESBWriteMapInfoCmd:
           structure: CFESBWriteFileInfoCmd
           cfe_mid: '0x1803'
           cmd_code: 8
           topic_name: /cfe_sb_write_map_info_cmd
+          port: 1234
         CFETBLAbortLoadCmd:
           structure: CFETBLAbortLoadCmd
           cfe_mid: '0x1804'
           cmd_code: 9
           topic_name: /cfe_tbl_abort_load_cmd
+          port: 1234
         CFETBLActivateCmd:
           structure: CFETBLActivateCmd
           cfe_mid: '0x1804'
           cmd_code: 5
           topic_name: /cfe_tbl_activate_cmd
+          port: 1234
         CFETBLDeleteCDSCmd:
           structure: CFETBLDeleteCDSCmd
           cfe_mid: '0x1804'
           cmd_code: 8
           topic_name: /cfe_tbl_delete_cds_cmd
+          port: 1234
         CFETBLDumpCmd:
           structure: CFETBLDumpCmd
           cfe_mid: '0x1804'
           cmd_code: 3
           topic_name: /cfe_tbl_dump_cmd
+          port: 1234
         CFETBLDumpRegistryCmd:
           structure: CFETBLDumpRegistryCmd
           cfe_mid: '0x1804'
           cmd_code: 6
           topic_name: /cfe_tbl_dump_registry_cmd
+          port: 1234
         CFETBLLoadCmd:
           structure: CFETBLLoadCmd
           cfe_mid: '0x1804'
           cmd_code: 2
           topic_name: /cfe_tbl_load_cmd
+          port: 1234
         CFETBLNoopCmd:
           structure: CFETBLNoArgsCmd
           cfe_mid: '0x1804'
           cmd_code: 0
           topic_name: /cfe_tbl_noop_cmd
+          port: 1234
         CFETBLResetCountersCmd:
           structure: CFETBLNoArgsCmd
           cfe_mid: '0x1804'
           cmd_code: 1
           topic_name: /cfe_tbl_reset_counters_cmd
+          port: 1234
         CFETBLSendRegistryCmd:
           structure: CFETBLSendRegistryCmd
           cfe_mid: '0x1804'
           cmd_code: 7
           topic_name: /cfe_tbl_send_registry_cmd
+          port: 1234
         CFETBLValidateCmd:
           structure: CFETBLValidateCmd
           cfe_mid: '0x1804'
           cmd_code: 4
           topic_name: /cfe_tbl_validate_cmd
+          port: 1234
         CFETIMENoopCmd:
           structure: CFETIMENoArgsCmd
           cfe_mid: '0x1805'
           cmd_code: 0
           topic_name: /cfe_time_noop_cmd
+          port: 1234
         CFETIMEResetCountersCmd:
           structure: CFETIMENoArgsCmd
           cfe_mid: '0x1805'
           cmd_code: 1
           topic_name: /cfe_time_reset_counters_cmd
+          port: 1234
         CFETIMESendDiagnosticCmd:
           structure: CFETIMENoArgsCmd
           cfe_mid: '0x1805'
           cmd_code: 2
           topic_name: /cfe_time_send_diagnostic_cmd
+          port: 1234
         CFETIMEAdd1HZAdjustmentCmd:
           structure: CFETIMEOneHzAdjustmentCmd
           cfe_mid: '0x1805'
           cmd_code: 13
           topic_name: /cfe_time_add_1hz_adjustment_cmd
+          port: 1234
         CFETIMESub1HZAdjustmentCmd:
           structure: CFETIMEOneHzAdjustmentCmd
           cfe_mid: '0x1805'
           cmd_code: 14
           topic_name: /cfe_time_sub_1hz_adjustment_cmd
+          port: 1234
         CFETIMESetLeapSecondsCmd:
           structure: CFETIMESetLeapSecondsCmd
           cfe_mid: '0x1805'
           cmd_code: 10
           topic_name: /cfe_time_set_leap_seconds_cmd
+          port: 1234
         CFETIMESetSignalCmd:
           structure: CFETIMESetSignalCmd
           cfe_mid: '0x1805'
           cmd_code: 15
           topic_name: /cfe_time_set_signal_cmd
+          port: 1234
         CFETIMESetSourceCmd:
           structure: CFETIMESetSourceCmd
           cfe_mid: '0x1805'
           cmd_code: 3
           topic_name: /cfe_time_set_source_cmd
+          port: 1234
         CFETIMESetStateCmd:
           structure: CFETIMESetStateCmd
           cfe_mid: '0x1805'
           cmd_code: 4
           topic_name: /cfe_time_set_state_cmd
+          port: 1234
         CFETIMEAddDelayCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 5
           topic_name: /cfe_time_add_delay_cmd
+          port: 1234
         CFETIMESubDelayCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 6
           topic_name: /cfe_time_sub_delay_cmd
+          port: 1234
         CFETIMESetMETCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 8
           topic_name: /cfe_time_set_met_cmd
+          port: 1234
         CFETIMESetSTCFCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 9
           topic_name: /cfe_time_set_stcf_cmd
+          port: 1234
         CFETIMEAddAdjustCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 11
           topic_name: /cfe_time_add_adjust_cmd
+          port: 1234
         CFETIMESubAdjustCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 12
           topic_name: /cfe_time_sub_adjust_cmd
+          port: 1234
         CFETIMESetTimeCmd:
           structure: CFETIMETimeCmd
           cfe_mid: '0x1805'
           cmd_code: 7
           topic_name: /cfe_time_set_time_cmd
+          port: 1234
         CILABNoArgsCmd:
           structure: CILABNoArgsCmdt
           cfe_mid: '0x1884'
           cmd_code: 0
           topic_name: /ci_lab_no_args_cmd
+          port: 1234
         ROSAPPNoArgsCmd:
           structure: ROSAPPNoArgsCmdt
           cfe_mid: '0x1896'
           cmd_code: 0
           topic_name: /ros_app_no_args_cmd
+          port: 1234
         SAMPLEAPPNoArgsCmd:
           structure: SAMPLEAPPNoArgsCmdt
           cfe_mid: '0x1882'
           cmd_code: 0
           topic_name: /sample_app_no_args_cmd
+          port: 1234
         SCHLABStateEntry:
           structure: SCHLABStateEntryt
           cfe_mid: '0x1200'
           cmd_code: 0  
           topic_name: /sch_lab_state_entry
+          port: 1234
         TOLABAddPacketCmd:
           structure: TOLABAddPacketCmdt
           cfe_mid: '0x1880'
           cmd_code: 2
           topic_name: /to_lab_add_packet_cmd
+          port: 1234
         TOLABEnableOutputCmd:
           structure: TOLABEnableOutputCmdt
           cfe_mid: '0x1880'
           cmd_code: 6
           topic_name: /to_lab_enable_output_cmd
+          port: 1234
         TOLABNoopCmd:
           structure: TOLABNoArgsCmdt
           cfe_mid: '0x1880'
           cmd_code: 0
           topic_name: /to_lab_noop_cmd
+          port: 1234
         TOLABResetCountersCmd:
           structure: TOLABNoArgsCmdt
           cfe_mid: '0x1880'
           cmd_code: 1
           topic_name: /to_lab_reset_counters_cmd
+          port: 1234
         TOLABRemoveAllCmd:
           structure: TOLABNoArgsCmdt
           cfe_mid: '0x1880'
           cmd_code: 5
           topic_name: /to_lab_remove_all_cmd
+          port: 1234
         TOLABSendDataTypesCmd:
           structure: TOLABNoArgsCmdt
           cfe_mid: '0x1880'
           cmd_code: 3
           topic_name: /to_lab_send_data_types_cmd
+          port: 1234
         TOLABRemovePacketCmd:
           structure: TOLABRemovePacketCmdt
           cfe_mid: '0x1880'
           cmd_code: 4
           topic_name: /to_lab_remove_packet_cmd
+          port: 1234
               
       telemetry_data:
         CFEESOneAppTlm:

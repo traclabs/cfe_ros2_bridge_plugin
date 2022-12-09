@@ -75,7 +75,7 @@ class JuicerInterface():
                         c_key = symbol.get_name()
                         c_msg_type = symbol.get_ros_name()
                         c_topic = symbol.get_ros_topic()
-                        c = CommandInfo(c_key, c_msg_type, c_topic, None)
+                        c = CommandInfo(c_key, c_msg_type, c_topic, None, 0)
                         self._command_info.append(c)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_ros_name()
@@ -109,7 +109,8 @@ class JuicerInterface():
             c_msg_type = struct_name
             # symbol = self._symbol_ros_name_map[struct_name]
             c_topic = cd["topic_name"]
-            c = CommandInfo(c_key, c_msg_type, c_topic, None)
+            c_port = cd["port"]
+            c = CommandInfo(c_key, c_msg_type, c_topic, None, c_port)
             command_info.append(c)
         return command_info
 

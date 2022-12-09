@@ -28,10 +28,10 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
 
-        self._node.declare_parameter('plugin_params.commandPort', 1234)
-        self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
-            get_parameter_value().integer_value
-        self._node.get_logger().info('commandPort: ' + str(self._command_port))
+        # self._node.declare_parameter('plugin_params.commandPort', 1234)
+        # self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
+        #     get_parameter_value().integer_value
+        # self._node.get_logger().info('commandPort: ' + str(self._command_port))
 
         self._node.declare_parameter('plugin_params.commandHost', '127.0.0.1')
         self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
@@ -43,7 +43,7 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_info = self._juicer_interface.get_telemetry_message_info()
         self._command_info = self._juicer_interface.get_command_message_info()
 
-        command_params = ["structure", "cfe_mid", "cmd_code", "topic_name"]
+        command_params = ["structure", "cfe_mid", "cmd_code", "topic_name", "port"]
         telemetry_params = ["cfe_mid", "topic_name"]
         self._cfe_config = ParseCFEConfig(self._node, command_params, telemetry_params)
         self._cfe_config.print_commands()
@@ -83,7 +83,7 @@ class FSWPlugin(FSWPluginInterface):
         cmd_ids = self._command_dict[key_name]
         self._node.get_logger().debug('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
-        send_success = self.send_cmd_packet(packet, self._command_host, self._command_port)
+        send_success = self.send_cmd_packet(packet, self._command_host, cmd_ids['port'])
         if send_success:
             self._node.get_logger().debug('Sent packet to cFE.')
         else:
