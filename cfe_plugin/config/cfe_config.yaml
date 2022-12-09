@@ -6,275 +6,475 @@ cfe_bridge:
       commandPort: 1234
       commandHost: "127.0.0.7"
       telemetryPort: 1235
-      commands: ["CFEESAppNameCmd", "CFEESDeleteCDSCmd", "CFEESDumpCDSRegistryCmd", "CFEESQueryAllCmd", "CFEESNoArgsCmd", "CFEESOverWriteSysLogCmd", "CFEESReloadAppCmd", "CFEESRestartCmd", "CFEESSendMemPoolStatsCmd", "CFEESSetMaxPRCountCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESStartApp", "CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEEVSAppNameBitMaskCmd", "CFEEVSAppNameCmd", "CFEEVSAppNameEventIDCmd", "CFEEVSAppNameEventIDMaskCmd", "CFEEVSBitMaskCmd", "CFEEVSNoArgsCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSSetLogModeCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSWriteLogDataFileCmd", "CFESBRouteCmd", "CFESBWriteFileInfoCmd", "CFETBLAbortLoadCmd", "CFETBLActivateCmd", "CFETBLDeleteCDSCmd", "CFETBLDumpCmd", "CFETBLDumpRegistryCmd", "CFETBLLoadCmd", "CFETBLNoArgsCmd", "CFETBLNotifyCmd", "CFETBLSendRegistryCmd", "CFETBLValidateCmd", "CFETIMENoArgsCmd", "CFETIMEOneHzAdjustmentCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetSignalCmd", "CFETIMESetSourceCmd", "CFETIMESetStateCmd", "CFETIMETimeCmd", "CFETIMEToneDataCmd", "CILABNoArgsCmdt", "ROSAPPNoArgsCmdt", "SAMPLEAPPNoArgsCmdt", "SCHLABStateEntryt", "TOLABAddPacketCmdt", "TOLABEnableOutputCmd", "TOLABNoArgsCmdt", "TOLABRemovePacketCmdt"]
+      commands: ["CFEESStopAppCmd", "CFEESRestartAppCmd", "CFEESQueryOneCmd", "CFEESDeleteCDSCmd", "CFEESDumpCDSRegistryCmd", "CFEESQueryAllCmd", "CFEESQueryAllTasksCmd", "CFEESWriteSysLogCmd", "CFEESWriteERLogCmd", "CFEESNoopCmd", "CFEESResetCountersCmd", "CFEESClearSysLogCmd", "CFEESClearERLogCmd", "CFEESResetPRCountCmd", "CFEESOverWriteSysLogCmd", "CFEESReloadAppCmd", "CFEESRestartCmd", "CFEESSendMemPoolStatsCmd", "CFEESSetMaxPRCountCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESStartApp", "CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEEVSEnableAppEventTypeCmd", "CFEEVSDisableAppEventTypeCmd", "CFEEVSEnableAppEventsCmd", "CFEEVSDisableAppEventsCmd", "CFEEVSResetAppCounterCmd", "CFEEVSResetAllFiltersCmd", "CFEEVSResetFilterCmd", "CFEEVSDeleteEventFilterCmd", "CFEEVSAddEventFilterCmd", "CFEEVSSetFilterCmd", "CFEEVSEnablePortsCmd", "CFEEVSDisablePortsCmd", "CFEEVSEnableEventTypeCmd", "CFEEVSDisableEventTypeCmd", "CFEEVSNoopCmd", "CFEEVSResetCountersCmd", "CFEEVSClearLogCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSSetLogModeCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSWriteLogDataFileCmd", "CFESBEnableRouteCmd", "CFESBDisableRouteCmd", "CFESBNoopCmd", "CFESBResetCountersCmd", "CFESBEnableSubReportingCmd", "CFESBDisableSubReportingCmd", "CFESBSendSbStatsCmd", "CFESBSendPrevSubsCmd", "CFESBWriteRoutingInfoCmd", "CFESBWritePipeInfoCmd", "CFESBWriteMapInfoCmd", "CFETBLAbortLoadCmd", "CFETBLActivateCmd", "CFETBLDeleteCDSCmd", "CFETBLDumpCmd", "CFETBLDumpRegistryCmd", "CFETBLLoadCmd", "CFETBLNoopCmd", "CFETBLResetCountersCmd", "CFETBLSendRegistryCmd", "CFETBLValidateCmd", "CFETIMENoopCmd", "CFETIMEResetCountersCmd", "CFETIMESendDiagnosticCmd", "CFETIMEAdd1HZAdjustmentCmd", "CFETIMESub1HZAdjustmentCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetSignalCmd", "CFETIMESetSourceCmd", "CFETIMESetStateCmd", "CFETIMEAddDelayCmd", "CFETIMESubDelayCmd", "CFETIMESetMETCmd", "CFETIMESetSTCFCmd", "CFETIMEAddAdjustCmd", "CFETIMESubAdjustCmd", "CFETIMESetTimeCmd", "CILABNoArgsCmd", "ROSAPPNoArgsCmd", "SAMPLEAPPNoArgsCmd", "SCHLABStateEntry", "TOLABAddPacketCmd", "TOLABEnableOutputCmd", "TOLABNoopCmd", "TOLABResetCountersCmd", "TOLABRemoveAllCmd", "TOLABSendDataTypesCmd", "TOLABRemovePacketCmd"]
       
       telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm"]
       command_data:
-        CFEESAppNameCmd:
+        CFEESStopAppCmd:
           structure: CFEESAppNameCmd
-          cfe_mid: '0x1200'
-          cmd_code: 3  
-          topic_name: /cfe_es_app_name_cmd
+          cfe_mid: '0x1806'
+          cmd_code: 5
+          topic_name: /cfe_es_stop_app_cmd
+        CFEESRestartAppCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 6
+          topic_name: /cfe_es_restart_app_cmd
+        CFEESQueryOneCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 8
+          topic_name: /cfe_es_query_one_cmd
         CFEESDeleteCDSCmd:
           structure: CFEESDeleteCDSCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 21
           topic_name: /cfe_es_delete_cds_cmd
         CFEESDumpCDSRegistryCmd:
           structure: CFEESDumpCDSRegistryCmd
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 23 
           topic_name: /cfe_es_dump_cds_registry_cmd
         CFEESQueryAllCmd:
           structure: CFEESFileNameCmd
           cfe_mid: '0x1806'
           cmd_code: 9  
           topic_name: /cfe_es_query_all_cmd
-        CFEESNoArgsCmd:
+        CFEESQueryAllTasksCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 24
+          topic_name: /cfe_es_query_all_tasks_cmd
+        CFEESWriteSysLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 11
+          topic_name: /cfe_es_write_sys_log_cmd
+        CFEESWriteERLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 13
+          topic_name: /cfe_es_write_er_log_cmd
+        CFEESNoopCmd:
           structure: CFEESNoArgsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
-          topic_name: /cfe_es_no_args_cmd
+          cfe_mid: '0x1806'
+          cmd_code: 0
+          topic_name: /cfe_es_noop_cmd
+        CFEESResetCountersCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 1
+          topic_name: /cfe_es_reset_counters_cmd
+        CFEESClearSysLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 10
+          topic_name: /cfe_es_clear_sys_log_cmd
+        CFEESClearERLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 12
+          topic_name: /cfe_es_clear_er_log_cmd
+        CFEESResetPRCountCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 19
+          topic_name: /cfe_es_reset_pr_count_cmd
         CFEESOverWriteSysLogCmd:
           structure: CFEESOverWriteSysLogCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 18 
           topic_name: /cfe_es_over_write_sys_log_cmd
         CFEESReloadAppCmd:
           structure: CFEESReloadAppCmd
-          cfe_mid: '0x1200'
-          cmd_code: 4  
+          cfe_mid: '0x1806'
+          cmd_code: 7  
           topic_name: /cfe_es_reload_app_cmd
         CFEESRestartCmd:
           structure: CFEESRestartCmd
-          cfe_mid: '0x1200'
+          cfe_mid: '0x1806'
           cmd_code: 2  
           topic_name: /cfe_es_restart_cmd
         CFEESSendMemPoolStatsCmd:
           structure: CFEESSendMemPoolStatsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 22
           topic_name: /cfe_es_send_mem_pool_stats_cmd
         CFEESSetMaxPRCountCmd:
           structure: CFEESSetMaxPRCountCmd
-          cfe_mid: '0x1200'
-          cmd_code: 5  
+          cfe_mid: '0x1806'
+          cmd_code: 20
           topic_name: /cfe_es_set_max_pr_count_cmd
         CFEESSetPerfFilterMaskCmd:
           structure: CFEESSetPerfFilterMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 16
           topic_name: /cfe_es_set_perf_filter_mask_cmd
         CFEESSetPerfTriggerMaskCmd:
           structure: CFEESSetPerfTriggerMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 17
           topic_name: /cfe_es_set_perf_trigger_mask_cmd
         CFEESStartApp:
           structure: CFEESStartApp
-          cfe_mid: '0x1200'
-          cmd_code: 2  
+          cfe_mid: '0x1806'
+          cmd_code: 4  
           topic_name: /cfe_es_start_app
         CFEESStartPerfDataCmd:
           structure: CFEESStartPerfDataCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1806'
+          cmd_code: 14
           topic_name: /cfe_es_start_perf_data_cmd
         CFEESStopPerfDataCmd:
           structure: CFEESStopPerfDataCmd
-          cfe_mid: '0x1200'
-          cmd_code: 1  
+          cfe_mid: '0x1806'
+          cmd_code: 15
           topic_name: /cfe_es_stop_perf_data_cmd
-        CFEEVSAppNameBitMaskCmd:
+        CFEEVSEnableAppEventTypeCmd:
           structure: CFEEVSAppNameBitMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_evs_app_name_bit_mask_cmd
-        CFEEVSAppNameCmd:
+          cfe_mid: '0x1801'
+          cmd_code: 2
+          topic_name: /cfe_evs_enable_app_event_type_cmd
+        CFEEVSDisableAppEventTypeCmd:
+          structure: CFEEVSAppNameBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 3
+          topic_name: /cfe_evs_disable_app_event_type_cmd
+        CFEEVSEnableAppEventsCmd:
           structure: CFEEVSAppNameCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_evs_app_name_cmd
-        CFEEVSAppNameEventIDCmd:
+          cfe_mid: '0x1801'
+          cmd_code: 7
+          topic_name: /cfe_evs_enable_app_events_cmd
+        CFEEVSDisableAppEventsCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 8
+          topic_name: /cfe_evs_disable_app_events_cmd
+        CFEEVSResetAppCounterCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 9
+          topic_name: /cfe_evs_reset_app_counter_cmd
+        CFEEVSResetAllFiltersCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 14
+          topic_name: /cfe_evs_reset_all_filters_cmd
+        CFEEVSResetFilterCmd:
           structure: CFEEVSAppNameEventIDCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_evs_app_name_event_id_cmd
-        CFEEVSAppNameEventIDMaskCmd:
+          cfe_mid: '0x1801'
+          cmd_code: 13
+          topic_name: /cfe_evs_reset_filter_cmd
+        CFEEVSDeleteEventFilterCmd:
+          structure: CFEEVSAppNameEventIDCmd
+          cfe_mid: '0x1801'
+          cmd_code: 16
+          topic_name: /cfe_evs_delete_event_filter_cmd
+        CFEEVSAddEventFilterCmd:
           structure: CFEEVSAppNameEventIDMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_evs_app_name_event_id_mask_cmd
-        CFEEVSBitMaskCmd:
+          cfe_mid: '0x1801'
+          cmd_code: 15
+          topic_name: /cfe_evs_add_event_filter_cmd
+        CFEEVSSetFilterCmd:
+          structure: CFEEVSAppNameEventIDMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 10
+          topic_name: /cfe_evs_set_filter_cmd
+        CFEEVSEnablePortsCmd:
           structure: CFEEVSBitMaskCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_evs_bit_mask_cmd
-        CFEEVSNoArgsCmd:
+          cfe_mid: '0x1801'
+          cmd_code: 11
+          topic_name: /cfe_evs_enable_ports_cmd
+        CFEEVSDisablePortsCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 12
+          topic_name: /cfe_evs_disable_ports_cmd
+        CFEEVSEnableEventTypeCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 2
+          topic_name: /cfe_evs_enable_event_type_cmd
+        CFEEVSDisableEventTypeCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 3
+          topic_name: /cfe_evs_disable_event_type_cmd
+        CFEEVSNoopCmd:
           structure: CFEEVSNoArgsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 5  
-          topic_name: /cfe_evs_no_args_cmd
+          cfe_mid: '0x1801'
+          cmd_code: 0  
+          topic_name: /cfe_evs_noop_cmd
+        CFEEVSResetCountersCmd:
+          structure: CFEEVSNoArgsCmd
+          cfe_mid: '0x1801'
+          cmd_code: 1
+          topic_name: /cfe_evs_reset_counters_cmd
+        CFEEVSClearLogCmd:
+          structure: CFEEVSNoArgsCmd
+          cfe_mid: '0x1801'
+          cmd_code: 20
+          topic_name: /cfe_evs_clear_log_cmd
         CFEEVSSetEventFormatModeCmd:
           structure: CFEEVSSetEventFormatModeCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1801'
+          cmd_code: 4
           topic_name: /cfe_evs_set_event_format_mode_cmd
         CFEEVSSetLogModeCmd:
           structure: CFEEVSSetLogModeCmd
-          cfe_mid: '0x1200'
-          cmd_code: 4  
+          cfe_mid: '0x1801'
+          cmd_code: 19
           topic_name: /cfe_evs_set_log_mode_cmd
         CFEEVSWriteAppDataFileCmd:
           structure: CFEEVSWriteAppDataFileCmd
-          cfe_mid: '0x1200'
-          cmd_code: 6  
+          cfe_mid: '0x1801'
+          cmd_code: 17
           topic_name: /cfe_evs_write_app_data_file_cmd
         CFEEVSWriteLogDataFileCmd:
           structure: CFEEVSWriteLogDataFileCmd
-          cfe_mid: '0x1200'
-          cmd_code: 3  
+          cfe_mid: '0x1801'
+          cmd_code: 18
           topic_name: /cfe_evs_write_log_data_file_cmd
-        CFESBRouteCmd:
+        CFESBEnableRouteCmd:
           structure: CFESBRouteCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_sb_route_cmd
-        CFESBWriteFileInfoCmd:
+          cfe_mid: '0x1803'
+          cmd_code: 4
+          topic_name: /cfe_sb_enable_route_cmd
+        CFESBDisableRouteCmd:
+          structure: CFESBRouteCmd
+          cfe_mid: '0x1803'
+          cmd_code: 5
+          topic_name: /cfe_sb_disable_route_cmd
+        CFESBNoopCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 0
+          topic_name: /cfe_sb_noop_cmd
+        CFESBResetCountersCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 1
+          topic_name: /cfe_sb_reset_counters_cmd
+        CFESBEnableSubReportingCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 9
+          topic_name: /cfe_sb_enable_sub_reporting_cmd
+        CFESBDisableSubReportingCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 10
+          topic_name: /cfe_sb_disable_sub_reporting_cmd
+        CFESBSendSbStatsCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 2
+          topic_name: /cfe_sb_send_sb_stats_cmd
+        CFESBSendPrevSubsCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 11
+          topic_name: /cfe_sb_send_prev_subs_cmd
+        CFESBWriteRoutingInfoCmd:
           structure: CFESBWriteFileInfoCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_sb_write_file_info_cmd
+          cfe_mid: '0x1803'
+          cmd_code: 3
+          topic_name: /cfe_sb_write_routing_info_cmd
+        CFESBWritePipeInfoCmd:
+          structure: CFESBWriteFileInfoCmd
+          cfe_mid: '0x1803'
+          cmd_code: 7
+          topic_name: /cfe_sb_write_pipe_info_cmd
+        CFESBWriteMapInfoCmd:
+          structure: CFESBWriteFileInfoCmd
+          cfe_mid: '0x1803'
+          cmd_code: 8
+          topic_name: /cfe_sb_write_map_info_cmd
         CFETBLAbortLoadCmd:
           structure: CFETBLAbortLoadCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 9
           topic_name: /cfe_tbl_abort_load_cmd
         CFETBLActivateCmd:
           structure: CFETBLActivateCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 5
           topic_name: /cfe_tbl_activate_cmd
         CFETBLDeleteCDSCmd:
           structure: CFETBLDeleteCDSCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 8
           topic_name: /cfe_tbl_delete_cds_cmd
         CFETBLDumpCmd:
           structure: CFETBLDumpCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 3
           topic_name: /cfe_tbl_dump_cmd
         CFETBLDumpRegistryCmd:
           structure: CFETBLDumpRegistryCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 6
           topic_name: /cfe_tbl_dump_registry_cmd
         CFETBLLoadCmd:
           structure: CFETBLLoadCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 2
           topic_name: /cfe_tbl_load_cmd
-        CFETBLNoArgsCmd:
+        CFETBLNoopCmd:
           structure: CFETBLNoArgsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_tbl_no_args_cmd
-        CFETBLNotifyCmd:
-          structure: CFETBLNotifyCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_tbl_notify_cmd
+          cfe_mid: '0x1804'
+          cmd_code: 0
+          topic_name: /cfe_tbl_noop_cmd
+        CFETBLResetCountersCmd:
+          structure: CFETBLNoArgsCmd
+          cfe_mid: '0x1804'
+          cmd_code: 1
+          topic_name: /cfe_tbl_reset_counters_cmd
         CFETBLSendRegistryCmd:
           structure: CFETBLSendRegistryCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 7
           topic_name: /cfe_tbl_send_registry_cmd
         CFETBLValidateCmd:
           structure: CFETBLValidateCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1804'
+          cmd_code: 4
           topic_name: /cfe_tbl_validate_cmd
-        CFETIMENoArgsCmd:
+        CFETIMENoopCmd:
           structure: CFETIMENoArgsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_time_no_args_cmd
-        CFETIMEOneHzAdjustmentCmd:
-          structure: CFETIMEOneHzAdjustmentCmd
-          cfe_mid: '0x1200'
+          cfe_mid: '0x1805'
           cmd_code: 0
-          topic_name: /cfe_time_one_hz_adjustment_cmd
+          topic_name: /cfe_time_noop_cmd
+        CFETIMEResetCountersCmd:
+          structure: CFETIMENoArgsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 1
+          topic_name: /cfe_time_reset_counters_cmd
+        CFETIMESendDiagnosticCmd:
+          structure: CFETIMENoArgsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 2
+          topic_name: /cfe_time_send_diagnostic_cmd
+        CFETIMEAdd1HZAdjustmentCmd:
+          structure: CFETIMEOneHzAdjustmentCmd
+          cfe_mid: '0x1805'
+          cmd_code: 13
+          topic_name: /cfe_time_add_1hz_adjustment_cmd
+        CFETIMESub1HZAdjustmentCmd:
+          structure: CFETIMEOneHzAdjustmentCmd
+          cfe_mid: '0x1805'
+          cmd_code: 14
+          topic_name: /cfe_time_sub_1hz_adjustment_cmd
         CFETIMESetLeapSecondsCmd:
           structure: CFETIMESetLeapSecondsCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1805'
+          cmd_code: 10
           topic_name: /cfe_time_set_leap_seconds_cmd
         CFETIMESetSignalCmd:
           structure: CFETIMESetSignalCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1805'
+          cmd_code: 15
           topic_name: /cfe_time_set_signal_cmd
         CFETIMESetSourceCmd:
           structure: CFETIMESetSourceCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1805'
+          cmd_code: 3
           topic_name: /cfe_time_set_source_cmd
         CFETIMESetStateCmd:
           structure: CFETIMESetStateCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
+          cfe_mid: '0x1805'
+          cmd_code: 4
           topic_name: /cfe_time_set_state_cmd
-        CFETIMETimeCmd:
+        CFETIMEAddDelayCmd:
           structure: CFETIMETimeCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_time_time_cmd
-        CFETIMEToneDataCmd:
-          structure: CFETIMEToneDataCmd
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /cfe_time_tone_data_cmd
-        CILABNoArgsCmdt:
+          cfe_mid: '0x1805'
+          cmd_code: 5
+          topic_name: /cfe_time_add_delay_cmd
+        CFETIMESubDelayCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 6
+          topic_name: /cfe_time_sub_delay_cmd
+        CFETIMESetMETCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 8
+          topic_name: /cfe_time_set_met_cmd
+        CFETIMESetSTCFCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 9
+          topic_name: /cfe_time_set_stcf_cmd
+        CFETIMEAddAdjustCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 11
+          topic_name: /cfe_time_add_adjust_cmd
+        CFETIMESubAdjustCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 12
+          topic_name: /cfe_time_sub_adjust_cmd
+        CFETIMESetTimeCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 7
+          topic_name: /cfe_time_set_time_cmd
+        CILABNoArgsCmd:
           structure: CILABNoArgsCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /ci_lab_no_args_cmd_t
-        ROSAPPNoArgsCmdt:
+          cfe_mid: '0x1884'
+          cmd_code: 0
+          topic_name: /ci_lab_no_args_cmd
+        ROSAPPNoArgsCmd:
           structure: ROSAPPNoArgsCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /ros_app_no_args_cmd_t
-        SAMPLEAPPNoArgsCmdt:
+          cfe_mid: '0x1896'
+          cmd_code: 0
+          topic_name: /ros_app_no_args_cmd
+        SAMPLEAPPNoArgsCmd:
           structure: SAMPLEAPPNoArgsCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /sample_app_no_args_cmd_t
-        SCHLABStateEntryt:
+          cfe_mid: '0x1882'
+          cmd_code: 0
+          topic_name: /sample_app_no_args_cmd
+        SCHLABStateEntry:
           structure: SCHLABStateEntryt
           cfe_mid: '0x1200'
           cmd_code: 0  
-          topic_name: /sch_lab_state_entry_t
-        TOLABAddPacketCmdt:
+          topic_name: /sch_lab_state_entry
+        TOLABAddPacketCmd:
           structure: TOLABAddPacketCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /to_lab_add_packet_cmd_t
+          cfe_mid: '0x1880'
+          cmd_code: 2
+          topic_name: /to_lab_add_packet_cmd
         TOLABEnableOutputCmd:
           structure: TOLABEnableOutputCmdt
           cfe_mid: '0x1880'
           cmd_code: 6
           topic_name: /to_lab_enable_output_cmd
-        TOLABNoArgsCmdt:
+        TOLABNoopCmd:
           structure: TOLABNoArgsCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /to_lab_no_args_cmd_t
-        TOLABRemovePacketCmdt:
+          cfe_mid: '0x1880'
+          cmd_code: 0
+          topic_name: /to_lab_noop_cmd
+        TOLABResetCountersCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 1
+          topic_name: /to_lab_reset_counters_cmd
+        TOLABRemoveAllCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 5
+          topic_name: /to_lab_remove_all_cmd
+        TOLABSendDataTypesCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 3
+          topic_name: /to_lab_send_data_types_cmd
+        TOLABRemovePacketCmd:
           structure: TOLABRemovePacketCmdt
-          cfe_mid: '0x1200'
-          cmd_code: 0  
-          topic_name: /to_lab_remove_packet_cmd_t
+          cfe_mid: '0x1880'
+          cmd_code: 4
+          topic_name: /to_lab_remove_packet_cmd
               
       telemetry_data:
         CFEESOneAppTlm:
