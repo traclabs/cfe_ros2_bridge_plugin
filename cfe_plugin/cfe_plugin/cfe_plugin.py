@@ -28,15 +28,12 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
 
-        # self._node.declare_parameter('plugin_params.commandPort', 1234)
-        # self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
-        #     get_parameter_value().integer_value
-        # self._node.get_logger().info('commandPort: ' + str(self._command_port))
-
         self._node.declare_parameter('plugin_params.commandHost', '127.0.0.1')
         self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
             get_parameter_value().string_value
         self._node.get_logger().info('commandHost: ' + str(self._command_host))
+
+        self._command_ports = {}
 
         self._msg_pkg = "cfe_msgs"
 
@@ -92,11 +89,21 @@ class FSWPlugin(FSWPluginInterface):
     def send_cmd_packet(self, packet, cmd_host, cmd_port):
         # send packet to cFE
         self._node.get_logger().debug('Got packet to send to cFE!')
-        cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        bytes_sent = cmd_sock.sendto(packet, (cmd_host, cmd_port))
-        self._node.get_logger().debug('Sent ' + str(bytes_sent) + ' bytes out of ' + str(len(packet)))
-        cmd_sock.close()
-        return bytes_sent > 0
+        if cmd_port in self._command_ports:
+            cmd_sock = self._command_ports.get(cmd_port)
+        else:
+            cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self._command_ports[cmd_port] = cmd_sock
+            cmd_sock.connect((cmd_host, cmd_port))
+        send_worked = False
+        try:
+            cmd_sock.sendall(packet)
+            send_worked = True
+            self._node.get_logger().debug('Sent command data.')
+        except OSError as err:
+            # TODO: assume socket closed and reopen
+            self._node.get_logger().warn('socket error: ' + err)
+        return send_worked
 
     def get_telemetry_message_info(self):
         return self._telem_info
