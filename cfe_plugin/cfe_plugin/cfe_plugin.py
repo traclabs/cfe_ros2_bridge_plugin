@@ -41,7 +41,7 @@ class FSWPlugin(FSWPluginInterface):
         self._command_info = self._juicer_interface.get_command_message_info()
 
         command_params = ["structure", "cfe_mid", "cmd_code", "topic_name", "port"]
-        telemetry_params = ["cfe_mid", "topic_name"]
+        telemetry_params = ["structure", "cfe_mid", "topic_name", "port"]
         self._cfe_config = ParseCFEConfig(self._node, command_params, telemetry_params)
         self._cfe_config.print_commands()
         self._cfe_config.print_telemetry()
@@ -49,6 +49,7 @@ class FSWPlugin(FSWPluginInterface):
         self._command_dict = self._cfe_config.get_command_dict()
         self._telemetry_dict = self._cfe_config.get_telemetry_dict()
 
+        self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
         self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
                                              self._telemetry_dict,
                                              self._juicer_interface)

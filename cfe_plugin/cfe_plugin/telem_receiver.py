@@ -16,12 +16,17 @@ class TelemReceiver():
         self._port = port
         self._msg_pkg = msg_pkg
         self._tlm_map = {}
+        self._key_map = {}
         self._logger = self._node.get_logger()
+        self._node.get_logger().debug("telem_receiver got these telemetry structs")
         for tlm in telem_info:
             self._node.get_logger().debug("type: " + str(tlm))
+            self._node.get_logger().debug("  structure: " + str(telem_info[tlm]['structure']))
             self._node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
             self._node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
-            self._tlm_map[telem_info[tlm]['cfe_mid']] = tlm
+            self._node.get_logger().debug("  port: " + str(telem_info[tlm]['port']))
+            self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
+            self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
             self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
         self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
@@ -63,11 +68,12 @@ class TelemReceiver():
             ros_name = self._tlm_map[packet_id]
             self._logger.debug("Received packet for " + ros_name)
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
-                              self._tlm_map[packet_id])
+                              ros_name)
             msg = MsgType()
             setattr(msg, "seq", self.get_seq_count(datagram))
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
-            self._current_value[ros_name] = msg
+            key = self._key_map[packet_id]
+            self._current_value[key] = msg
         else:
             self._logger.info("Don't know how to handle message id " + packet_id)
 
