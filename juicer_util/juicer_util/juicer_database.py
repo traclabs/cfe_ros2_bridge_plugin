@@ -73,23 +73,22 @@ class JuicerDatabase():
 
         cur.close()
         # Need to add a field of type CCSDS_SpacePacket_t and add it to CFE_MSG_Message symbol
-        if "CFE_MSG_Message" in self._symbol_name_app:
-            symbol = self._symbol_name_map["CFE_MSG_Message"]
-            fid = last_id + 1
-            container_symbol = symbol.get_id()
-            fname = "CCSDS"
-            foffset = 0
-            fsymbol = self._symbol_name_map["CCSDS_SpacePacket_t"]
-            ftype = fsymbol.get_id()
-            fendian = last_endian
-            fbit_size = 0
-            fbit_offset = 0
-            my_field = JuicerFieldEntry(self._node, fid, container_symbol, fname, foffset, ftype,
-                                        fendian, fbit_size, fbit_offset)
-            self._field_name_map[my_field.get_name()] = my_field
-            typeid = my_field.get_type()
-            my_field.set_type_symbol(self._symbol_id_map[typeid])
-            symbol.add_field(my_field)
+        symbol = self._symbol_name_map["CFE_MSG_Message"]
+        fid = last_id + 1
+        container_symbol = symbol.get_id()
+        fname = "CCSDS"
+        foffset = 0
+        fsymbol = self._symbol_name_map["CCSDS_SpacePacket_t"]
+        ftype = fsymbol.get_id()
+        fendian = last_endian
+        fbit_size = 0
+        fbit_offset = 0
+        my_field = JuicerFieldEntry(self._node, fid, container_symbol, fname, foffset, ftype,
+                                    fendian, fbit_size, fbit_offset)
+        self._field_name_map[my_field.get_name()] = my_field
+        typeid = my_field.get_type()
+        my_field.set_type_symbol(self._symbol_id_map[typeid])
+        symbol.add_field(my_field)
         return self._field_name_map
 
     def load_data(self):

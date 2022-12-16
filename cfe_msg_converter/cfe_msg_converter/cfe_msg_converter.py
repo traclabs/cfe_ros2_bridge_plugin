@@ -34,8 +34,7 @@ class CfeMsgConverter(Node):
         self._cmake_template = self._resource_path + "/CMakeLists.template"
         self.get_logger().info("CMakeLists Template: " + self._cmake_template)
 
-        resource_path = get_package_share_directory("cfe_msg_converter") + "/resource/"
-        self._juicer_interface = JuicerInterface(self, resource_path)
+        self._juicer_interface = JuicerInterface(self)
         self._symbol_name_map = self._juicer_interface.get_symbol_name_map()
         self._msgs_list = self.create_messages(self._msgs_src_dir)
 
