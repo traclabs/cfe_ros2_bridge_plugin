@@ -216,20 +216,24 @@ class JuicerInterface():
         packet = bytearray(packet_size)
         # process differently if string vs numeric?
         ros_name = fsym.get_ros_name()
-        if ros_name.startswith("string") or ros_name.startswith("char"):
-            # handle string
-            string_b = fmsg.encode()
-            packet[:fsym.get_size()] = string_b
-            self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
-        else:
-            # handle numeric
-            endian = 'big'
-            if field.get_endian():
-                endian = 'little'
-            packet = fmsg.to_bytes(packet_size, endian)
-            # TODO: need to handle floating point types differently
-            self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name()
-                                          + " with endian " + endian)
+        try:
+            if ros_name.startswith("string") or ros_name.startswith("char"):
+                # handle string
+                string_b = fmsg.encode()
+                packet[:fsym.get_size()] = string_b
+                self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
+            else:
+                # handle numeric
+                endian = 'big'
+                if field.get_endian():
+                    endian = 'little'
+                packet = fmsg.to_bytes(packet_size, endian)
+                # TODO: need to handle floating point types differently
+                self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name()
+                                              + " with endian " + endian)
+
+        except:
+            self._node.get_logger().error("problem tryin to encode data: " + ros_name)
 
         return packet
 
