@@ -3,7 +3,7 @@
 uint32 sec
 uint32 nsec
 uint8 level
-bool[] name_truncated
+bool name_truncated
 string name
 bool msg_truncated
 string msg
