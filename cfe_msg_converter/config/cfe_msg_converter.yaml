@@ -2,4 +2,4 @@ cfe_msg_converter:
   ros__parameters:
     cfs_root: ~/code/TL-cFS
     plugin_params:
-      juicer_db: ["~/code/juicer/core-cpu1.sqlite"]
+      juicer_db: ["cfs_bootes-rc1-dev83_TL.sqlite"]

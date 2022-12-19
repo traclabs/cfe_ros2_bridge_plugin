@@ -515,4 +515,6 @@
         CFETIMEDiagnosticTlm:
           cfe_mid: '0x806'
           topic_name: /cfe_time_diagnostic_tlm
-
+        ROSAPPRosoutTlmt:
+          cfe_mid: '0x899'
+          topic_name: /rosapp_rosout_tlm
