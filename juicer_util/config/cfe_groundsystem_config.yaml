@@ -1,0 +1,520 @@
+/**:
+  ros__parameters:
+    plugin_params:
+      juicer_db: ["cfs_bootes-rc1-dev83_TL.sqlite"]
+      commands: ["CFEESStopAppCmd", "CFEESRestartAppCmd", "CFEESQueryOneCmd", "CFEESDeleteCDSCmd", "CFEESDumpCDSRegistryCmd", "CFEESQueryAllCmd", "CFEESQueryAllTasksCmd", "CFEESWriteSysLogCmd", "CFEESWriteERLogCmd", "CFEESNoopCmd", "CFEESResetCountersCmd", "CFEESClearSysLogCmd", "CFEESClearERLogCmd", "CFEESResetPRCountCmd", "CFEESOverWriteSysLogCmd", "CFEESReloadAppCmd", "CFEESRestartCmd", "CFEESSendMemPoolStatsCmd", "CFEESSetMaxPRCountCmd", "CFEESSetPerfFilterMaskCmd", "CFEESSetPerfTriggerMaskCmd", "CFEESStartApp", "CFEESStartPerfDataCmd", "CFEESStopPerfDataCmd", "CFEEVSEnableAppEventTypeCmd", "CFEEVSDisableAppEventTypeCmd", "CFEEVSEnableAppEventsCmd", "CFEEVSDisableAppEventsCmd", "CFEEVSResetAppCounterCmd", "CFEEVSResetAllFiltersCmd", "CFEEVSResetFilterCmd", "CFEEVSDeleteEventFilterCmd", "CFEEVSAddEventFilterCmd", "CFEEVSSetFilterCmd", "CFEEVSEnablePortsCmd", "CFEEVSDisablePortsCmd", "CFEEVSEnableEventTypeCmd", "CFEEVSDisableEventTypeCmd", "CFEEVSNoopCmd", "CFEEVSResetCountersCmd", "CFEEVSClearLogCmd", "CFEEVSSetEventFormatModeCmd", "CFEEVSSetLogModeCmd", "CFEEVSWriteAppDataFileCmd", "CFEEVSWriteLogDataFileCmd", "CFESBEnableRouteCmd", "CFESBDisableRouteCmd", "CFESBNoopCmd", "CFESBResetCountersCmd", "CFESBEnableSubReportingCmd", "CFESBDisableSubReportingCmd", "CFESBSendSbStatsCmd", "CFESBSendPrevSubsCmd", "CFESBWriteRoutingInfoCmd", "CFESBWritePipeInfoCmd", "CFESBWriteMapInfoCmd", "CFETBLAbortLoadCmd", "CFETBLActivateCmd", "CFETBLDeleteCDSCmd", "CFETBLDumpCmd", "CFETBLDumpRegistryCmd", "CFETBLLoadCmd", "CFETBLNoopCmd", "CFETBLResetCountersCmd", "CFETBLSendRegistryCmd", "CFETBLValidateCmd", "CFETIMENoopCmd", "CFETIMEResetCountersCmd", "CFETIMESendDiagnosticCmd", "CFETIMEAdd1HZAdjustmentCmd", "CFETIMESub1HZAdjustmentCmd", "CFETIMESetLeapSecondsCmd", "CFETIMESetSignalCmd", "CFETIMESetSourceCmd", "CFETIMESetStateCmd", "CFETIMEAddDelayCmd", "CFETIMESubDelayCmd", "CFETIMESetMETCmd", "CFETIMESetSTCFCmd", "CFETIMEAddAdjustCmd", "CFETIMESubAdjustCmd", "CFETIMESetTimeCmd", "CILABNoArgsCmd", "ROSAPPNoArgsCmd", "SAMPLEAPPNoArgsCmd", "SCHLABStateEntry", "TOLABAddPacketCmd", "TOLABEnableOutputCmd", "TOLABNoopCmd", "TOLABResetCountersCmd", "TOLABRemoveAllCmd", "TOLABSendDataTypesCmd", "TOLABRemovePacketCmd"]
+      
+      telemetry: ["CFEESOneAppTlm", "CFEESMemStatsTlm", "CFEESHousekeepingTlm", "CFEEVSLongEventTlm", "CFEEVSHousekeepingTlm", "CFEEVSShortEventTlm", "CFESBHousekeepingTlm", "CFESBStatsTlm", "CFESBAllSubscriptionsTlm", "CFESBSingleSubscriptionTlm", "CFETBLHousekeepingTlm", "CFETBLTableRegistryTlm", "CFETIMEHousekeepingTlm", "CFETIMEDiagnosticTlm", "ROSAPPRosoutTlmt"]
+      command_data:
+        CFEESStopAppCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 5
+          topic_name: /groundsystem/cfe_es_stop_app_cmd
+        CFEESRestartAppCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 6
+          topic_name: /groundsystem/cfe_es_restart_app_cmd
+        CFEESQueryOneCmd:
+          structure: CFEESAppNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 8
+          topic_name: /groundsystem/cfe_es_query_one_cmd
+        CFEESDeleteCDSCmd:
+          structure: CFEESDeleteCDSCmd
+          cfe_mid: '0x1806'
+          cmd_code: 21
+          topic_name: /groundsystem/cfe_es_delete_cds_cmd
+        CFEESDumpCDSRegistryCmd:
+          structure: CFEESDumpCDSRegistryCmd
+          cfe_mid: '0x1806'
+          cmd_code: 23 
+          topic_name: /groundsystem/cfe_es_dump_cds_registry_cmd
+        CFEESQueryAllCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 9  
+          topic_name: /groundsystem/cfe_es_query_all_cmd
+        CFEESQueryAllTasksCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 24
+          topic_name: /groundsystem/cfe_es_query_all_tasks_cmd
+        CFEESWriteSysLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 11
+          topic_name: /groundsystem/cfe_es_write_sys_log_cmd
+        CFEESWriteERLogCmd:
+          structure: CFEESFileNameCmd
+          cfe_mid: '0x1806'
+          cmd_code: 13
+          topic_name: /groundsystem/cfe_es_write_er_log_cmd
+        CFEESNoopCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 0
+          topic_name: /groundsystem/cfe_es_noop_cmd
+        CFEESResetCountersCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 1
+          topic_name: /groundsystem/cfe_es_reset_counters_cmd
+        CFEESClearSysLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 10
+          topic_name: /groundsystem/cfe_es_clear_sys_log_cmd
+        CFEESClearERLogCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 12
+          topic_name: /groundsystem/cfe_es_clear_er_log_cmd
+        CFEESResetPRCountCmd:
+          structure: CFEESNoArgsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 19
+          topic_name: /groundsystem/cfe_es_reset_pr_count_cmd
+        CFEESOverWriteSysLogCmd:
+          structure: CFEESOverWriteSysLogCmd
+          cfe_mid: '0x1806'
+          cmd_code: 18 
+          topic_name: /groundsystem/cfe_es_over_write_sys_log_cmd
+        CFEESReloadAppCmd:
+          structure: CFEESReloadAppCmd
+          cfe_mid: '0x1806'
+          cmd_code: 7  
+          topic_name: /groundsystem/cfe_es_reload_app_cmd
+        CFEESRestartCmd:
+          structure: CFEESRestartCmd
+          cfe_mid: '0x1806'
+          cmd_code: 2  
+          topic_name: /groundsystem/cfe_es_restart_cmd
+        CFEESSendMemPoolStatsCmd:
+          structure: CFEESSendMemPoolStatsCmd
+          cfe_mid: '0x1806'
+          cmd_code: 22
+          topic_name: /groundsystem/cfe_es_send_mem_pool_stats_cmd
+        CFEESSetMaxPRCountCmd:
+          structure: CFEESSetMaxPRCountCmd
+          cfe_mid: '0x1806'
+          cmd_code: 20
+          topic_name: /groundsystem/cfe_es_set_max_pr_count_cmd
+        CFEESSetPerfFilterMaskCmd:
+          structure: CFEESSetPerfFilterMaskCmd
+          cfe_mid: '0x1806'
+          cmd_code: 16
+          topic_name: /groundsystem/cfe_es_set_perf_filter_mask_cmd
+        CFEESSetPerfTriggerMaskCmd:
+          structure: CFEESSetPerfTriggerMaskCmd
+          cfe_mid: '0x1806'
+          cmd_code: 17
+          topic_name: /groundsystem/cfe_es_set_perf_trigger_mask_cmd
+        CFEESStartApp:
+          structure: CFEESStartApp
+          cfe_mid: '0x1806'
+          cmd_code: 4  
+          topic_name: /groundsystem/cfe_es_start_app
+        CFEESStartPerfDataCmd:
+          structure: CFEESStartPerfDataCmd
+          cfe_mid: '0x1806'
+          cmd_code: 14
+          topic_name: /groundsystem/cfe_es_start_perf_data_cmd
+        CFEESStopPerfDataCmd:
+          structure: CFEESStopPerfDataCmd
+          cfe_mid: '0x1806'
+          cmd_code: 15
+          topic_name: /groundsystem/cfe_es_stop_perf_data_cmd
+        CFEEVSEnableAppEventTypeCmd:
+          structure: CFEEVSAppNameBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 2
+          topic_name: /groundsystem/cfe_evs_enable_app_event_type_cmd
+        CFEEVSDisableAppEventTypeCmd:
+          structure: CFEEVSAppNameBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 3
+          topic_name: /groundsystem/cfe_evs_disable_app_event_type_cmd
+        CFEEVSEnableAppEventsCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 7
+          topic_name: /groundsystem/cfe_evs_enable_app_events_cmd
+        CFEEVSDisableAppEventsCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 8
+          topic_name: /groundsystem/cfe_evs_disable_app_events_cmd
+        CFEEVSResetAppCounterCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 9
+          topic_name: /groundsystem/cfe_evs_reset_app_counter_cmd
+        CFEEVSResetAllFiltersCmd:
+          structure: CFEEVSAppNameCmd
+          cfe_mid: '0x1801'
+          cmd_code: 14
+          topic_name: /groundsystem/cfe_evs_reset_all_filters_cmd
+        CFEEVSResetFilterCmd:
+          structure: CFEEVSAppNameEventIDCmd
+          cfe_mid: '0x1801'
+          cmd_code: 13
+          topic_name: /groundsystem/cfe_evs_reset_filter_cmd
+        CFEEVSDeleteEventFilterCmd:
+          structure: CFEEVSAppNameEventIDCmd
+          cfe_mid: '0x1801'
+          cmd_code: 16
+          topic_name: /groundsystem/cfe_evs_delete_event_filter_cmd
+        CFEEVSAddEventFilterCmd:
+          structure: CFEEVSAppNameEventIDMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 15
+          topic_name: /groundsystem/cfe_evs_add_event_filter_cmd
+        CFEEVSSetFilterCmd:
+          structure: CFEEVSAppNameEventIDMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 10
+          topic_name: /groundsystem/cfe_evs_set_filter_cmd
+        CFEEVSEnablePortsCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 11
+          topic_name: /groundsystem/cfe_evs_enable_ports_cmd
+        CFEEVSDisablePortsCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 12
+          topic_name: /groundsystem/cfe_evs_disable_ports_cmd
+        CFEEVSEnableEventTypeCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 2
+          topic_name: /groundsystem/cfe_evs_enable_event_type_cmd
+        CFEEVSDisableEventTypeCmd:
+          structure: CFEEVSBitMaskCmd
+          cfe_mid: '0x1801'
+          cmd_code: 3
+          topic_name: /groundsystem/cfe_evs_disable_event_type_cmd
+        CFEEVSNoopCmd:
+          structure: CFEEVSNoArgsCmd
+          cfe_mid: '0x1801'
+          cmd_code: 0  
+          topic_name: /groundsystem/cfe_evs_noop_cmd
+        CFEEVSResetCountersCmd:
+          structure: CFEEVSNoArgsCmd
+          cfe_mid: '0x1801'
+          cmd_code: 1
+          topic_name: /groundsystem/cfe_evs_reset_counters_cmd
+        CFEEVSClearLogCmd:
+          structure: CFEEVSNoArgsCmd
+          cfe_mid: '0x1801'
+          cmd_code: 20
+          topic_name: /groundsystem/cfe_evs_clear_log_cmd
+        CFEEVSSetEventFormatModeCmd:
+          structure: CFEEVSSetEventFormatModeCmd
+          cfe_mid: '0x1801'
+          cmd_code: 4
+          topic_name: /groundsystem/cfe_evs_set_event_format_mode_cmd
+        CFEEVSSetLogModeCmd:
+          structure: CFEEVSSetLogModeCmd
+          cfe_mid: '0x1801'
+          cmd_code: 19
+          topic_name: /groundsystem/cfe_evs_set_log_mode_cmd
+        CFEEVSWriteAppDataFileCmd:
+          structure: CFEEVSWriteAppDataFileCmd
+          cfe_mid: '0x1801'
+          cmd_code: 17
+          topic_name: /groundsystem/cfe_evs_write_app_data_file_cmd
+        CFEEVSWriteLogDataFileCmd:
+          structure: CFEEVSWriteLogDataFileCmd
+          cfe_mid: '0x1801'
+          cmd_code: 18
+          topic_name: /groundsystem/cfe_evs_write_log_data_file_cmd
+        CFESBEnableRouteCmd:
+          structure: CFESBRouteCmd
+          cfe_mid: '0x1803'
+          cmd_code: 4
+          topic_name: /groundsystem/cfe_sb_enable_route_cmd
+        CFESBDisableRouteCmd:
+          structure: CFESBRouteCmd
+          cfe_mid: '0x1803'
+          cmd_code: 5
+          topic_name: /groundsystem/cfe_sb_disable_route_cmd
+        CFESBNoopCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 0
+          topic_name: /groundsystem/cfe_sb_noop_cmd
+        CFESBResetCountersCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 1
+          topic_name: /groundsystem/cfe_sb_reset_counters_cmd
+        CFESBEnableSubReportingCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 9
+          topic_name: /groundsystem/cfe_sb_enable_sub_reporting_cmd
+        CFESBDisableSubReportingCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 10
+          topic_name: /groundsystem/cfe_sb_disable_sub_reporting_cmd
+        CFESBSendSbStatsCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 2
+          topic_name: /groundsystem/cfe_sb_send_sb_stats_cmd
+        CFESBSendPrevSubsCmd:
+          structure: CFEMSGCommandHeader
+          cfe_mid: '0x1803'
+          cmd_code: 11
+          topic_name: /groundsystem/cfe_sb_send_prev_subs_cmd
+        CFESBWriteRoutingInfoCmd:
+          structure: CFESBWriteFileInfoCmd
+          cfe_mid: '0x1803'
+          cmd_code: 3
+          topic_name: /groundsystem/cfe_sb_write_routing_info_cmd
+        CFESBWritePipeInfoCmd:
+          structure: CFESBWriteFileInfoCmd
+          cfe_mid: '0x1803'
+          cmd_code: 7
+          topic_name: /groundsystem/cfe_sb_write_pipe_info_cmd
+        CFESBWriteMapInfoCmd:
+          structure: CFESBWriteFileInfoCmd
+          cfe_mid: '0x1803'
+          cmd_code: 8
+          topic_name: /groundsystem/cfe_sb_write_map_info_cmd
+        CFETBLAbortLoadCmd:
+          structure: CFETBLAbortLoadCmd
+          cfe_mid: '0x1804'
+          cmd_code: 9
+          topic_name: /groundsystem/cfe_tbl_abort_load_cmd
+        CFETBLActivateCmd:
+          structure: CFETBLActivateCmd
+          cfe_mid: '0x1804'
+          cmd_code: 5
+          topic_name: /groundsystem/cfe_tbl_activate_cmd
+        CFETBLDeleteCDSCmd:
+          structure: CFETBLDeleteCDSCmd
+          cfe_mid: '0x1804'
+          cmd_code: 8
+          topic_name: /groundsystem/cfe_tbl_delete_cds_cmd
+        CFETBLDumpCmd:
+          structure: CFETBLDumpCmd
+          cfe_mid: '0x1804'
+          cmd_code: 3
+          topic_name: /groundsystem/cfe_tbl_dump_cmd
+        CFETBLDumpRegistryCmd:
+          structure: CFETBLDumpRegistryCmd
+          cfe_mid: '0x1804'
+          cmd_code: 6
+          topic_name: /groundsystem/cfe_tbl_dump_registry_cmd
+        CFETBLLoadCmd:
+          structure: CFETBLLoadCmd
+          cfe_mid: '0x1804'
+          cmd_code: 2
+          topic_name: /groundsystem/cfe_tbl_load_cmd
+        CFETBLNoopCmd:
+          structure: CFETBLNoArgsCmd
+          cfe_mid: '0x1804'
+          cmd_code: 0
+          topic_name: /groundsystem/cfe_tbl_noop_cmd
+        CFETBLResetCountersCmd:
+          structure: CFETBLNoArgsCmd
+          cfe_mid: '0x1804'
+          cmd_code: 1
+          topic_name: /groundsystem/cfe_tbl_reset_counters_cmd
+        CFETBLSendRegistryCmd:
+          structure: CFETBLSendRegistryCmd
+          cfe_mid: '0x1804'
+          cmd_code: 7
+          topic_name: /groundsystem/cfe_tbl_send_registry_cmd
+        CFETBLValidateCmd:
+          structure: CFETBLValidateCmd
+          cfe_mid: '0x1804'
+          cmd_code: 4
+          topic_name: /groundsystem/cfe_tbl_validate_cmd
+        CFETIMENoopCmd:
+          structure: CFETIMENoArgsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 0
+          topic_name: /groundsystem/cfe_time_noop_cmd
+        CFETIMEResetCountersCmd:
+          structure: CFETIMENoArgsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 1
+          topic_name: /groundsystem/cfe_time_reset_counters_cmd
+        CFETIMESendDiagnosticCmd:
+          structure: CFETIMENoArgsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 2
+          topic_name: /groundsystem/cfe_time_send_diagnostic_cmd
+        CFETIMEAdd1HZAdjustmentCmd:
+          structure: CFETIMEOneHzAdjustmentCmd
+          cfe_mid: '0x1805'
+          cmd_code: 13
+          topic_name: /groundsystem/cfe_time_add_1hz_adjustment_cmd
+        CFETIMESub1HZAdjustmentCmd:
+          structure: CFETIMEOneHzAdjustmentCmd
+          cfe_mid: '0x1805'
+          cmd_code: 14
+          topic_name: /groundsystem/cfe_time_sub_1hz_adjustment_cmd
+        CFETIMESetLeapSecondsCmd:
+          structure: CFETIMESetLeapSecondsCmd
+          cfe_mid: '0x1805'
+          cmd_code: 10
+          topic_name: /groundsystem/cfe_time_set_leap_seconds_cmd
+        CFETIMESetSignalCmd:
+          structure: CFETIMESetSignalCmd
+          cfe_mid: '0x1805'
+          cmd_code: 15
+          topic_name: /groundsystem/cfe_time_set_signal_cmd
+        CFETIMESetSourceCmd:
+          structure: CFETIMESetSourceCmd
+          cfe_mid: '0x1805'
+          cmd_code: 3
+          topic_name: /groundsystem/cfe_time_set_source_cmd
+        CFETIMESetStateCmd:
+          structure: CFETIMESetStateCmd
+          cfe_mid: '0x1805'
+          cmd_code: 4
+          topic_name: /groundsystem/cfe_time_set_state_cmd
+        CFETIMEAddDelayCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 5
+          topic_name: /groundsystem/cfe_time_add_delay_cmd
+        CFETIMESubDelayCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 6
+          topic_name: /groundsystem/cfe_time_sub_delay_cmd
+        CFETIMESetMETCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 8
+          topic_name: /groundsystem/cfe_time_set_met_cmd
+        CFETIMESetSTCFCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 9
+          topic_name: /groundsystem/cfe_time_set_stcf_cmd
+        CFETIMEAddAdjustCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 11
+          topic_name: /groundsystem/cfe_time_add_adjust_cmd
+        CFETIMESubAdjustCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 12
+          topic_name: /groundsystem/cfe_time_sub_adjust_cmd
+        CFETIMESetTimeCmd:
+          structure: CFETIMETimeCmd
+          cfe_mid: '0x1805'
+          cmd_code: 7
+          topic_name: /groundsystem/cfe_time_set_time_cmd
+        CILABNoArgsCmd:
+          structure: CILABNoArgsCmdt
+          cfe_mid: '0x1884'
+          cmd_code: 0
+          topic_name: /groundsystem/ci_lab_no_args_cmd
+        ROSAPPNoArgsCmd:
+          structure: ROSAPPNoArgsCmdt
+          cfe_mid: '0x1896'
+          cmd_code: 0
+          topic_name: /groundsystem/ros_app_no_args_cmd
+        SAMPLEAPPNoArgsCmd:
+          structure: SAMPLEAPPNoArgsCmdt
+          cfe_mid: '0x1882'
+          cmd_code: 0
+          topic_name: /groundsystem/sample_app_no_args_cmd
+        SCHLABStateEntry:
+          structure: SCHLABStateEntryt
+          cfe_mid: '0x1200'
+          cmd_code: 0  
+          topic_name: /groundsystem/sch_lab_state_entry
+        TOLABAddPacketCmd:
+          structure: TOLABAddPacketCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 2
+          topic_name: /groundsystem/to_lab_add_packet_cmd
+        TOLABEnableOutputCmd:
+          structure: TOLABEnableOutputCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 6
+          topic_name: /groundsystem/to_lab_enable_output_cmd
+        TOLABNoopCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 0
+          topic_name: /groundsystem/to_lab_noop_cmd
+        TOLABResetCountersCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 1
+          topic_name: /groundsystem/to_lab_reset_counters_cmd
+        TOLABRemoveAllCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 5
+          topic_name: /groundsystem/to_lab_remove_all_cmd
+        TOLABSendDataTypesCmd:
+          structure: TOLABNoArgsCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 3
+          topic_name: /groundsystem/to_lab_send_data_types_cmd
+        TOLABRemovePacketCmd:
+          structure: TOLABRemovePacketCmdt
+          cfe_mid: '0x1880'
+          cmd_code: 4
+          topic_name: /groundsystem/to_lab_remove_packet_cmd
+              
+      telemetry_data:
+        CFEESOneAppTlm:
+          cfe_mid: '0x80B'
+          topic_name: /groundsystem/cfe_es_one_app_tlm
+        CFEESMemStatsTlm:
+          cfe_mid: '0x810'
+          topic_name: /groundsystem/cfe_es_mem_stats_tlm
+        CFEESHousekeepingTlm:
+          cfe_mid: '0x800'
+          topic_name: /groundsystem/cfe_es_hk_tlm
+        CFEEVSLongEventTlm:
+          cfe_mid: '0x808'
+          topic_name: /groundsystem/cfe_evs_long_event_tlm
+        CFEEVSHousekeepingTlm:
+          cfe_mid: '0x801'
+          topic_name: /groundsystem/cfe_evs_hk_tlm
+        CFEEVSShortEventTlm:
+          cfe_mid: '0x809'
+          topic_name: /groundsystem/cfe_evs_short_event_tlm
+        CFESBHousekeepingTlm:
+          cfe_mid: '0x803'
+          topic_name: /groundsystem/cfe_sb_hk_tlm
+        CFESBStatsTlm:
+          cfe_mid: '0x80A'
+          topic_name: /groundsystem/cfe_sb_stats_tlm
+        CFESBAllSubscriptionsTlm:
+          cfe_mid: '0x80D'
+          topic_name: /groundsystem/cfe_sb_all_subscriptions_tlm
+        CFESBSingleSubscriptionTlm:
+          cfe_mid: '0x80E'
+          topic_name: /groundsystem/cfe_sb_single_subscription_tlm
+        CFETBLHousekeepingTlm:
+          cfe_mid: '0x804'
+          topic_name: /groundsystem/cfe_tbl_hk_tlm
+        CFETBLTableRegistryTlm:
+          cfe_mid: '0x80C'
+          topic_name: /groundsystem/cfe_tbl_table_registry_tlm
+        CFETIMEHousekeepingTlm:
+          cfe_mid: '0x805'
+          topic_name: /groundsystem/cfe_time_hk_tlm
+        CFETIMEDiagnosticTlm:
+          cfe_mid: '0x806'
+          topic_name: /groundsystem/cfe_time_diagnostic_tlm
+        ROSAPPRosoutTlmt:
+          cfe_mid: '0x899'
+          topic_name: /groundsystem/rosapp_rosout_tlm

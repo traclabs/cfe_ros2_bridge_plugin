@@ -177,6 +177,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TOLABRemovePacketCmdt.msg"
   "msg/TOLABEnableOutputPayloadt.msg"
   "msg/TOLABEnableOutputCmdt.msg"
+  "msg/CFEMSGMessage.msg"
+  "msg/CCSDSPrimaryHeader.msg"
+  "msg/CCSDSSpacePackett.msg"
 )
 
 if(BUILD_TESTING)
