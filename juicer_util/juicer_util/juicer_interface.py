@@ -75,13 +75,13 @@ class JuicerInterface():
                         c_key = symbol.get_name()
                         c_msg_type = symbol.get_ros_name()
                         c_topic = symbol.get_ros_topic()
-                        c = CommandInfo(c_key, c_msg_type, c_topic, None)
+                        c = CommandInfo(c_key, c_msg_type, c_topic, None, 0)
                         self._command_info.append(c)
                     elif symbol.get_is_telemetry():
                         t_key = symbol.get_ros_name()
                         t_msg_type = symbol.get_ros_name()
                         t_topic = symbol.get_ros_topic()
-                        t = TelemInfo(t_key, t_msg_type, t_topic)
+                        t = TelemInfo(t_key, t_msg_type, t_topic, 0)
                         self._telem_info.append(t)
             ccsds_prim_hdr = self._symbol_ros_name_map["CCSDSPrimaryHeader"]
             # need to fix fields for CCSDSPrimaryHeader
@@ -99,6 +99,20 @@ class JuicerInterface():
     def get_command_message_info(self):
         return self._command_info
 
+    def reconcile_telem_info(self, tlm_info, tlm_dict):
+        # need to create new TelemInfo entries for each entry in tlm_dict
+        telem_info = []
+        for key in tlm_dict.keys():
+            td = tlm_dict[key]
+            struct_name = td["structure"]
+            t_key = key
+            t_msg_type = struct_name
+            t_topic = td["topic_name"]
+            t_port = td["port"]
+            t = TelemInfo(t_key, t_msg_type, t_topic, t_port)
+            telem_info.append(t)
+        return telem_info
+
     def reconcile_command_info(self, cmd_info, cmd_dict):
         # need to create new CommandInfo entries for each entry in cmd_dict
         command_info = []
@@ -109,7 +123,8 @@ class JuicerInterface():
             c_msg_type = struct_name
             # symbol = self._symbol_ros_name_map[struct_name]
             c_topic = cd["topic_name"]
-            c = CommandInfo(c_key, c_msg_type, c_topic, None)
+            c_port = cd["port"]
+            c = CommandInfo(c_key, c_msg_type, c_topic, None, c_port)
             command_info.append(c)
         return command_info
 
