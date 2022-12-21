@@ -108,7 +108,9 @@ class JuicerInterface():
             t_key = key
             t_msg_type = struct_name
             t_topic = td["topic_name"]
-            t_port = td["port"]
+            t_port = 0
+            if "port" in td:
+                t_port = td["port"]
             t = TelemInfo(t_key, t_msg_type, t_topic, t_port)
             telem_info.append(t)
         return telem_info
@@ -123,7 +125,9 @@ class JuicerInterface():
             c_msg_type = struct_name
             # symbol = self._symbol_ros_name_map[struct_name]
             c_topic = cd["topic_name"]
-            c_port = cd["port"]
+            c_port = 0
+            if "port" in cd:
+                c_port = cd["port"]
             c = CommandInfo(c_key, c_msg_type, c_topic, None, c_port)
             command_info.append(c)
         return command_info
