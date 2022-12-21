@@ -169,37 +169,40 @@ class JuicerInterface():
             self._node.get_logger().debug("handle field " + debug_name)
             offs = offset + field.get_byte_offset()
             val = None
-            # self._msg_list contains list of data types that need to be processed
-            if fsym.get_ros_name() in self._msg_list:
-                MsgType = getattr(importlib.import_module(msg_pkg + ".msg"),
-                                  fsym.get_ros_name())
-                fmsg = MsgType()
-                val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
-                self._node.get_logger().debug("Got value from recursive call for " + debug_name)
-            else:
-                if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
-                    # copy code from cfs_telem_receiver
-                    ca = ""
-                    for s in range(int(fsym.get_size())):
-                        tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
-                        ca = ca + codecs.decode(tf[0], 'UTF-8')
-                    val = ca
-                    self._node.get_logger().debug("Got value as a string - " + debug_name)
+            try:
+                # self._msg_list contains list of data types that need to be processed
+                if fsym.get_ros_name() in self._msg_list:
+                    MsgType = getattr(importlib.import_module(msg_pkg + ".msg"),
+                                      fsym.get_ros_name())
+                    fmsg = MsgType()
+                    val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
+                    self._node.get_logger().debug("Got value from recursive call for " + debug_name)
                 else:
-                    size = fsym.get_size()
-                    fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                    tlm_field = unpack(fmt, datagram[offs:(offs + size)])
-                    val = tlm_field[0]
-                    self._node.get_logger().debug("Unpacked value - " + debug_name
-                                                  + " using format " + fmt)
-            # do something with val here
-            if val is not None:
-                setattr(msg, field.get_ros_name(), val)
-                self._node.get_logger().debug("Set " + field.get_ros_name()
-                                              + " to value " + str(val))
-            else:
-                self._node.get_logger().debug("Value for " + debug_name
-                                              + " set through recursive call")
+                    if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
+                        # copy code from cfs_telem_receiver
+                        ca = ""
+                        for s in range(int(fsym.get_size())):
+                            tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
+                            ca = ca + codecs.decode(tf[0], 'UTF-8')
+                        val = ca
+                        self._node.get_logger().debug("Got value as a string - " + debug_name)
+                    else:
+                        size = fsym.get_size()
+                        fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
+                        tlm_field = unpack(fmt, datagram[offs:(offs + size)])
+                        val = tlm_field[0]
+                        self._node.get_logger().debug("Unpacked value - " + debug_name
+                                                      + " using format " + fmt)
+                # do something with val here
+                if val is not None:
+                    setattr(msg, field.get_ros_name(), val)
+                    self._node.get_logger().debug("Set " + field.get_ros_name()
+                                                  + " to value " + str(val))
+                else:
+                    self._node.get_logger().debug("Value for " + debug_name
+                                                  + " set through recursive call")
+            except:
+                self._node.get_logger().debug("Problem unpacking - " + debug_name)
         return msg
 
     def parse_command(self, command_info, message, mid, code):
@@ -235,20 +238,24 @@ class JuicerInterface():
         packet = bytearray(packet_size)
         # process differently if string vs numeric?
         ros_name = fsym.get_ros_name()
-        if ros_name.startswith("string") or ros_name.startswith("char"):
-            # handle string
-            string_b = fmsg.encode()
-            packet[:fsym.get_size()] = string_b
-            self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
-        else:
-            # handle numeric
-            endian = 'big'
-            if field.get_endian():
-                endian = 'little'
-            packet = fmsg.to_bytes(packet_size, endian)
-            # TODO: need to handle floating point types differently
-            self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name()
-                                          + " with endian " + endian)
+        try:
+            if ros_name.startswith("string") or ros_name.startswith("char"):
+                # handle string
+                string_b = fmsg.encode()
+                packet[:fsym.get_size()] = string_b
+                self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
+            else:
+                # handle numeric
+                endian = 'big'
+                if field.get_endian():
+                    endian = 'little'
+                packet = fmsg.to_bytes(packet_size, endian)
+                # TODO: need to handle floating point types differently
+                self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name()
+                                              + " with endian " + endian)
+
+        except:
+            self._node.get_logger().error("problem tryin to encode data: " + ros_name)
 
         return packet
 
