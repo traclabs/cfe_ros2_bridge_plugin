@@ -229,10 +229,11 @@ class JuicerInterface():
                     endian = 'little'
                 packet = fmsg.to_bytes(packet_size, endian)
                 # TODO: need to handle floating point types differently
-                self._node.get_logger().debug("Storing " + str(fmsg) + " into " + field.get_ros_name()
+                self._node.get_logger().debug("Storing " + str(fmsg) + " into "
+                                              + field.get_ros_name()
                                               + " with endian " + endian)
 
-        except:
+        except (TypeError):
             self._node.get_logger().error("problem tryin to encode data: " + ros_name)
 
         return packet
