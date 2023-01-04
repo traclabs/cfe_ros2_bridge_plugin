@@ -18,6 +18,7 @@ class JuicerFieldEntry():
         self._bit_offset = bit_offset
         self._ros_name = generate_ros_field_name(name)
         self._type_symbol = None
+        self._byte_length = 0
 
     def get_name(self):
         return self._name
@@ -60,6 +61,12 @@ class JuicerFieldEntry():
 
     def set_little_endian(self, endian):
         self._little_endian = endian
+
+    def get_byte_length(self):
+        return self._byte_length
+
+    def set_byte_length(self, length):
+        self._byte_length = length
 
 
 def generate_ros_field_name(name):
