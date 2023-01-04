@@ -48,11 +48,20 @@ class FSWPlugin(FSWPluginInterface):
 
         self._command_dict = self._cfe_config.get_command_dict()
         self._telemetry_dict = self._cfe_config.get_telemetry_dict()
+        tlm_ports = []
+        for tlm in self._telemetry_dict:
+            port = self._telemetry_dict[tlm]['port']
+            if port not in tlm_ports:
+                tlm_ports.append(port)
+        self._node.get_logger().info("Telemetry ports: " + str(tlm_ports))
 
         self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
-        self._telem_receiver = TelemReceiver(self._node, self._msg_pkg, self._telemetry_port,
-                                             self._telemetry_dict,
-                                             self._juicer_interface)
+        self._telem_receivers = []
+        for port in tlm_ports:
+            telem_receiver = TelemReceiver(self._node, self._msg_pkg, port,
+                                           self._telemetry_dict,
+                                           self._juicer_interface)
+            self._telem_receivers.append(telem_receiver)
         # self._cmd_receiver = CmdReceiver(self._node, self._msg_pkg, self._command_port,
         #                                      self._command_dict,
         #                                      self._juicer_interface)
@@ -113,7 +122,12 @@ class FSWPlugin(FSWPluginInterface):
         return self._command_info
 
     def get_latest_data(self, key):
-        return self._telem_receiver.get_latest_data(key)
+        data = None
+        for telem_receiver in self._telem_receivers:
+            if data == None:
+                data = telem_receiver.get_latest_data(key)
+
+        return data
 
     def create_ros_msgs(self, msg_dir):
         msg_list = []

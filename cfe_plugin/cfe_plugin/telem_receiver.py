@@ -20,14 +20,18 @@ class TelemReceiver():
         self._logger = self._node.get_logger()
         self._node.get_logger().debug("telem_receiver got these telemetry structs")
         for tlm in telem_info:
-            self._node.get_logger().debug("type: " + str(tlm))
-            self._node.get_logger().debug("  structure: " + str(telem_info[tlm]['structure']))
-            self._node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-            self._node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
-            self._node.get_logger().debug("  port: " + str(telem_info[tlm]['port']))
-            self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
-            self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
-            self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
+            port = telem_info[tlm]['port']
+            if port == self._port:
+                self._node.get_logger().debug("type: " + str(tlm))
+                self._node.get_logger().debug("  structure: " + str(telem_info[tlm]['structure']))
+                self._node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
+                self._node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
+                self._node.get_logger().debug("  port: " + str(telem_info[tlm]['port']))
+                self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
+                self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
+                self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
+            # else:
+            #     self._node.get_logger().info("Skipping telem on port " + str(port) + " as we're listening to port " + str(self._port))
         self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
