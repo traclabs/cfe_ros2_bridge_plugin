@@ -45,7 +45,14 @@ class JuicerFieldEntry():
         symbol = self._type_symbol
         if symbol.get_alternative():
             symbol = symbol.get_alternative()
-        return symbol.get_ros_name()
+        # determine if this is an array
+        size = symbol.get_size()
+        if (self._byte_length / size) >= 2:
+            type_name = symbol.get_ros_name_array()
+            self._node.get_logger().info("Found array for " + symbol.get_ros_name() + " of length " + str(self._byte_length / size))
+        else:
+            type_name = symbol.get_ros_name()
+        return type_name
 
     def set_type_symbol(self, symbol):
         self._type_symbol = symbol

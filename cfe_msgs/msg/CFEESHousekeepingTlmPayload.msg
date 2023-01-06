@@ -33,8 +33,8 @@ uint32 boot_source
 uint32 perf_state
 uint32 perf_mode
 uint32 perf_trigger_count
-uint32 perf_filter_mask
-uint32 perf_trigger_mask
+uint32[] perf_filter_mask
+uint32[] perf_trigger_mask
 uint32 perf_data_start
 uint32 perf_data_end
 uint32 perf_data_count

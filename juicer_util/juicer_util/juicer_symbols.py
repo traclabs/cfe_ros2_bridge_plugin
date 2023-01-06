@@ -29,6 +29,14 @@ class JuicerSymbolEntry():
     def get_ros_name(self):
         return self._ros_name
 
+    def get_ros_name_array(self):
+        array_name = self._ros_name + "[]"
+        if self._ros_name.startswith("char"):
+            array_name = "string"
+        elif self._ros_name.startswith("string"):
+            array_name = "string"
+        return array_name
+
     def set_ros_name(self, name):
         self._ros_name = name
 

@@ -2,4 +2,4 @@
 # ROS topic: cfe_msg_telemetryheader
 CFEMSGMessage msg
 CFEMSGTelemetrySecondaryHeadert sec
-uint8 spare
+uint8[] spare

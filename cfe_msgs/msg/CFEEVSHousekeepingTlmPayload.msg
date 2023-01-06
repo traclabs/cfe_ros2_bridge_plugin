@@ -14,4 +14,4 @@ uint8 log_enabled
 uint8 spare
 uint8 spare_1
 uint8 spare_2
-CFEEVSAppTlmData app_data
+CFEEVSAppTlmData[] app_data
