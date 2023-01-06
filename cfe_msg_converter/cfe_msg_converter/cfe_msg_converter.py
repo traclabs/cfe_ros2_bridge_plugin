@@ -20,10 +20,7 @@ class CfeMsgConverter(Node):
 
         self._cfs_msgs_dir = get_package_share_directory("cfe_msgs")
 
-        mpkg_name = "src/cfe_ros2_bridge_plugin/"
-        pkg_name = "cfe_msgs/"
-        p_up = "/../../../../"
-        self._msgs_src_dir = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name
+        self._msgs_src_dir = self.get_location()
 
         self.get_logger().info("cfe_msgs_dir: " + self._cfs_msgs_dir)
 
@@ -86,10 +83,7 @@ class CfeMsgConverter(Node):
                 self.get_logger().error("error writing msg file: " + fn)
 
     def write_cmake_lists_file(self):
-        mpkg_name = "src/cfe_ros2_bridge_plugin/"
-        pkg_name = "cfe_msgs/"
-        p_up = "/../../../../"
-        cmake_file = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name + "CMakeLists.txt"
+        cmake_file = self.get_location() + "CMakeLists.txt"
 
         try:
             outf = open(cmake_file, 'w')
@@ -116,6 +110,13 @@ class CfeMsgConverter(Node):
 
         except (IOError):
             self.get_logger().error("error writing CMakeLists.txt")
+
+    def get_location(self):
+        mpkg_name = "src/cfe_ros2_bridge_plugin/"
+        pkg_name = "cfe_msgs/"
+        p_up = "/../../../../"
+        msgs_src_dir = self._cfs_msgs_dir + p_up + mpkg_name + pkg_name
+        return msgs_src_dir
 
 
 def main(args=None):
