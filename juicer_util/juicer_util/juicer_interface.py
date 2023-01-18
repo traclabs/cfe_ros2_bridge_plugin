@@ -176,7 +176,7 @@ class JuicerInterface():
                                       fsym.get_ros_name())
                     fmsg = MsgType()
                     val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
-                    self._node.get_logger().debug("Got value from recursive call for " + debug_name)
+                    self._node.get_logger().debug("Got val from recursive call for " + debug_name)
                 else:
                     if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                         # copy code from cfs_telem_receiver
@@ -201,7 +201,7 @@ class JuicerInterface():
                 else:
                     self._node.get_logger().debug("Value for " + debug_name
                                                   + " set through recursive call")
-            except:
+            except (TypeError):
                 self._node.get_logger().debug("Problem unpacking - " + debug_name)
         return msg
 
