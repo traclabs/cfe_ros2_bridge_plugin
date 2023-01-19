@@ -2,5 +2,5 @@ cfe_bridge:
   ros__parameters:
     plugin_name: cfe_plugin.cfe_plugin
     plugin_params:
-      commandHost: "127.0.0.7"
+      commandHost: "127.0.0.1"
       telemetryPort: 1235
