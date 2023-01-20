@@ -2,4 +2,4 @@ cfe_msg_converter:
   ros__parameters:
     cfs_root: ~/code/TL-cFS
     plugin_params:
-      juicer_db: ["~/ros2/brash/src/cfe_ros2_bridge_plugin/cfe_plugin/resource/cfs_bootes-rc1-dev83_TL.sqlite"]
+      juicer_db: ["~/code/galactic_ws/brash/src/cfe_ros2_bridge_plugin/cfe_plugin/resource/cfs_bootes-rc1-dev83_TL.sqlite"]
