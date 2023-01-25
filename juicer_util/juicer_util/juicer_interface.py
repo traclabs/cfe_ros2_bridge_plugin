@@ -175,8 +175,15 @@ class JuicerInterface():
                 if fsym.get_ros_name() in self._msg_list:
                     MsgType = getattr(importlib.import_module(msg_pkg + ".msg"),
                                       fsym.get_ros_name())
+                    # this may be an array, so prepare for it
+                    aryval = []
+                    size = fsym.get_size()
                     fmsg = MsgType()
-                    val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
+                    for x in range(length):
+                        val = self.parse_packet(datagram, offs + x*size, fsym.get_ros_name(), fmsg, msg_pkg)
+                        aryval.append(val)
+                    if length > 1:
+                        val = aryval
                     self._node.get_logger().debug("Got val from recursive call for " + debug_name)
                 else:
                     if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
