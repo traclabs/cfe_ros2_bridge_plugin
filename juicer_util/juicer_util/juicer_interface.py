@@ -165,8 +165,9 @@ class JuicerInterface():
         fields = symbol.get_fields()
         for field in fields:
             fsym = field.get_type_symbol()
+            is_array, length = field.get_is_array()
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
-            self._node.get_logger().debug("handle field " + debug_name)
+            self._node.get_logger().debug("handle field " + debug_name + " of length " + str(length))
             offs = offset + field.get_byte_offset()
             val = None
             try:
@@ -187,10 +188,16 @@ class JuicerInterface():
                         val = ca
                         self._node.get_logger().debug("Got value as a string - " + debug_name)
                     else:
+                        # this may be an array, so prepare for it
+                        aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        tlm_field = unpack(fmt, datagram[offs:(offs + size)])
-                        val = tlm_field[0]
+                        for x in range(length):
+                            tlm_field = unpack(fmt, datagram[(offs + size*x):(offs + size*(x+1))])
+                            val = tlm_field[0]
+                            aryval.append(val)
+                        if length > 1:
+                            val = aryval
                         self._node.get_logger().debug("Unpacked value - " + debug_name
                                                       + " using format " + fmt)
                 # do something with val here
