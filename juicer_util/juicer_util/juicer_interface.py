@@ -167,7 +167,8 @@ class JuicerInterface():
             fsym = field.get_type_symbol()
             is_array, length = field.get_is_array()
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
-            self._node.get_logger().debug("handle field " + debug_name + " of length " + str(length))
+            self._node.get_logger().debug("handle field " + debug_name + " of length "
+                                          + str(length) + " for field " + field.get_ros_name())
             offs = offset + field.get_byte_offset()
             val = None
             try:

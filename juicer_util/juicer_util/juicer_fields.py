@@ -46,7 +46,7 @@ class JuicerFieldEntry():
         symbol = self.get_type_symbol()
         if is_array:
             type_name = symbol.get_ros_name_array()
-            self._node.get_logger().info("Found array for " + symbol.get_ros_name() + " of length " + str(length))
+            self._node.get_logger().debug("Found array for " + symbol.get_ros_name() + " of length " + str(length) + " for field " + self._ros_name)
         else:
             type_name = symbol.get_ros_name()
         return type_name
@@ -83,6 +83,9 @@ class JuicerFieldEntry():
 
     def set_byte_length(self, length):
         self._byte_length = length
+
+    def update_ros_name(self, name):
+        self._ros_name = name
 
 
 def generate_ros_field_name(name):
