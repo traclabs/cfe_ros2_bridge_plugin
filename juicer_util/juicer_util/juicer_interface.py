@@ -190,7 +190,7 @@ class JuicerInterface():
                     if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                         # copy code from cfs_telem_receiver
                         ca = ""
-                        for s in range(int(fsym.get_size())):
+                        for s in range(int(length)):
                             tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
                         val = ca
@@ -200,7 +200,7 @@ class JuicerInterface():
                         aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        for x in range(length):
+                        for x in range(int(length)):
                             tlm_field = unpack(fmt, datagram[(offs + size*x):(offs + size*(x+1))])
                             val = tlm_field[0]
                             aryval.append(val)
@@ -217,7 +217,7 @@ class JuicerInterface():
                     self._node.get_logger().debug("Value for " + debug_name
                                                   + " set through recursive call")
             except (TypeError):
-                self._node.get_logger().debug("Problem unpacking - " + debug_name)
+                self._node.get_logger().error("Error unpacking - " + debug_name)
         return msg
 
     def parse_command(self, command_info, message, mid, code):
