@@ -290,6 +290,10 @@ class JuicerInterface():
             retval = ">" + retval
         return retval
 
+    def get_symbol_info(self, name):
+        symbol = self._symbol_name_map[name]
+        return symbol
+
 
 def field_sort_order(field):
     return field.get_byte_offset()
