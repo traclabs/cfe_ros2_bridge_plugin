@@ -4,4 +4,4 @@ uint32 pool_size
 uint32 num_blocks_requested
 uint32 check_err_ctr
 uint32 num_free_bytes
-CFEESBlockStats block_stats
+CFEESBlockStats[] block_stats

@@ -17,4 +17,4 @@ uint32 spare0
 float64 df1
 float64 df2
 string str
-char spare_end
+string spare_end

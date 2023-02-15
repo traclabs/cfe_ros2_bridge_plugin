@@ -2,6 +2,7 @@ import sqlite3
 from sqlite3 import Error
 from juicer_util.juicer_fields import JuicerFieldEntry
 from juicer_util.juicer_symbols import JuicerSymbolEntry
+from juicer_util.juicer_symbols import field_byte_order
 
 
 class JuicerDatabase():
@@ -99,6 +100,7 @@ class JuicerDatabase():
         self._conn.close()
         self.prune_symbols_and_fields()
         self.mark_cmd_tlm_symbols()
+        self.handle_duplicate_fields()
 
     def prune_symbols_and_fields(self):
         self._node.get_logger().debug("Pruning out things that aren't needed.")
@@ -152,13 +154,43 @@ class JuicerDatabase():
 
     def mark_output_symbol(self, symbol):
         symbol.set_should_output(True)
+        byte_size = symbol.get_size()
         fields = symbol.get_fields()
+        fields.sort(key=lambda field: field._byte_offset)
+        prev_field = None
         for field in fields:
             field_symbol = field.get_type_symbol()
             self.mark_output_symbol(field_symbol)
+            if prev_field != None:
+                prev_field.set_byte_length(field.get_byte_offset() - prev_field.get_byte_offset())
+            prev_field = field
+        # need to set last field length
+        if prev_field != None:
+            prev_field.set_byte_length(byte_size - prev_field.get_byte_offset())
 
     def get_symbol_name_map(self):
         return self._symbol_name_map
 
     def get_field_name_map(self):
         return self._field_name_map
+
+    def handle_duplicate_fields(self):
+        for symbol_name in self._symbol_name_map:
+            symbol = self._symbol_name_map[symbol_name]
+            if len(symbol.get_fields()) > 0:
+                self.rename_duplicate_fields(symbol)
+
+    def rename_duplicate_fields(self, symbol):
+        v_names = {}
+
+        fields = symbol.get_fields()
+        fields.sort(key=field_byte_order)
+        for field in fields:
+            typename = field.get_type_name()
+            fn = field.get_ros_name()
+            if fn not in v_names.keys():
+                v_names[fn] = 0
+            else:
+                v_names[fn] += 1
+                fn = fn + "_" + str(v_names[fn])
+                field.update_ros_name(fn)

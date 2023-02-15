@@ -18,6 +18,7 @@ class JuicerFieldEntry():
         self._bit_offset = bit_offset
         self._ros_name = generate_ros_field_name(name)
         self._type_symbol = None
+        self._byte_length = 0
 
     def get_name(self):
         return self._name
@@ -41,10 +42,26 @@ class JuicerFieldEntry():
         return self._bit_offset
 
     def get_type_name(self):
-        symbol = self._type_symbol
-        if symbol.get_alternative():
-            symbol = symbol.get_alternative()
-        return symbol.get_ros_name()
+        is_array, length = self.get_is_array()
+        symbol = self.get_type_symbol()
+        if is_array:
+            type_name = symbol.get_ros_name_array()
+            self._node.get_logger().debug("Found array for " + symbol.get_ros_name() + " of length " + str(length) + " for field " + self._ros_name)
+        else:
+            type_name = symbol.get_ros_name()
+        return type_name
+
+    def get_is_array(self):
+        retval = False
+        symbol = self.get_type_symbol()
+        # determine if this is an array
+        size = symbol.get_size()
+        length = self._byte_length / size
+        if length >= 2:
+            retval = True
+        else:
+            length = 1
+        return retval, length
 
     def set_type_symbol(self, symbol):
         self._type_symbol = symbol
@@ -60,6 +77,15 @@ class JuicerFieldEntry():
 
     def set_little_endian(self, endian):
         self._little_endian = endian
+
+    def get_byte_length(self):
+        return self._byte_length
+
+    def set_byte_length(self, length):
+        self._byte_length = length
+
+    def update_ros_name(self, name):
+        self._ros_name = name
 
 
 def generate_ros_field_name(name):

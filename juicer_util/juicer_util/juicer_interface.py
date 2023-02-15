@@ -165,34 +165,75 @@ class JuicerInterface():
         fields = symbol.get_fields()
         for field in fields:
             fsym = field.get_type_symbol()
+            is_array, length = field.get_is_array()
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
-            self._node.get_logger().debug("handle field " + debug_name)
             offs = offset + field.get_byte_offset()
+            self._node.get_logger().debug("handle field " + debug_name + " of length "
+                                          + str(length) + " for field " + field.get_ros_name()
+                                          + " with offset " + str(offs))
             val = None
+            fmt = "not set"
             try:
                 # self._msg_list contains list of data types that need to be processed
                 if fsym.get_ros_name() in self._msg_list:
                     MsgType = getattr(importlib.import_module(msg_pkg + ".msg"),
                                       fsym.get_ros_name())
+                    # this may be an array, so prepare for it
+                    aryval = []
+                    size = fsym.get_size()
                     fmsg = MsgType()
-                    val = self.parse_packet(datagram, offs, fsym.get_ros_name(), fmsg, msg_pkg)
+                    for x in range(length):
+                        val = self.parse_packet(datagram, offs + x*size, fsym.get_ros_name(), fmsg, msg_pkg)
+                        aryval.append(val)
+                    if length > 1:
+                        val = aryval
                     self._node.get_logger().debug("Got val from recursive call for " + debug_name)
                 else:
                     if (fsym.get_ros_name() == 'string') or (fsym.get_ros_name() == 'char'):
                         # copy code from cfs_telem_receiver
                         ca = ""
-                        for s in range(int(fsym.get_size())):
-                            tf = unpack('c', datagram[(offs + s):(offs + s + 1)])
+                        size = int(length)
+                        self._node.get_logger().debug("unpacking " + str(size) + " character string")
+                        num_decoded = 0
+                        for s in range(size):
+                            start = offs + s
+                            end = start + 1
+                            if end > len(datagram):
+                                self._node.get_logger().error("ERROR: trying to read past end of buffer!")
+                                break;
+                            tf = unpack('c', datagram[start:end])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
+                            num_decoded = num_decoded + 1
                         val = ca
-                        self._node.get_logger().debug("Got value as a string - " + debug_name)
+                        self._node.get_logger().debug("Got value as a string - " + debug_name
+                                                     + " with " + str(num_decoded) + " items")
+                        if num_decoded == 0:
+                            val = None
                     else:
+                        # this may be an array, so prepare for it
+                        aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        tlm_field = unpack(fmt, datagram[offs:(offs + size)])
-                        val = tlm_field[0]
+                        self._node.get_logger().debug("unpack format is " + fmt + ", length is " + str(length))
+                        num_decoded = 0
+                        for x in range(int(length)):
+                            start = offs + size*x
+                            end = offs + size*(x+1)
+                            if end > len(datagram):
+                                self._node.get_logger().error("ERROR: trying to read past end of buffer!")
+                                break;
+                            self._node.get_logger().debug("unpack range is from " + str(start) + " to " + str(end))
+                            tlm_field = unpack(fmt, datagram[start:end])
+                            val = tlm_field[0]
+                            aryval.append(val)
+                            num_decoded = num_decoded + 1
+                        if length > 1:
+                            val = aryval
                         self._node.get_logger().debug("Unpacked value - " + debug_name
-                                                      + " using format " + fmt)
+                                                      + " using format " + fmt
+                                                      + " with " + str(num_decoded) + " items")
+                        if num_decoded == 0:
+                            val = None
                 # do something with val here
                 if val is not None:
                     setattr(msg, field.get_ros_name(), val)
@@ -202,7 +243,7 @@ class JuicerInterface():
                     self._node.get_logger().debug("Value for " + debug_name
                                                   + " set through recursive call")
             except (TypeError):
-                self._node.get_logger().debug("Problem unpacking - " + debug_name)
+                self._node.get_logger().error("Error unpacking - " + debug_name + " with format " + fmt)
         return msg
 
     def parse_command(self, command_info, message, mid, code):

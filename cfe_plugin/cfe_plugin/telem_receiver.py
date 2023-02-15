@@ -61,6 +61,7 @@ class TelemReceiver():
                 if len(datagram) < 6:
                     continue
 
+                self._logger.debug("Incoming data is length " + str(len(datagram)))
                 self.handle_packet(datagram)
 
             except socket.error:
@@ -74,7 +75,11 @@ class TelemReceiver():
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
                               ros_name)
             msg = MsgType()
-            setattr(msg, "seq", self.get_seq_count(datagram))
+            msg_attrs = dir(msg)
+            if "seq" in msg_attrs:
+                setattr(msg, "seq", self.get_seq_count(datagram))
+            else:
+                self._logger.warn("Failed to find 'seq' in message.")
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             key = self._key_map[packet_id]
             self._current_value[key] = msg
