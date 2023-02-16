@@ -4,4 +4,4 @@ CFESBMsgIdt stream
 uint16 pkt_size
 CFESBQost flags
 uint8 buf_limit
-char spare_end
+string spare_end

@@ -11,5 +11,5 @@ bool file_truncated
 string file
 bool function_truncated
 string function
-char spare0
+string spare0
 uint32 line
