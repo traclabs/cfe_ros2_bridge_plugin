@@ -46,7 +46,9 @@ class JuicerFieldEntry():
         symbol = self.get_type_symbol()
         if is_array:
             type_name = symbol.get_ros_name_array()
-            self._node.get_logger().debug("Found array for " + symbol.get_ros_name() + " of length " + str(length) + " for field " + self._ros_name)
+            self._node.get_logger().debug("Found array for " + symbol.get_ros_name()
+                                          + " of length " + str(length) + " for field "
+                                          + self._ros_name)
         else:
             type_name = symbol.get_ros_name()
         return type_name

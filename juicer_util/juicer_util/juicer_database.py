@@ -161,11 +161,11 @@ class JuicerDatabase():
         for field in fields:
             field_symbol = field.get_type_symbol()
             self.mark_output_symbol(field_symbol)
-            if prev_field != None:
+            if prev_field is not None:
                 prev_field.set_byte_length(field.get_byte_offset() - prev_field.get_byte_offset())
             prev_field = field
         # need to set last field length
-        if prev_field != None:
+        if prev_field is not None:
             prev_field.set_byte_length(byte_size - prev_field.get_byte_offset())
 
     def get_symbol_name_map(self):
@@ -186,7 +186,7 @@ class JuicerDatabase():
         fields = symbol.get_fields()
         fields.sort(key=field_byte_order)
         for field in fields:
-            typename = field.get_type_name()
+            # typename = field.get_type_name()
             fn = field.get_ros_name()
             if fn not in v_names.keys():
                 v_names[fn] = 0

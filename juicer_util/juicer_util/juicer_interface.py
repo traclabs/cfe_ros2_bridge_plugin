@@ -183,7 +183,8 @@ class JuicerInterface():
                     size = fsym.get_size()
                     fmsg = MsgType()
                     for x in range(length):
-                        val = self.parse_packet(datagram, offs + x*size, fsym.get_ros_name(), fmsg, msg_pkg)
+                        val = self.parse_packet(datagram, offs + x*size, fsym.get_ros_name(),
+                                                fmsg, msg_pkg)
                         aryval.append(val)
                     if length > 1:
                         val = aryval
@@ -193,20 +194,20 @@ class JuicerInterface():
                         # copy code from cfs_telem_receiver
                         ca = ""
                         size = int(length)
-                        self._node.get_logger().debug("unpacking " + str(size) + " character string")
+                        self._node.get_logger().debug("unpacking " + str(size) + " char string")
                         num_decoded = 0
                         for s in range(size):
                             start = offs + s
                             end = start + 1
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past end of buffer!")
-                                break;
+                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                break
                             tf = unpack('c', datagram[start:end])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
                             num_decoded = num_decoded + 1
                         val = ca
                         self._node.get_logger().debug("Got value as a string - " + debug_name
-                                                     + " with " + str(num_decoded) + " items")
+                                                      + " with " + str(num_decoded) + " items")
                         if num_decoded == 0:
                             val = None
                     else:
@@ -214,15 +215,17 @@ class JuicerInterface():
                         aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        self._node.get_logger().debug("unpack format is " + fmt + ", length is " + str(length))
+                        self._node.get_logger().debug("unpack format is " + fmt
+                                                      + ", length is " + str(length))
                         num_decoded = 0
                         for x in range(int(length)):
                             start = offs + size*x
                             end = offs + size*(x+1)
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past end of buffer!")
-                                break;
-                            self._node.get_logger().debug("unpack range is from " + str(start) + " to " + str(end))
+                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                break
+                            self._node.get_logger().debug("unpack range is from " + str(start)
+                                                          + " to " + str(end))
                             tlm_field = unpack(fmt, datagram[start:end])
                             val = tlm_field[0]
                             aryval.append(val)
@@ -243,7 +246,8 @@ class JuicerInterface():
                     self._node.get_logger().debug("Value for " + debug_name
                                                   + " set through recursive call")
             except (TypeError):
-                self._node.get_logger().error("Error unpacking - " + debug_name + " with format " + fmt)
+                self._node.get_logger().error("Error unpacking - " + debug_name
+                                              + " with format " + fmt)
         return msg
 
     def parse_command(self, command_info, message, mid, code):
