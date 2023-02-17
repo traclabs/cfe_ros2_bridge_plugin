@@ -166,6 +166,8 @@ def handle_lower_case_name(lc_name, symbol_name):
         n = 'uint8'
     elif n == 'padding16':
         n = 'uint16'
+    elif n == 'padding24':
+        n = 'string'
     elif n == 'padding32':
         n = 'uint32'
     elif n == 'padding64':
