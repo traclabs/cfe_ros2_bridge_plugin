@@ -6,6 +6,7 @@ import importlib
 from struct import unpack
 import codecs
 import juicer_util.juicer_interface
+from std_msgs.msg import Header
 
 
 class TelemReceiver():
@@ -70,6 +71,8 @@ class TelemReceiver():
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
         if packet_id in self._tlm_map:
+            # get the current timestamp to add to the message
+            mytime = self._node.get_clock().now().to_msg()
             ros_name = self._tlm_map[packet_id]
             # self._logger.info("Received packet for " + ros_name)
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
@@ -80,6 +83,12 @@ class TelemReceiver():
                 setattr(msg, "seq", self.get_seq_count(datagram))
             else:
                 self._logger.warn("Failed to find 'seq' in message.")
+            if "header" in msg_attrs:
+                hdr = Header()
+                hdr.stamp = mytime
+                setattr(msg, "header", hdr)
+                # self._logger.info("Set the header time to " + str(mytime))
+
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             key = self._key_map[packet_id]
             self._current_value[key] = msg
