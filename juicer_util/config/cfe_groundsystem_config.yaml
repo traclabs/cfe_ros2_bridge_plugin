@@ -642,17 +642,17 @@
           port: 1235
         CPU1ROSAPPRosoutWarnTlmt:
           structure: ROSAPPRosoutTlmt
-          cfe_mid: '0x89A'
+          cfe_mid: '0x89a'
           topic_name: /groundsystem/rosapp_rosout_warn_tlm
           port: 1235
         CPU1ROSAPPRosoutErrorTlmt:
           structure: ROSAPPRosoutTlmt
-          cfe_mid: '0x89B'
+          cfe_mid: '0x89b'
           topic_name: /groundsystem/rosapp_rosout_error_tlm
           port: 1235
         CPU1ROSAPPRosoutFatalTlmt:
           structure: ROSAPPRosoutTlmt
-          cfe_mid: '0x89C'
+          cfe_mid: '0x89c'
           topic_name: /groundsystem/rosapp_rosout_fatal_tlm
           port: 1235
         CPU1ROSAPPRosoutDebugTlmt:
