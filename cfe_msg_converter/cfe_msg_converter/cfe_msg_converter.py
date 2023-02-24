@@ -63,8 +63,10 @@ class CfeMsgConverter(Node):
                 f.write("# ROS topic: " + symbol.get_ros_topic() + "\n")
                 if symbol.get_is_command():
                     f.write("# Command message" + "\n")
+                    f.write("std_msgs/Header header" + "\n")
                 if symbol.get_is_telemetry():
                     f.write("# Telemetry message" + "\n")
+                    f.write("std_msgs/Header header" + "\n")
                     f.write("int32 seq" + "\n")
                 fields = symbol.get_fields()
                 fields.sort(key=field_byte_order)

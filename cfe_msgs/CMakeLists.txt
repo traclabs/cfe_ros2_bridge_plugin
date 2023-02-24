@@ -180,6 +180,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CFEMSGMessage.msg"
   "msg/ROSAPPRosoutPayloadt.msg"
   "msg/ROSAPPRosoutTlmt.msg"
+  DEPENDENCIES std_msgs
 )
 
 if(BUILD_TESTING)
