@@ -90,6 +90,11 @@ class JuicerInterface():
                 for field in ccsds_prim_hdr.get_fields():
                     field.set_type_symbol(two_bytes)
                     field.set_little_endian(False)
+            # need to fix time field for CFEMSGTelemetrySecondaryHeadert
+            telem_sec_hdr = self._symbol_ros_name_map["CFEMSGTelemetrySecondaryHeadert"]
+            if telem_sec_hdr is not None:
+                for field in telem_sec_hdr.get_fields():
+                    field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()
 
@@ -328,7 +333,7 @@ class JuicerInterface():
         elif ros_name == "bool":
             retval = "?"
         else:
-            self._logger.warn("Failed to get unpack format for " + ros_name)
+            self._node.get_logger().warn("Failed to get unpack format for " + ros_name)
         if little_endian:
             retval = "<" + retval
         else:
