@@ -3,7 +3,7 @@ import importlib
 import codecs
 
 from rcl_interfaces.msg import ParameterDescriptor
-from struct import unpack
+from struct import unpack, pack
 
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
@@ -205,7 +205,7 @@ class JuicerInterface():
                             start = offs + s
                             end = start + 1
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                self._node.get_logger().error("ERROR: trying to read string past EOB for " + debug_name + "!")
                                 break
                             tf = unpack('c', datagram[start:end])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
@@ -220,16 +220,16 @@ class JuicerInterface():
                         aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        self._node.get_logger().debug("unpack format is " + fmt
+                        self._node.get_logger().info("unpack format is " + fmt
                                                       + ", length is " + str(length))
                         num_decoded = 0
                         for x in range(int(length)):
                             start = offs + size*x
                             end = offs + size*(x+1)
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                self._node.get_logger().error("ERROR: trying to read data past EOB for " + debug_name + "!")
                                 break
-                            self._node.get_logger().debug("unpack range is from " + str(start)
+                            self._node.get_logger().info("unpack range is from " + str(start)
                                                           + " to " + str(end))
                             tlm_field = unpack(fmt, datagram[start:end])
                             val = tlm_field[0]
@@ -237,7 +237,7 @@ class JuicerInterface():
                             num_decoded = num_decoded + 1
                         if length > 1:
                             val = aryval
-                        self._node.get_logger().debug("Unpacked value - " + debug_name
+                        self._node.get_logger().info("Unpacked value - " + debug_name
                                                       + " using format " + fmt
                                                       + " with " + str(num_decoded) + " items")
                         if num_decoded == 0:
@@ -294,6 +294,9 @@ class JuicerInterface():
                 string_b = fmsg.encode()
                 packet[:fsym.get_size()] = string_b
                 self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
+            elif ros_name.startswith("float"):
+                fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
+                packet = pack(fmt, fmsg)
             else:
                 # handle numeric
                 endian = 'big'
@@ -332,6 +335,10 @@ class JuicerInterface():
             retval = "s"
         elif ros_name == "bool":
             retval = "?"
+        elif ros_name == "float32":
+            retval = "f"
+        elif ros_name == "float64":
+            retval = "d"
         else:
             self._node.get_logger().warn("Failed to get unpack format for " + ros_name)
         if little_endian:
