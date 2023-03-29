@@ -11,10 +11,10 @@ class RunMultipleFiles():
         self.files = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
                       'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
                       'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
-                      'cf/sch_lab.so', 'cf/to_lab.so']
-        self.fileDir = '/home/tmilam/code/TL_cFS/build/exe/cpu1'
-        self.outDir = '/home/tmilam/code/test/juicer/dbs'
-        self.exeCmd = '/home/tmilam/code/juicer/build/juicer'
+                      'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so']
+        self.fileDir = '/home/swhart/code/TL-cFS/build/exe/cpu1'
+        self.outDir = '/home/swhart/code/juicer/dbs'
+        self.exeCmd = '/home/swhart/code/juicer/build/juicer'
 
         for name in self.files:
             fname = self.fileDir + "/" + name
