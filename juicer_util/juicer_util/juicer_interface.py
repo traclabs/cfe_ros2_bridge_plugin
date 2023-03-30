@@ -232,7 +232,7 @@ class JuicerInterface():
                             if end > len(datagram):
                                 self._node.get_logger().error("ERROR: trying to read data past EOB for " + debug_name + "!")
                                 break
-                            self._node.get_logger().info("unpack range is from " + str(start)
+                            self._node.get_logger().debug("unpack range is from " + str(start)
                                                           + " to " + str(end))
                             tlm_field = unpack(fmt, datagram[start:end])
                             val = tlm_field[0]
@@ -298,7 +298,7 @@ class JuicerInterface():
                 packet[:fsym.get_size()] = string_b
                 self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
             elif ros_name.startswith("float"):
-                fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
+                fmt = self.get_unpack_format(fsym.get_ros_name(), 1-field.get_endian())
                 packet = pack(fmt, fmsg)
             else:
                 # handle numeric
@@ -348,6 +348,10 @@ class JuicerInterface():
             retval = "<" + retval
         else:
             retval = ">" + retval
+
+        if ros_name == "float32":
+            retval = "<f"
+
         return retval
 
     def get_symbol_info(self, name):
