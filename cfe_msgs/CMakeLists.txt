@@ -26,14 +26,15 @@ find_package(std_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/CCSDSPrimaryHeader.msg"
+  "msg/CCSDSSpacePackett.msg"
+  "msg/CFEMSGMessage.msg"
   "msg/CFEESAppInfo.msg"
   "msg/CFEESBlockStats.msg"
   "msg/CFEESMemPoolStats.msg"
   "msg/CFETIMESysTime.msg"
   "msg/CFEMSGTelemetryHeader.msg"
   "msg/CFEMSGTelemetrySecondaryHeadert.msg"
-  "msg/CCSDSPrimaryHeader.msg"
-  "msg/CCSDSSpacePackett.msg"
   "msg/CFEESOneAppTlmPayload.msg"
   "msg/CFEESOneAppTlm.msg"
   "msg/CFEESPoolStatsTlmPayload.msg"
@@ -162,6 +163,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ROSAPPNoArgsCmdt.msg"
   "msg/ROSAPPHkTlmPayloadt.msg"
   "msg/ROSAPPHkTlmt.msg"
+  "msg/ROSAPPRosoutPayloadt.msg"
+  "msg/ROSAPPRosoutTlmt.msg"
   "msg/SAMPLEAPPNoArgsCmdt.msg"
   "msg/SAMPLEAPPHkTlmPayloadt.msg"
   "msg/SAMPLEAPPHkTlmt.msg"
@@ -177,9 +180,11 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TOLABRemovePacketCmdt.msg"
   "msg/TOLABEnableOutputPayloadt.msg"
   "msg/TOLABEnableOutputCmdt.msg"
-  "msg/CFEMSGMessage.msg"
-  "msg/ROSAPPRosoutPayloadt.msg"
-  "msg/ROSAPPRosoutTlmt.msg"
+  "msg/RobotSimNoArgsCmdt.msg"
+  "msg/RobotSimJointCmdt.msg"
+  "msg/RobotSimSSRMSt.msg"
+  "msg/RobotSimHkTlmPayloadt.msg"
+  "msg/RobotSimHkTlmt.msg"
   DEPENDENCIES std_msgs
 )
 
