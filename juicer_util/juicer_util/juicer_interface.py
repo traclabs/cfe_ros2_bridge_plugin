@@ -162,6 +162,9 @@ class JuicerInterface():
     def get_symbol_name_map(self):
         return self._symbol_name_map
 
+    def get_symbol_ros_name_map(self):
+        return self._symbol_ros_name_map
+
     def get_field_name_map(self):
         return self._field_name_map
 
