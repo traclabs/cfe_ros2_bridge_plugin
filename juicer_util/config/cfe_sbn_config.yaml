@@ -773,4 +773,8 @@
           cfe_mid: '0x881'
           topic_name: /sbn/to_lab_data_types_tlm
           port: 1235
-
+        CPU1RobotSimHkTlmt:
+          structure: RobotSimTlmStatet
+          cfe_mid: '0x817'
+          topic_name: /sbn/robot_sim_state_tlm
+          port: 1235

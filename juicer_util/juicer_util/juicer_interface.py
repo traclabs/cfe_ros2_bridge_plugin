@@ -223,7 +223,7 @@ class JuicerInterface():
                         aryval = []
                         size = fsym.get_size()
                         fmt = self.get_unpack_format(fsym.get_ros_name(), field.get_endian())
-                        self._node.get_logger().info("unpack format is " + fmt
+                        self._node.get_logger().debug("unpack format is " + fmt
                                                       + ", length is " + str(length))
                         num_decoded = 0
                         for x in range(int(length)):
@@ -240,7 +240,7 @@ class JuicerInterface():
                             num_decoded = num_decoded + 1
                         if length > 1:
                             val = aryval
-                        self._node.get_logger().info("Unpacked value - " + debug_name
+                        self._node.get_logger().debug("Unpacked value - " + debug_name
                                                       + " using format " + fmt
                                                       + " with " + str(num_decoded) + " items")
                         if num_decoded == 0:
