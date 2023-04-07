@@ -230,7 +230,7 @@ class JuicerInterface():
                             start = offs + size*x
                             end = offs + size*(x+1)
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read data past EOB for " + debug_name + "!")
+                                self._node.get_logger().debug("ERROR: trying to read data past EOB for " + debug_name + "!")
                                 break
                             self._node.get_logger().debug("unpack range is from " + str(start)
                                                           + " to " + str(end))
@@ -275,13 +275,18 @@ class JuicerInterface():
             fmsg = getattr(message, field.get_ros_name(), 0)
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
             if len(fsym.get_fields()) == 0:
-                self._node.get_logger().debug("Storing concrete value for " + debug_name)
+                self._node.get_logger().info("Storing concrete value for " + debug_name)
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
-                self._node.get_logger().debug("handle field " + debug_name)
-                fpacket = self.encode_command(fsym, fmsg, mid, code)
-                self._node.get_logger().debug("Appending " + debug_name)
+                self._node.get_logger().info("handle field " + debug_name)
+                if debug_name == 'cmd_header.CFEMSGCommandHeader':
+                    self._node.get_logger().info("Appending fake data")
+                    fpacket = bytes(6)
+                else :
+                    fpacket = self.encode_command(fsym, fmsg, mid, code)
+                    self._node.get_logger().info("Appending " + debug_name)
+                self._node.get_logger().info("fpacket " + str(fpacket))
                 packet.extend(fpacket)
 
         return packet
