@@ -102,6 +102,7 @@ class CfeMsgConverter(Node):
                                 outf.write("  \"msg/" + m + ".msg\"\n")
                                 msg_list.append(m)
 
+                        outf.write("  DEPENDENCIES std_msgs\n")
                         outf.write(")\n")
 
                     else:
