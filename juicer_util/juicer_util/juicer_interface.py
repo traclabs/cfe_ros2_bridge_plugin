@@ -279,13 +279,15 @@ class JuicerInterface():
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
-                self._node.get_logger().info("handle field " + debug_name)
-                if debug_name == 'cmd_header.CFEMSGCommandHeader':
-                    self._node.get_logger().info("Appending fake data")
-                    fpacket = bytes(6)
-                else :
-                    fpacket = self.encode_command(fsym, fmsg, mid, code)
-                    self._node.get_logger().info("Appending " + debug_name)
+                # self._node.get_logger().info("handle field " + debug_name)
+                # if debug_name == 'cmd_header.CFEMSGCommandHeader':
+                #     self._node.get_logger().info("Appending fake data")
+                #     fpacket = bytes(6)
+                # else :
+                #     fpacket = self.encode_command(fsym, fmsg, mid, code)
+                #     self._node.get_logger().info("Appending " + debug_name)
+                fpacket = self.encode_command(fsym, fmsg, mid, code)
+                # self._node.get_logger().info("Appending " + debug_name)
                 self._node.get_logger().info("fpacket " + str(fpacket))
                 packet.extend(fpacket)
 

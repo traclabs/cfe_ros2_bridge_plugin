@@ -26,15 +26,14 @@ find_package(std_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/CCSDSPrimaryHeader.msg"
-  "msg/CCSDSSpacePackett.msg"
-  "msg/CFEMSGMessage.msg"
   "msg/CFEESAppInfo.msg"
   "msg/CFEESBlockStats.msg"
   "msg/CFEESMemPoolStats.msg"
   "msg/CFETIMESysTime.msg"
   "msg/CFEMSGTelemetryHeader.msg"
   "msg/CFEMSGTelemetrySecondaryHeadert.msg"
+  "msg/CCSDSPrimaryHeader.msg"
+  "msg/CCSDSSpacePackett.msg"
   "msg/CFEESOneAppTlmPayload.msg"
   "msg/CFEESOneAppTlm.msg"
   "msg/CFEESPoolStatsTlmPayload.msg"
@@ -186,6 +185,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotSimHkTlmPayloadt.msg"
   "msg/RobotSimHkTlmt.msg"
   "msg/RobotSimTlmStatet.msg"
+  "msg/CFEMSGMessage.msg"
   DEPENDENCIES std_msgs
 )
 

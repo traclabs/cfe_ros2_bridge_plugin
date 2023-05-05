@@ -93,11 +93,6 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
 
-        if (key_name == 'CPU1RobotSimJointCmdt'):
-            packet[0] = 0x18
-            packet[1] = 0x17
-            packet[6] = cmd_ids['cmd_code']
-
         send_success = self.send_cmd_packet(packet, self._command_host, cmd_ids['port'])
 
         if send_success:
