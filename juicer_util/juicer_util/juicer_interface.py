@@ -3,7 +3,7 @@ import importlib
 import codecs
 
 from rcl_interfaces.msg import ParameterDescriptor
-from struct import unpack
+from struct import unpack, pack
 
 from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
@@ -162,6 +162,9 @@ class JuicerInterface():
     def get_symbol_name_map(self):
         return self._symbol_name_map
 
+    def get_symbol_ros_name_map(self):
+        return self._symbol_ros_name_map
+
     def get_field_name_map(self):
         return self._field_name_map
 
@@ -205,7 +208,7 @@ class JuicerInterface():
                             start = offs + s
                             end = start + 1
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                self._node.get_logger().error("ERROR: trying to read string past EOB for " + debug_name + "!")
                                 break
                             tf = unpack('c', datagram[start:end])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
@@ -227,7 +230,7 @@ class JuicerInterface():
                             start = offs + size*x
                             end = offs + size*(x+1)
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read past EOB!")
+                                self._node.get_logger().debug("ERROR: trying to read data past EOB for " + debug_name + "!")
                                 break
                             self._node.get_logger().debug("unpack range is from " + str(start)
                                                           + " to " + str(end))
@@ -272,13 +275,20 @@ class JuicerInterface():
             fmsg = getattr(message, field.get_ros_name(), 0)
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
             if len(fsym.get_fields()) == 0:
-                self._node.get_logger().debug("Storing concrete value for " + debug_name)
+                self._node.get_logger().info("Storing concrete value for " + debug_name)
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
-                self._node.get_logger().debug("handle field " + debug_name)
+                # self._node.get_logger().info("handle field " + debug_name)
+                # if debug_name == 'cmd_header.CFEMSGCommandHeader':
+                #     self._node.get_logger().info("Appending fake data")
+                #     fpacket = bytes(6)
+                # else :
+                #     fpacket = self.encode_command(fsym, fmsg, mid, code)
+                #     self._node.get_logger().info("Appending " + debug_name)
                 fpacket = self.encode_command(fsym, fmsg, mid, code)
-                self._node.get_logger().debug("Appending " + debug_name)
+                # self._node.get_logger().info("Appending " + debug_name)
+                self._node.get_logger().info("fpacket " + str(fpacket))
                 packet.extend(fpacket)
 
         return packet
@@ -294,6 +304,9 @@ class JuicerInterface():
                 string_b = fmsg.encode()
                 packet[:fsym.get_size()] = string_b
                 self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
+            elif ros_name.startswith("float"):
+                fmt = self.get_unpack_format(fsym.get_ros_name(), 1-field.get_endian())
+                packet = pack(fmt, fmsg)
             else:
                 # handle numeric
                 endian = 'big'
@@ -332,12 +345,20 @@ class JuicerInterface():
             retval = "s"
         elif ros_name == "bool":
             retval = "?"
+        elif ros_name == "float32":
+            retval = "f"
+        elif ros_name == "float64":
+            retval = "d"
         else:
             self._node.get_logger().warn("Failed to get unpack format for " + ros_name)
         if little_endian:
             retval = "<" + retval
         else:
             retval = ">" + retval
+
+        if ros_name == "float32":
+            retval = "<f"
+
         return retval
 
     def get_symbol_info(self, name):
