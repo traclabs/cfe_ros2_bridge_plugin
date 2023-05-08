@@ -191,7 +191,7 @@ class JuicerInterface():
                     size = fsym.get_size()
                     fmsg = MsgType()
                     for x in range(length):
-                        val = self.parse_packet(datagram, offs + x*size, fsym.get_ros_name(),
+                        val = self.parse_packet(datagram, offs + x * size, fsym.get_ros_name(),
                                                 fmsg, msg_pkg)
                         aryval.append(val)
                     if length > 1:
@@ -208,7 +208,8 @@ class JuicerInterface():
                             start = offs + s
                             end = start + 1
                             if end > len(datagram):
-                                self._node.get_logger().error("ERROR: trying to read string past EOB for " + debug_name + "!")
+                                self._node.get_logger().error("ERROR: trying to read past EOB for "
+                                                              + debug_name + "!")
                                 break
                             tf = unpack('c', datagram[start:end])
                             ca = ca + codecs.decode(tf[0], 'UTF-8')
@@ -227,10 +228,11 @@ class JuicerInterface():
                                                       + ", length is " + str(length))
                         num_decoded = 0
                         for x in range(int(length)):
-                            start = offs + size*x
-                            end = offs + size*(x+1)
+                            start = offs + size * x
+                            end = offs + size * (x + 1)
                             if end > len(datagram):
-                                self._node.get_logger().debug("ERROR: trying to read data past EOB for " + debug_name + "!")
+                                self._node.get_logger().debug("ERROR: trying to read past EOB for "
+                                                              + debug_name + "!")
                                 break
                             self._node.get_logger().debug("unpack range is from " + str(start)
                                                           + " to " + str(end))
@@ -305,7 +307,7 @@ class JuicerInterface():
                 packet[:fsym.get_size()] = string_b
                 self._node.get_logger().debug("Storing " + fmsg + " into " + field.get_ros_name())
             elif ros_name.startswith("float"):
-                fmt = self.get_unpack_format(fsym.get_ros_name(), 1-field.get_endian())
+                fmt = self.get_unpack_format(fsym.get_ros_name(), 1 - field.get_endian())
                 packet = pack(fmt, fmsg)
             else:
                 # handle numeric
