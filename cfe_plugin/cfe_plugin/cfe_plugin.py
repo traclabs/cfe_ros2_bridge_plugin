@@ -71,7 +71,15 @@ class FSWPlugin(FSWPluginInterface):
         for ci in self._command_info:
             key = ci.get_key()
             cmd_ids = self._command_dict[key]
-            msg_size = symbol_name_map[ci.get_msg_type()].get_size()
+
+            msg_type = ci.get_msg_type()
+            if not msg_type:
+                # Special case: Default handler for binary command payload (with cfg defined MID + FC)
+                # We specify size of 0 to indicate dynamically sized message
+                msg_size = 0
+                self._node.get_logger().info('***DBG**: cmd with msg_size=0 (dynamic)')
+            else:
+                msg_size = symbol_name_map[ci.get_msg_type()].get_size()
             ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'], msg_size)
             ci.set_callback_func(ch.process_callback)
 

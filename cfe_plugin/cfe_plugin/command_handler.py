@@ -18,6 +18,9 @@ class CommandHandler():
         if cmd_header != None:
             # override values with ones from config file
             cmd_header.msg.ccsds.pri.stream_id = self._cfe_mid
-            cmd_header.msg.ccsds.pri.length = self._msg_length
+            if self._msg_length < 0:
+                print("***DBG***: len<0. TODO: How to dynamically calculate length?. msg=:" + str(msg))
+            else:
+                cmd_header.msg.ccsds.pri.length = self._msg_length
             cmd_header.sec.function_code = self._cmd_code
         self._callback(self._cmd_info, msg)

@@ -1,4 +1,6 @@
 import os
+import struct
+import sys
 import importlib
 import codecs
 
@@ -97,6 +99,7 @@ class JuicerInterface():
                     field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()
+        self._seq = 0 # Seq counter
 
     def get_telemetry_message_info(self):
         return self._telem_info
@@ -261,13 +264,41 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().debug("Handling command for " + command_info.get_key() +
+        if not command_info.get_msg_type():
+            self._node.get_logger().info("Handling command for " + command_info.get_key()
+                                         + " with generic Binary handler")
+            return self.encode_binary_command(message, mid, code)
+        self._node.get_logger().info("Handling command for " + command_info.get_key() +
                                       " of type " + command_info.get_msg_type())
-        self._node.get_logger().debug("Message: " + str(message))
+        self._node.get_logger().info("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
         return packet
 
+    def encode_binary_command(self, message, mid, code):
+        self._seq = self._seq+1 # TODO: Is seq set on nominal commands being sent? Should this var be used to override if not?
+
+        #self._node.get_logger().info("mid is " + str(mid) +"="+ str(int(mid,0)) + f", seq={self._seq}, len={len(message.data)-7}, code={code}")
+        
+        hdr = struct.pack(">HHHhh",
+                          int(mid,0) | 0x1800,
+                          self._seq, # VERIFY
+                          len(message.data)-7,
+                          code, # function code,
+                          0 # spare
+        )
+
+        # Because python is so clear at binary data manipulation
+        rtv = hdr + b''.join(message.data)
+
+        self._node.get_logger().info("hdr    : " + str(hdr));
+        self._node.get_logger().info("sendbin: " + str(rtv) )
+        self._node.get_logger().info("data   : " + str(message.data) )
+        
+        return rtv
+
+        # QUESTION: If this fn builds packet /w header ... then why is mid/code not used in original encode_command?
+    
     def encode_command(self, symbol, message, mid, code):
         packet = bytearray()
         fields = symbol.get_fields()
