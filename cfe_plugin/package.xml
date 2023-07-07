@@ -16,7 +16,7 @@
   <depend>rcl_interfaces</depend>
   <depend>cfe_msgs</depend>
 
-  <exec_depend>fsw_ros2_bridge</exec_depend>  
+  <depend>fsw_ros2_bridge</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

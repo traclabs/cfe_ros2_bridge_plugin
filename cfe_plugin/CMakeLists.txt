@@ -20,7 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(rcl_interfaces REQUIRED)
-find_package(cfe_msgs REQUIRED)
+# find_package(cfe_msgs REQUIRED)
 
 set(common_ros_depends
   rcl_interfaces
