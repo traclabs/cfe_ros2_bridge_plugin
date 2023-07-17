@@ -41,7 +41,7 @@ class TelemReceiver():
 
         self._logger.info("starting thread to receive CFS telemetry")
         self._recv_thread.start()
-        self._current_value = {}
+        self._latest_values = {}
 
     def stop_thread(self):
         self._running = False
@@ -92,14 +92,23 @@ class TelemReceiver():
 
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             key = self._key_map[packet_id]
-            self._current_value[key] = msg
+
+            # check to see if we have telem data for this key. if not create a new list
+            if key not in self._latest_values:
+                self._latest_values[key] = []
+
+            # append latest message to the list for this key
+            self._latest_values[key].append(msg)
+
         else:
             self._logger.info("Don't know how to handle message id " + packet_id)
 
-    def get_latest_data(self, key):
+    def get_buffered_data(self, key, clear):
         retval = None
-        if key in self._current_value:
-            retval = self._current_value[key]
+        if key in self._latest_values:
+            retval = self._latest_values[key]
+        if clear and (key in self._latest_values):
+            del self._latest_values[key]
         return retval
 
     @staticmethod
