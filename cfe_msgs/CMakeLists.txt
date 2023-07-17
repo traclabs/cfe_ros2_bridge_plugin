@@ -162,6 +162,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ROSAPPNoArgsCmdt.msg"
   "msg/ROSAPPHkTlmPayloadt.msg"
   "msg/ROSAPPHkTlmt.msg"
+  "msg/ROSAPPRosoutPayloadt.msg"
+  "msg/ROSAPPRosoutTlmt.msg"
   "msg/SAMPLEAPPNoArgsCmdt.msg"
   "msg/SAMPLEAPPHkTlmPayloadt.msg"
   "msg/SAMPLEAPPHkTlmt.msg"
@@ -177,9 +179,14 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TOLABRemovePacketCmdt.msg"
   "msg/TOLABEnableOutputPayloadt.msg"
   "msg/TOLABEnableOutputCmdt.msg"
+  "msg/RobotSimNoArgsCmdt.msg"
+  "msg/RobotSimJointCmdt.msg"
+  "msg/RobotSimSSRMSt.msg"
+  "msg/RobotSimHkTlmPayloadt.msg"
+  "msg/RobotSimHkTlmt.msg"
+  "msg/RobotSimTlmStatet.msg"
   "msg/CFEMSGMessage.msg"
-  "msg/ROSAPPRosoutPayloadt.msg"
-  "msg/ROSAPPRosoutTlmt.msg"
+  DEPENDENCIES std_msgs
 )
 
 if(BUILD_TESTING)

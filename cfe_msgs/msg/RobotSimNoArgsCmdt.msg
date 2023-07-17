@@ -1,5 +1,5 @@
-# cFE NAME: CI_LAB_NoArgsCmd_t
-# ROS topic: ci_lab_noargscmd_t
+# cFE NAME: RobotSimNoArgsCmd_t
+# ROS topic: robotsimnoargscmd_t
 # Command message
 std_msgs/Header header
 CFEMSGCommandHeader cmd_header

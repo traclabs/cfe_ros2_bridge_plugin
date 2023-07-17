@@ -18,7 +18,6 @@ def generate_launch_description():
         'cfe_groundsystem_config.yaml'
         )
 
-
     node = Node(
         package='fsw_ros2_bridge',
         name='cfe_bridge',

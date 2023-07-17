@@ -3,4 +3,4 @@
 CFESBMsgIdt msg_id
 uint32 pipe
 uint8 spare
-char spare_end
+string spare_end

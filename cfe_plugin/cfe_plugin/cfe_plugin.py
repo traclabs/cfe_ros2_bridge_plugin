@@ -67,10 +67,12 @@ class FSWPlugin(FSWPluginInterface):
         #                                      self._juicer_interface)
 
         self._command_info = self._juicer_interface.reconcile_command_info(self._command_info, self._command_dict)
+        symbol_name_map = self._juicer_interface.get_symbol_ros_name_map()
         for ci in self._command_info:
             key = ci.get_key()
             cmd_ids = self._command_dict[key]
-            ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'])
+            msg_size = symbol_name_map[ci.get_msg_type()].get_size()
+            ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'], msg_size)
             ci.set_callback_func(ch.process_callback)
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
@@ -86,19 +88,21 @@ class FSWPlugin(FSWPluginInterface):
 
     def command_callback(self, command_info, message):
         key_name = command_info.get_key()
-        self._node.get_logger().debug('Handling cmd ' + key_name)
+        self._node.get_logger().info('Handling cmd ' + key_name)
         cmd_ids = self._command_dict[key_name]
-        self._node.get_logger().debug('Cmd ids: ' + str(cmd_ids))
+        self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
+
         send_success = self.send_cmd_packet(packet, self._command_host, cmd_ids['port'])
+
         if send_success:
-            self._node.get_logger().debug('Sent packet to cFE.')
+            self._node.get_logger().info('Sent packet of size ' + str(len(packet)) + ' to cFE.\n' + str(packet))
         else:
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
     def send_cmd_packet(self, packet, cmd_host, cmd_port):
         # send packet to cFE
-        self._node.get_logger().debug('Got packet to send to cFE!')
+        self._node.get_logger().info('Got packet to send to cFE!')
         if cmd_port in self._command_ports:
             cmd_sock = self._command_ports.get(cmd_port)
         else:
