@@ -278,22 +278,22 @@ class JuicerInterface():
     def encode_binary_command(self, message, mid, code):
         self._seq = self._seq+1 # TODO: Is seq set on nominal commands being sent? Should this var be used to override if not?
 
-        #self._node.get_logger().info("mid is " + str(mid) +"="+ str(int(mid,0)) + f", seq={self._seq}, len={len(message.data)-7}, code={code}")
+        self._node.get_logger().info("mid is " + str(mid) +"="+ str(int(mid,0)) + f", seq={self._seq}, len={len(message.data)+8-7} from {len(message.data)}, code={code}")
         
-        hdr = struct.pack(">HHHhh",
+        hdr = struct.pack(">HHHh",
                           int(mid,0) | 0x1800,
                           self._seq, # VERIFY
-                          len(message.data)-7,
-                          code, # function code,
-                          0 # spare
+                          len(message.data)+8-7,
+                          code # function code,
+#                          0 # spare
         )
 
         # Because python is so clear at binary data manipulation
         rtv = hdr + b''.join(message.data)
 
-        self._node.get_logger().info("hdr    : " + str(hdr));
-        self._node.get_logger().info("sendbin: " + str(rtv) )
-        self._node.get_logger().info("data   : " + str(message.data) )
+        self._node.get_logger().info("hdr    : " + hdr.hex() ) #str(hdr));
+        self._node.get_logger().info("sendbin: " + rtv.hex() ) #str(rtv)) )
+        #self._node.get_logger().info("data   : " + str(message.data) )
         
         return rtv
 
