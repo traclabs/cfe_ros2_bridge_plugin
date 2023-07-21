@@ -28,11 +28,55 @@ class JuicerInterface():
     ----------
     node : rosnode
         the ROS2 node
+    juicer_db : dict
+        list of juicer database files to read
+    telem_info : dict
+        list of TelemInfo objects
+    command_info : dict
+        list of CommandInfo objects
+    field_name_map : dict
+        list of field entries from the database
+    symbol_name_map : dict
+        list of symbol entries from the database mapped to name
+    symbol_ros_name_map : dict
+        list of symbol entries from the database mapped to ROS2 name
+    msg_list : list
+        list of ROS2 messages to write to file
 
     Methods
     -------
     get_telemetry_message_info():
         Returns the list of telemetry objects
+    get_command_message_info():
+        Returns the list of command objects
+    reconcile_telem_info(tlm_info, tlm_dict):
+        Combines data from tlm_info and tlm_dict into singe structure
+    reconcile_command_info(cmd_info, cmd_dict):
+        Combines data from cmd_info and cmd_dict into singe structure
+    get_msg_list():
+        Returns the list of ROS2 messages to be created
+    set_up_msg_list():
+        Create the list of ROS2 messages to write to file
+    get_topic_list():
+        Return the list of ROS2 topics
+    get_symbol_name_map():
+        Returns the list of symbols mapped by name
+    get_symbol_ros_name_map():
+        Returns the list of symbols mapped by ROS2 name
+    get_field_name_map():
+        Returns the list of fields mapped by name
+    parse_packet(datagram, offset, ros_name, msg, msg_pkg):
+        Parse data packet and return ROS2 structure
+    parse_command(command_info, message, mid, code):
+        Parse the ROS2 command into cFS packet
+    encode_command(symbol, message, mid, code):
+        Convert ROS2 command message into cFS command packet
+    encode_data(field, fsym, fmsg):
+        Encode data into byte array
+    get_unpack_format(ros_name, little_endian):
+        Returns the format for decoding data
+    get_symbol_info(name):
+        Return the symbol object for the given symbol name
     """
 
     def __init__(self, node, database_path):
@@ -206,7 +250,7 @@ class JuicerInterface():
         Create the list of ROS2 messages to write to file
 
             Returns:
-                    msg_list (): The list of ROS2 messages to write to file
+                    msg_list (list): The list of ROS2 messages to write to file
         '''
         msg_list = []
         for key in self._symbol_name_map.keys():
@@ -261,7 +305,7 @@ class JuicerInterface():
 
     def parse_packet(self, datagram, offset, ros_name, msg, msg_pkg):
         '''
-        Something
+        Parse data packet and return ROS2 structure
 
             Parameters:
                     datagram (bytearray): The incoming data
@@ -468,9 +512,9 @@ class JuicerInterface():
         Encode data into byte array
 
             Parameters:
-                    field ();
+                    field (JuicerFieldEntry): The field to encode
                     fsym (JuicerSymbolEntry): The data type to encode
-                    fmsg ():
+                    fmsg (): The data to encode
 
             Returns:
                     packet (bytearray): The encoded data
@@ -505,6 +549,16 @@ class JuicerInterface():
         return packet
 
     def get_unpack_format(self, ros_name, little_endian):
+        '''
+        Returns the format for decoding data
+
+            Parameters:
+                    ros_name (str): The ROS2 name of the message
+                    little_endian (bool): True if data is little endian
+
+            Returns:
+                    retval (str): The unpack format code
+        '''
         retval = "B"
         if ros_name == "uint64":
             retval = "Q"
@@ -543,9 +597,27 @@ class JuicerInterface():
         return retval
 
     def get_symbol_info(self, name):
+        '''
+        Return the symbol object for the given symbol name
+
+            Parameters:
+                    name (str): The name of the symbol
+
+            Returns:
+                    symbol (JuicerSymbolEntry): The symbol object
+        '''
         symbol = self._symbol_name_map[name]
         return symbol
 
 
 def field_sort_order(field):
+    '''
+    Helper function to sort fields by byte offset
+
+        Parameters:
+                field (JuicerFieldEntry): The field to sort
+
+        Returns:
+                The byte offset of the field
+    '''
     return field.get_byte_offset()
