@@ -47,7 +47,7 @@ class JuicerDatabase():
     mark_cmd_tlm_symbols():
         Mark all symbols that are either telemetry or command data types.
     mark_output_symbol(symbol):
-        Mark this symbol as one that should be written to a msg file and mark each of its fields.
+        Mark this symbol as one that should be written to a message file and mark each of its fields.
     get_symbol_name_map():
         Return the symbol list as a map of symbol name to symbol object.
     get_field_name_map():

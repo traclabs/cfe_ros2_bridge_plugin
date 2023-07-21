@@ -428,7 +428,7 @@ class JuicerInterface():
             self._node.get_logger().info("Handling command for " + command_info.get_key()
                                          + " with generic Binary handler")
             return self.encode_binary_command(message, mid, code)
-        self._node.get_logger().info("Handling command for " + command_info.get_key() +
+        self._node.get_logger().debug("Handling command for " + command_info.get_key() +
                                       " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
