@@ -1,3 +1,10 @@
+"""
+.. module:: cfe_ros2_bridge_plugin.juicer_util.juicer_interface
+   :synopsis: Serves as the main interface to access juicer database information
+
+.. moduleauthor:: Tod Milam
+
+"""
 import os
 import importlib
 import codecs
@@ -12,6 +19,18 @@ from juicer_util.juicer_database import JuicerDatabase
 
 
 class JuicerInterface():
+    """This class is the main way of accessing information from the juicer database.
+
+    Attributes
+    ----------
+    node : rosnode
+        the ROS2 node
+
+    Methods
+    -------
+    get_telemetry_message_info():
+        Returns the list of telemetry objects
+    """
 
     def __init__(self, node, database_path):
 
@@ -99,12 +118,34 @@ class JuicerInterface():
         self._msg_list = self.set_up_msg_list()
 
     def get_telemetry_message_info(self):
+        '''
+        Returns the list of telemetry objects
+
+            Returns:
+                    telem_info (dict): The list of telemetry objects
+        '''
         return self._telem_info
 
     def get_command_message_info(self):
+        '''
+        Returns the list of command objects
+
+            Returns:
+                    command_info (dict): The list of command objects
+        '''
         return self._command_info
 
     def reconcile_telem_info(self, tlm_info, tlm_dict):
+        '''
+        Combines data from tlm_info and tlm_dict into singe structure
+
+            Parameters:
+                    tlm_info (dict): The list of telemetry objects from juicer database
+                    tlm_dict (dict): A list of telemetry objects with additional data
+
+            Returns:
+                    tlm_info (dict): A list of combined telemetry information
+        '''
         # need to create new TelemInfo entries for each entry in tlm_dict
         telem_info = []
         for key in tlm_dict.keys():
@@ -121,6 +162,16 @@ class JuicerInterface():
         return telem_info
 
     def reconcile_command_info(self, cmd_info, cmd_dict):
+        '''
+        Combines data from cmd_info and cmd_dict into singe structure
+
+            Parameters:
+                    cmd_info (dict): The list of command objects from juicer database
+                    cmd_dict (dict): A list of command objects with additional data
+
+            Returns:
+                    cmd_info (dict): A list of combined command information
+        '''
         # need to create new CommandInfo entries for each entry in cmd_dict
         command_info = []
         for key in cmd_dict.keys():
@@ -138,9 +189,21 @@ class JuicerInterface():
         return command_info
 
     def get_msg_list(self):
+        '''
+        Returns the list of ROS2 messages to be created
+
+            Returns:
+                    msg_list (): The list of ROS2 messages to write to file
+        '''
         return self._msg_list
 
     def set_up_msg_list(self):
+        '''
+        Create the list of ROS2 messages to write to file
+
+            Returns:
+                    msg_list (): The list of ROS2 messages to write to file
+        '''
         msg_list = []
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
@@ -151,6 +214,12 @@ class JuicerInterface():
         return msg_list
 
     def get_topic_list(self):
+        '''
+        Return the list of ROS2 topics
+
+            Returns:
+                    The list of ROS2 topics
+        '''
         topic_list = []
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
@@ -160,15 +229,46 @@ class JuicerInterface():
         return topic_list
 
     def get_symbol_name_map(self):
+        '''
+        Returns the list of symbols mapped by name
+
+            Returns:
+                    A mapping of symbol to symbol name
+        '''
         return self._symbol_name_map
 
     def get_symbol_ros_name_map(self):
+        '''
+        Returns the list of symbols mapped by ROS2 name
+
+            Returns:
+                    A mapping of symbol to the symbol's ROS2 name
+        '''
         return self._symbol_ros_name_map
 
     def get_field_name_map(self):
+        '''
+        Returns the list of fields mapped by name
+
+            Returns:
+                    A mapping of field to field name
+        '''
         return self._field_name_map
 
     def parse_packet(self, datagram, offset, ros_name, msg, msg_pkg):
+        '''
+        Something
+
+            Parameters:
+                    datagram (bytearray): The incoming data
+                    offset (int): Offset into datagram to start processing
+                    ros_name (str): The ROS2 name of the message to process
+                    msg (): The ROS2 message to populate
+                    msg_pkg (str): The package name of the ROS2 message to populate
+
+            Returns:
+                    msg (): The populated ROS2 message
+        '''
         symbol = self._symbol_ros_name_map[ros_name]
         fields = symbol.get_fields()
         for field in fields:
@@ -261,6 +361,18 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
+        '''
+        Parse the ROS2 command into cFS packet
+
+            Parameters:
+                    command_info (CommandInfo): The command info for this command
+                    message (): The incoming ROS2 message
+                    mid (int): The cFS message id for this command
+                    code (int): The cFS command code
+
+            Returns:
+                    packet (bytearray): Populated cFS command packet
+        '''
         self._node.get_logger().debug("Handling command for " + command_info.get_key() +
                                       " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
@@ -269,6 +381,18 @@ class JuicerInterface():
         return packet
 
     def encode_command(self, symbol, message, mid, code):
+        '''
+        Convert ROS2 command message into cFS command packet
+
+            Parameters:
+                    symbol (JuicerSymbolEntry): Symbol associated with this command
+                    message (): ROS2 command message
+                    mid (int): cFS command message id
+                    code (int): cFS command code
+
+            Returns:
+                    packet (bytearray): The cFS command packet
+        '''
         packet = bytearray()
         fields = symbol.get_fields()
         fields.sort(key=field_sort_order)
@@ -296,6 +420,17 @@ class JuicerInterface():
         return packet
 
     def encode_data(self, field, fsym, fmsg):
+        '''
+        Encode data into byte array
+
+            Parameters:
+                    field ();
+                    fsym (JuicerSymbolEntry): The data type to encode
+                    fmsg ():
+
+            Returns:
+                    packet (bytearray): The encoded data
+        '''
         packet_size = fsym.get_size()
         packet = bytearray(packet_size)
         # process differently if string vs numeric?

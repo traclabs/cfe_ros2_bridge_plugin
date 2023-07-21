@@ -1,3 +1,11 @@
+"""
+.. module:: cfe_ros2_bridge_plugin.juicer_util.juicer_database
+   :synopsis: Serves as the interface to the sqlite datase file
+
+.. moduleauthor:: Tod Milam
+
+"""
+
 import sqlite3
 from sqlite3 import Error
 from juicer_util.juicer_fields import JuicerFieldEntry
@@ -6,9 +14,57 @@ from juicer_util.juicer_symbols import field_byte_order
 
 
 class JuicerDatabase():
+    """This class serves as the interface to the sqlite database.
+
+    Attributes
+    ----------
+    node : rosnode
+        the ROS2 node
+    db_file : str
+        the name of the sqlite file
+    field_name_map : dict
+        list of field entries from the database
+    symbol_name_map : dict
+        list of symbol entries from the database mapped to name
+    symbol_id_map : dict
+        list of symbol entries from the database mapped to id
+
+    Methods
+    -------
+    create_connection(db_file):
+        Returns a connection to the specified database.
+    retrieve_all_symbols():
+        Query all rows in the symbols table
+    retrieve_all_fields():
+        Query all rows in the fields table
+    load_data():
+        Load the data from the database
+    prune_symbols_and_fields():
+        Remove symbols and fields that are not used by either telemetry or commands.
+    find_alternative_symbol(empty_symbol):
+        Find a symbol to replace the empty symbol that may be a typedef.
+    mark_cmd_tlm_symbols():
+        Mark all symbols that are either telemetry or command data types.
+    mark_output_symbol(symbol):
+        Mark this symbol as one that should be written to a message file and mark each of its fields.
+    get_symbol_name_map():
+        Return the symbol list as a map of symbol name to symbol object.
+    get_field_name_map():
+        Return the field list as a map of field name to field object.
+    handle_duplicate_fields():
+        Check all fields for duplicate names and rename as necessary.
+    rename_duplicate_fields(symbol):
+        Rename all fields that have the given name.
+    """
 
     def __init__(self, node, db_file):
+        '''
+        Initializes the attributes for the object.
 
+            Parameters:
+                    node (rosnode): The ROS2 node
+                    db_file (str): The name of the sqlite file
+        '''
         self._node = node
         self._node.get_logger().debug("Loading message data from Juicer SQLite databases")
         self._db_file = db_file
@@ -17,11 +73,16 @@ class JuicerDatabase():
         self._symbol_id_map = dict()
 
     def create_connection(self, db_file):
-        """ create a database connection to the SQLite database
+        '''
+        Create a database connection to the SQLite database
             specified by the db_file
-        :param db_file: database file
-        :return: Connection object or None
-        """
+
+            Parameters:
+                    db_file (str): database file name
+
+            Returns:
+                    conn (sqlite connection): Connection object or None
+        '''
         conn = None
         try:
             conn = sqlite3.connect(db_file)
@@ -31,10 +92,12 @@ class JuicerDatabase():
         return conn
 
     def retrieve_all_symbols(self):
-        """
+        '''
         Query all rows in the symbols table
-        :return: A mapping of symbol name to symbol object
-        """
+
+            Returns:
+                    symbol_id_map (dict): A mapping of symbol name to symbol object
+        '''
         cur = self._conn.cursor()
         cur.execute("SELECT * FROM symbols")
         rows = cur.fetchall()
@@ -48,10 +111,12 @@ class JuicerDatabase():
         return self._symbol_id_map
 
     def retrieve_all_fields(self):
-        """
+        '''
         Query all rows in the fields table
-        :return: A mapping of field name to field object
-        """
+
+            Returns:
+                    field_name_map (dict): A mapping of field name to field object
+        '''
         cur = self._conn.cursor()
         cur.execute("SELECT * FROM fields")
 
@@ -94,6 +159,9 @@ class JuicerDatabase():
         return self._field_name_map
 
     def load_data(self):
+        '''
+        Load the data from the database
+        '''
         self._conn = self.create_connection(self._db_file)
         self.retrieve_all_symbols()
         self.retrieve_all_fields()
@@ -103,6 +171,9 @@ class JuicerDatabase():
         self.handle_duplicate_fields()
 
     def prune_symbols_and_fields(self):
+        '''
+        Remove symbols and fields that are not used by either telemetry or commands.
+        '''
         self._node.get_logger().debug("Pruning out things that aren't needed.")
         self._empty_symbols = []
         for key in self._symbol_name_map.keys():
@@ -126,6 +197,15 @@ class JuicerDatabase():
                                       + " empty symbols left after pruning")
 
     def find_alternative_symbol(self, empty_symbol):
+        '''
+        Find a symbol to replace the empty symbol that may be a typedef.
+
+            Parameters:
+                    empty_symbol (symbol): The empty symbol to be replaced
+
+            Returns:
+                    symbol (symbol): The replacement symbol or None
+        '''
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
             if empty_symbol.get_name().startswith(symbol.get_name()):
@@ -145,6 +225,9 @@ class JuicerDatabase():
         return None
 
     def mark_cmd_tlm_symbols(self):
+        '''
+        Mark all symbols that are either telemetry or command data types.
+        '''
         self._node.get_logger().debug("Marking symbols that are necessary for messages.")
         self._empty_symbols = []
         for key in self._symbol_name_map.keys():
@@ -153,6 +236,12 @@ class JuicerDatabase():
                 self.mark_output_symbol(symbol)
 
     def mark_output_symbol(self, symbol):
+        '''
+        Mark this symbol as one that should be written to a message file and mark each of its fields.
+
+            Parameters:
+                    symbol (symbol): The symbol to mark
+        '''
         symbol.set_should_output(True)
         byte_size = symbol.get_size()
         fields = symbol.get_fields()
@@ -169,18 +258,39 @@ class JuicerDatabase():
             prev_field.set_byte_length(byte_size - prev_field.get_byte_offset())
 
     def get_symbol_name_map(self):
+        '''
+        Return the symbol list as a map of symbol name to symbol object.
+
+            Returns:
+                    symbol_name_map (dict): A dictionary of symbols.
+        '''
         return self._symbol_name_map
 
     def get_field_name_map(self):
+        '''
+        Return the field list as a map of field name to field object.
+
+            Returns:
+                    field_name_map (dict): A dictionary of fields.
+        '''
         return self._field_name_map
 
     def handle_duplicate_fields(self):
+        '''
+        Check all fields for duplicate names and rename as necessary.
+        '''
         for symbol_name in self._symbol_name_map:
             symbol = self._symbol_name_map[symbol_name]
             if len(symbol.get_fields()) > 0:
                 self.rename_duplicate_fields(symbol)
 
     def rename_duplicate_fields(self, symbol):
+        '''
+        Rename all fields that have the given name.
+
+            Parameters:
+                    symbol (symbol): A symbol with a name that isn't unique
+        '''
         v_names = {}
 
         fields = symbol.get_fields()
