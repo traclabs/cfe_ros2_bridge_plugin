@@ -125,7 +125,7 @@ class FSWPlugin(FSWPluginInterface):
     def get_command_message_info(self):
         return self._command_info
 
-    def get_buffered_data(self, key, clear):
+    def get_buffered_data(self, key, clear=True):
         data = None
         for telem_receiver in self._telem_receivers:
             if data == None:
