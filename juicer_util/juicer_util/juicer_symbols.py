@@ -216,7 +216,7 @@ class JuicerSymbolEntry():
             self._node.get_logger().debug("Skipping field " + field.get_name() + ", " + t)
         else:
             self._fields.append(field)
-            self._fields.sort(key=self.field_byte_order)
+            self._fields.sort(key=field_byte_order)
             field_type = field.get_type_name()
             if "TelemetryHeader" in field_type:
                 self._is_telemetry = True
@@ -381,14 +381,14 @@ class JuicerSymbolEntry():
         return n
 
 
-    def field_byte_order(self, field):
-        '''
-        Helper function to sort fields by their byte offset.
+def field_byte_order(field):
+    '''
+    Helper function to sort fields by their byte offset.
 
-            Parameters:
-                    field (JuicerFieldEntry): The field being sorted
+        Parameters:
+                field (JuicerFieldEntry): The field being sorted
 
-            Returns:
-                    byte_offset (int): The byte offset of the field
-        '''
-        return field.get_byte_offset()
+        Returns:
+                byte_offset (int): The byte offset of the field
+    '''
+    return field.get_byte_offset()
