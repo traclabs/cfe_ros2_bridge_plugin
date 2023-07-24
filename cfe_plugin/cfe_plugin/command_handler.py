@@ -1,4 +1,5 @@
 
+from cfe_msgs.msg import CFEMSGCommandHeader
 
 class CommandHandler():
     def __init__(self, node, cmd_info, callback, mid, cid, size):
@@ -11,13 +12,11 @@ class CommandHandler():
         self._msg_length = size - self._header_size
 
     def process_callback(self, msg):
-        cmd_header = getattr(msg, 'cmd_header', None)
-        # NOTE: Special case - NOLABNoArgsCmdt.msg has it misspelled
-        if cmd_header == None:
-            cmd_header = getattr(msg, 'cmd_heade', None)
-        if cmd_header != None:
-            # override values with ones from config file
-            cmd_header.msg.ccsds.pri.stream_id = self._cfe_mid
-            cmd_header.msg.ccsds.pri.length = self._msg_length
-            cmd_header.sec.function_code = self._cmd_code
+        for t in msg.__dir__():
+            if isinstance(getattr(msg, t), CFEMSGCommandHeader):
+                cmd_header = getattr(msg, t, None)
+                cmd_header.msg.ccsds.pri.stream_id = self._cfe_mid
+                cmd_header.msg.ccsds.pri.length = self._msg_length
+                cmd_header.sec.function_code = self._cmd_code
+                break
         self._callback(self._cmd_info, msg)
