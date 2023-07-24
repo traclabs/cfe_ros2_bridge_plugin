@@ -216,7 +216,7 @@ class JuicerSymbolEntry():
             self._node.get_logger().debug("Skipping field " + field.get_name() + ", " + t)
         else:
             self._fields.append(field)
-            self._fields.sort(key=self.field_byte_order)
+            self._fields.sort(key=field_byte_order)
             field_type = field.get_type_name()
             if "TelemetryHeader" in field_type:
                 self._is_telemetry = True
