@@ -39,6 +39,14 @@ class CfeMsgConverter(Node):
 
     Methods
     -------
+    create_messages(msgs_dir):
+        Creates the message files.
+    output_msg_file(symbol, msgs_dir):
+        Writes a message file.
+    write_cmake_lists_file():
+        Writes the CMakeLists.txt file.
+    get_location():
+        Creates and returns the directory to write the messages file.
     """
     def __init__(self):
         '''
