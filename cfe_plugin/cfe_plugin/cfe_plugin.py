@@ -1,3 +1,11 @@
+"""
+.. module:: cfe_ros2_bridge_plugin.cfe_plugin.cfe_plugin
+   :synopsis: Class that serves as the main class for the cFE plugin
+
+.. moduleauthor:: Tod Milam
+
+"""
+
 import os
 import socket
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
@@ -14,9 +22,62 @@ from ament_index_python.packages import get_package_share_directory
 
 
 class FSWPlugin(FSWPluginInterface):
+    """This class is the main class of the cFE GroundSystem Plugin.
+
+    Attributes
+    ----------
+    node : rosnode
+        the ROS2 node
+    juicer_interface : JuicerInterface
+        the interface to the juicer database
+    telemetry_port : int
+        the port to receive telemetry from
+    command_host : str
+        the host name to send commands
+    command_ports : dict
+        the list of ports that commands will be sent on
+    msg_pkg : str
+        the name of the ROS2 package containing the message structures
+    telem_info : list
+        the list of telemetry items to listen for
+    command_info : list
+        the list of command items to listen for
+    cfe_config : ParseCFEConfig
+        the configuration values from the configuration file(s)
+    command_dict : dict
+        the list of commands from the configuration file(s)
+    telemetry_dict : dict
+        the list of telemetry from the configuration file(s)
+    telem_receivers : list
+        the list of TelemReceiver objects
+
+    Methods
+    -------
+    parameters_callback(params):
+        Method called when a parameter has been changed.
+    command_callback(command_info, message):
+        Method called when a command is received.
+    send_cmd_packet(packet):
+        Sends the command packet to cFE.
+    get_telemetry_message_info():
+        Returns the list of telemetry info objects.
+    get_command_message_info():
+        Returns the list of command info objects.
+    get_latest_data(key):
+        Return the latest value for the specified key.
+    create_ros_msgs(msg_dir):
+        Unused method required by interface.
+    get_msg_package():
+        Return the package where the ROS2 messages are found.
+    """
 
     def __init__(self, node):
+        '''
+        Initializes the attributes and set up command and telemetry listeners.
 
+            Parameters:
+                    node (rosnode): The ROS2 node
+        '''
         self._node = node
         self._node.get_logger().info("Setting up cFE plugin")
 
@@ -101,6 +162,15 @@ class FSWPlugin(FSWPluginInterface):
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 
     def parameters_callback(self, params):
+        '''
+        Method called when a parameter has been changed.
+
+            Parameters:
+                    params (list): The list of new parameter values
+
+            Returns:
+                    result (bool): If set was successful
+        '''
         self._node.get_logger().warn("param callback!")
         for param in params:
             if param.name == "plugin_params.udp_receive_port":
@@ -114,6 +184,13 @@ class FSWPlugin(FSWPluginInterface):
         return SetParametersResult(successful=True)
 
     def command_callback(self, command_info, message):
+        '''
+        Method called when a command is received.
+
+            Parameters:
+                    command_info (JuicerCommandEntry): The command info of the message received
+                    message (): The command message values
+        '''
         key_name = command_info.get_key()
         self._node.get_logger().info('Handling cmd ' + key_name)
         cmd_ids = self._command_dict[key_name]
@@ -129,6 +206,14 @@ class FSWPlugin(FSWPluginInterface):
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
     def send_cmd_packet(self, packet):
+        '''
+        Sends the command packet to cFE.
+
+            Parameters:
+                    packet (bytearray): The data to send
+            Returns:
+                    success (bool): If the packet was sent successfully
+        '''
         # send packet to cFE
         self._node.get_logger().info(f"Got packet to send to cFE! ({self._command_ip}, {self._command_port})")
 
@@ -143,12 +228,34 @@ class FSWPlugin(FSWPluginInterface):
         return send_worked
 
     def get_telemetry_message_info(self):
+        '''
+        Returns the list of telemetry info objects.
+
+            Returns:
+                    telem_info (list): List of TelemetryInfo objects
+        '''
         return self._telem_info
 
     def get_command_message_info(self):
+        '''
+        Returns the list of command info objects.
+
+            Returns:
+                    command_info (list): List of CommandInfo objects
+        '''
         return self._command_info
 
     def get_buffered_data(self, key, clear=True):
+        '''
+        Return the latest value for the specified key.
+
+            Parameters:
+                    key (str): The ROS2 name of the telemetry wanted
+                    clear (bool): If queue should be cleared
+
+            Returns:
+                    latest_data (): The value of the specified key
+        '''
         data = None
         for telem_receiver in self._telem_receivers:
             if data == None:
@@ -156,8 +263,17 @@ class FSWPlugin(FSWPluginInterface):
         return data
 
     def create_ros_msgs(self, msg_dir):
+        '''
+        Unused method required by interface.
+        '''
         msg_list = []
         return msg_list
 
     def get_msg_package(self):
+        '''
+        Return the package where the ROS2 messages are found.
+
+            Returns:
+                    msg_pkg (str): Package name where ROS2 message are located
+        '''
         return self._msg_pkg
