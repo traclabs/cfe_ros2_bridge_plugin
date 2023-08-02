@@ -74,8 +74,7 @@ class TelemReceiver():
             # get the current timestamp to add to the message
             mytime = self._node.get_clock().now().to_msg()
             ros_name = self._tlm_map[packet_id]
-            if ros_name == "RobotSimHkTlmt":
-                self._logger.info("Received packet for " + ros_name + ", pid: " + str(packet_id))
+            self._logger.debug("Received packet for " + ros_name + ", pid: " + str(packet_id))
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
                               ros_name)
             msg = MsgType()
