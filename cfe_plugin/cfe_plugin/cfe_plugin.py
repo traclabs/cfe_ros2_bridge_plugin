@@ -63,8 +63,8 @@ class FSWPlugin(FSWPluginInterface):
         Returns the list of telemetry info objects.
     get_command_message_info():
         Returns the list of command info objects.
-    get_latest_data(key):
-        Return the latest value for the specified key.
+    get_buffered_data(key, clear=True):
+        Return the buffered value(s) for the specified key.
     create_ros_msgs(msg_dir):
         Unused method required by interface.
     get_msg_package():
@@ -224,12 +224,13 @@ class FSWPlugin(FSWPluginInterface):
         '''
         return self._command_info
 
-    def get_latest_data(self, key):
+    def get_buffered_data(self, key, clear=True):
         '''
-        Return the latest value for the specified key.
+        Return the buffered value for the specified key.
 
             Parameters:
                     key (str): The ROS2 name of the telemetry wanted
+                    clear (bool): Flag indicating if data should be cleared once returned
 
             Returns:
                     latest_data (): The value of the specified key
@@ -237,8 +238,7 @@ class FSWPlugin(FSWPluginInterface):
         data = None
         for telem_receiver in self._telem_receivers:
             if data == None:
-                data = telem_receiver.get_latest_data(key)
-
+                data = telem_receiver.get_buffered_data(key, clear)
         return data
 
     def create_ros_msgs(self, msg_dir):

@@ -51,8 +51,8 @@ class CmdReceiver():
         Starts the thread processing, listening for commands.
     handle_packet(datagram):
         Process an incoming data packet.
-    get_latest_data(key):
-        Returns the latest command value for the given key.
+    get_buffered_data(key, clear):
+        Returns the buffered command value for the given key.
     get_pkt_id(datagram):
         Return the packet id for the cFE data packet.
     get_seq_count(datagram):
@@ -90,7 +90,7 @@ class CmdReceiver():
 
         self._logger.info("starting thread to receive CFS command")
         self._recv_thread.start()
-        self._current_value = {}
+        self._latest_values = {}
 
     def stop_thread(self):
         '''
@@ -140,24 +140,34 @@ class CmdReceiver():
                               self._cmd_map[packet_id])
             msg = MsgType()
             self._juicer_interface.parse_packet(datagram, 0, self._cmd_map[packet_id], msg, self._msg_pkg)
-            self._current_value[ros_name] = msg
+
+            # check to see if we have telem data for this key. if not create a new list
+            if ros_name not in self._latest_values:
+                self._latest_values[ros_name] = []
+
+            # append latest message to the list for this key
+            self._latest_values[ros_name].append(msg)
+
             self._logger.debug("Parsed cmd: " + str(msg))
         else:
             self._logger.info("Don't know how to handle command message id " + packet_id)
 
-    def get_latest_data(self, key):
+    def get_buffered_data(self, key, clear):
         '''
-        Returns the latest command value for the given key.
+        Returns the buffered command value for the given key.
 
             Parameters:
                     key (str): The key for the command
+                    clear (bool): Flag indicating if data should be cleared once returned
 
             Returns:
                     current_value (): The command value for the key
         '''
         retval = None
-        if key in self._current_value:
-            retval = self._current_value[key]
+        if key in self._latest_values:
+            retval = self._latest_values[key]
+        if clear and (key in self._latest_values):
+            del self._latest_values[key]
         return retval
 
     @staticmethod

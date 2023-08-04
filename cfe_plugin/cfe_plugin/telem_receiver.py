@@ -54,8 +54,8 @@ class TelemReceiver():
         Starts the thread processing, listening for telemetry.
     handle_packet(datagram):
         Process an incoming data packet.
-    get_latest_data(key):
-        Returns the latest telemetry value for the given key.
+    get_buffered_data(key, clear):
+        Returns the buffered telemetry value for the given key.
     get_pkt_id(datagram):
         Return the packet id for the cFE data packet.
     get_seq_count(datagram):
@@ -102,7 +102,7 @@ class TelemReceiver():
 
         self._logger.info("starting thread to receive CFS telemetry")
         self._recv_thread.start()
-        self._current_value = {}
+        self._latest_values = {}
 
     def stop_thread(self):
         '''
@@ -147,8 +147,7 @@ class TelemReceiver():
             # get the current timestamp to add to the message
             mytime = self._node.get_clock().now().to_msg()
             ros_name = self._tlm_map[packet_id]
-            if ros_name == "RobotSimHkTlmt":
-                self._logger.info("Received packet for " + ros_name + ", pid: " + str(packet_id))
+            self._logger.info("Received packet for " + ros_name + ", pid: " + str(packet_id))
             MsgType = getattr(importlib.import_module(self._msg_pkg + ".msg"),
                               ros_name)
             msg = MsgType()
@@ -165,23 +164,33 @@ class TelemReceiver():
 
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             key = self._key_map[packet_id]
-            self._current_value[key] = msg
+
+            # check to see if we have telem data for this key. if not create a new list
+            if key not in self._latest_values:
+                self._latest_values[key] = []
+
+            # append latest message to the list for this key
+            self._latest_values[key].append(msg)
+
         else:
             self._logger.info("Don't know how to handle message id " + packet_id)
 
-    def get_latest_data(self, key):
+    def get_buffered_data(self, key, clear):
         '''
-        Returns the latest telemetry value for the given key.
+        Returns the buffered telemetry value for the given key.
 
             Parameters:
                     key (str): The key for the telemetry
+                    clear (bool): Flag indicating if data should be cleared once returned
 
             Returns:
                     current_value (): The telemetry value for the key
         '''
         retval = None
-        if key in self._current_value:
-            retval = self._current_value[key]
+        if key in self._latest_values:
+            retval = self._latest_values[key]
+        if clear and (key in self._latest_values):
+            del self._latest_values[key]
         return retval
 
     @staticmethod

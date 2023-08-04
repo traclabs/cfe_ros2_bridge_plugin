@@ -190,7 +190,7 @@ class JuicerFieldEntry():
         symbol = self.get_type_symbol()
         # determine if this is an array
         size = symbol.get_size()
-        length = self._byte_length / size
+        length = int(self._byte_length / size)
         if length >= 2:
             retval = True
         else:
