@@ -1,3 +1,10 @@
+"""
+.. module:: cfe_ros2_bridge_plugin.cfe_plugin.cmd_receiver
+   :synopsis: Class that listens on a port for command data
+
+.. moduleauthor:: Tod Milam
+
+"""
 import threading
 import socket
 import rclpy
@@ -9,7 +16,59 @@ import juicer_util.juicer_interface
 
 
 class CmdReceiver():
+    """This class listens on a port for incoming commands.
+
+    Attributes
+    ----------
+    node : rosnode
+        the ROS2 node
+    cmd_code_map : dict
+        mapping of the command key to the command code
+    juicer_interface : JuicerInterface
+        the interface to the juicer database
+    port : int
+        the port number to listen on for command data
+    msg_pkg : str
+        the ROS2 package containing the ROS2 message structures
+    cmd_map : dict
+        mapping of the command message id to the command key
+    logger : node logger
+        used as a shortcut to accessing the logger
+    recv_buff_size : int
+        the size of the buffer in the receiving socket
+    running : bool
+        set to True until time for this receiver to quit
+    recv_thread : Thread
+        the thread running this receiver
+    current_value : dict
+        the latest value received for each command message
+
+    Methods
+    -------
+    stop_thread():
+        Tells the thread to stop and cleanup.
+    receive_thread():
+        Starts the thread processing, listening for commands.
+    handle_packet(datagram):
+        Process an incoming data packet.
+    get_latest_data(key):
+        Returns the latest command value for the given key.
+    get_pkt_id(datagram):
+        Return the packet id for the cFE data packet.
+    get_seq_count(datagram):
+        Return the sequence count for the cFE data packet.
+    """
     def __init__(self, node, msg_pkg, port, command_info, juicer_interface):
+        '''
+        Initializes the attributes of the cmd receiver object.
+
+            Parameters:
+                    node (rosnode): The ROS2 node
+                    msg_pkg (str): The ROS2 package containing the message structures
+                    port (int): The port number to listen on
+                    command_info (): The command configuration information
+                    juicer_interface (JuicerInterface): The interface to the Juicer database
+        '''
         self._node = node
         self._cmd_code_map = {}
         self._juicer_interface = juicer_interface
@@ -34,10 +93,16 @@ class CmdReceiver():
         self._current_value = {}
 
     def stop_thread(self):
+        '''
+        Tells the thread to stop and cleanup.
+        '''
         self._running = False
         self._recv_thread.join()
 
     def receive_thread(self):
+        '''
+        Starts the thread processing, listening for commands.
+        '''
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._logger.info("binding to port " + str(self._port))
         self._sock.bind(("", self._port))
@@ -58,6 +123,12 @@ class CmdReceiver():
                 self._logger.warn("Error receiving command data.")
 
     def handle_packet(self, datagram):
+        '''
+        Process an incoming data packet.
+
+            Parameters:
+                    datagram (bytearray): The incoming cFE data packet
+        '''
         packet_id = self.get_pkt_id(datagram)
         seq = self.get_seq_count(datagram)
         self._logger.debug("Sequence count = " + str(seq))
@@ -75,6 +146,15 @@ class CmdReceiver():
             self._logger.info("Don't know how to handle command message id " + packet_id)
 
     def get_latest_data(self, key):
+        '''
+        Returns the latest command value for the given key.
+
+            Parameters:
+                    key (str): The key for the command
+
+            Returns:
+                    current_value (): The command value for the key
+        '''
         retval = None
         if key in self._current_value:
             retval = self._current_value[key]
@@ -82,10 +162,28 @@ class CmdReceiver():
 
     @staticmethod
     def get_pkt_id(datagram):
+        '''
+        Return the packet id for the cFE data packet.
+
+            Parameters:
+                    datagram (bytearray): The cFE data packet
+
+            Returns:
+                    pkt_id (int): The packet id of the data packet
+        '''
         streamid = unpack(">H", datagram[:2])
         return hex(streamid[0])
 
     @staticmethod
     def get_seq_count(datagram):
+        '''
+        Return the sequence count for the cFE data packet.
+
+            Parameters:
+                    datagram (bytearray): The cFE data packet
+
+            Returns:
+                    seq_count (int): The sequence count
+        '''
         streamid = unpack(">H", datagram[2:4])
         return streamid[0] & 0x3FFF  # # sequence count mask
