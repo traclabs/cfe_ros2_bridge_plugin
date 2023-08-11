@@ -75,8 +75,8 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Initializes the attributes and set up command and telemetry listeners.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
+        Args:
+            node (rosnode): The ROS2 node
         '''
         self._node = node
         self._node.get_logger().info("Setting up cFE plugin")
@@ -142,11 +142,11 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Method called when a parameter has been changed.
 
-            Parameters:
-                    params (list): The list of new parameter values
+        Args:
+            params (list): The list of new parameter values
 
-            Returns:
-                    result (bool): If set was successful
+        Returns:
+            result (bool): If set was successful
         '''
         self._node.get_logger().warn("param callback!")
         for param in params:
@@ -160,9 +160,9 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Method called when a command is received.
 
-            Parameters:
-                    command_info (JuicerCommandEntry): The command info of the message received
-                    message (): The command message values
+        Args:
+            command_info (JuicerCommandEntry): The command info of the message received
+            message (): The command message values
         '''
         key_name = command_info.get_key()
         self._node.get_logger().info('Handling cmd ' + key_name)
@@ -181,12 +181,12 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Sends the command packet to cFE.
 
-            Parameters:
-                    packet (bytearray): The data to send
-                    cmd_host (str): The hostname to send to
-                    cmd_port (int): The port number to send over
-            Returns:
-                    success (bool): If the packet was sent successfully
+        Args:
+            packet (bytearray): The data to send
+            cmd_host (str): The hostname to send to
+            cmd_port (int): The port number to send over
+        Returns:
+            success (bool): If the packet was sent successfully
         '''
         # send packet to cFE
         self._node.get_logger().info('Got packet to send to cFE!')
@@ -210,8 +210,8 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Returns the list of telemetry info objects.
 
-            Returns:
-                    telem_info (list): List of TelemetryInfo objects
+        Returns:
+            telem_info (list): List of TelemetryInfo objects
         '''
         return self._telem_info
 
@@ -219,8 +219,8 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Returns the list of command info objects.
 
-            Returns:
-                    command_info (list): List of CommandInfo objects
+        Returns:
+            command_info (list): List of CommandInfo objects
         '''
         return self._command_info
 
@@ -228,12 +228,12 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Return the buffered value for the specified key.
 
-            Parameters:
-                    key (str): The ROS2 name of the telemetry wanted
-                    clear (bool): Flag indicating if data should be cleared once returned
+        Args:
+            key (str): The ROS2 name of the telemetry wanted
+            clear (bool): Flag indicating if data should be cleared once returned
 
-            Returns:
-                    latest_data (): The value of the specified key
+        Returns:
+            latest_data (): The value of the specified key
         '''
         data = None
         for telem_receiver in self._telem_receivers:
@@ -252,7 +252,7 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Return the package where the ROS2 messages are found.
 
-            Returns:
-                    msg_pkg (str): Package name where ROS2 message are located
+        Returns:
+            msg_pkg (str): Package name where ROS2 message are located
         '''
         return self._msg_pkg

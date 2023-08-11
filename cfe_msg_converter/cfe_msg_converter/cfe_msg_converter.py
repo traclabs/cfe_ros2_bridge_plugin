@@ -22,19 +22,19 @@ class CfeMsgConverter(Node):
     ----------
     cfs_root : str
         the directory containing the cFS code
-    cfs_msgs_dir : 
+    cfs_msgs_dir :
         the top level directory where the ROS2 messages will be stored
-    msgs_src_dir : 
+    msgs_src_dir :
         the source directory where the ROS2 messages will be written
-    resource_path : 
+    resource_path :
         the directory where resource files will be found
-    cmake_template : 
+    cmake_template :
         the template file used for creating the cmake file
-    juicer_interface : 
+    juicer_interface :
         the interface to the juicer sql database
-    symbol_name_map : 
+    symbol_name_map :
         the list of data structures from the juicer database to be converted to ROS2 messages
-    msgs_list : 
+    msgs_list :
         the list of ROS2 messages to write out
 
     Methods
@@ -82,11 +82,11 @@ class CfeMsgConverter(Node):
         '''
         Creates the message files.
 
-            Parameters:
-                    msgs_dir (str): The directory to write the messages files in
+        Args:
+            msgs_dir (str): The directory to write the messages files in
 
-            Returns:
-                    msg_list (list): The list of ROS2 message names written to file
+        Returns:
+            msg_list (list): The list of ROS2 message names written to file
         '''
         for key in self._symbol_name_map.keys():
             if self._symbol_name_map[key].get_should_output():
@@ -105,9 +105,9 @@ class CfeMsgConverter(Node):
         '''
         Writes a message file.
 
-            Parameters:
-                    symbol (JuicerSymbolEntry): The symbol to write
-                    msgs_dir (str): The directory the file will be written in
+        Args:
+            symbol (JuicerSymbolEntry): The symbol to write
+            msgs_dir (str): The directory the file will be written in
         '''
         if len(symbol.get_fields()) > 0:
             v_names = {}
@@ -179,8 +179,8 @@ class CfeMsgConverter(Node):
         '''
         Creates and returns the directory to write the messages file.
 
-            Returns:
-                    msgs_src_dir (str): The name of the directory where the messages files will be written
+        Returns:
+            msgs_src_dir (str): The name of the directory where the messages files will be written
         '''
         mpkg_name = "src/cfe_ros2_bridge_plugin/"
         pkg_name = "cfe_msgs/"

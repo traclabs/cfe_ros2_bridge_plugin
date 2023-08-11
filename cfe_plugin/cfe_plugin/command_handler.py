@@ -37,13 +37,13 @@ class CommandHandler():
         '''
         Initializes the attributes of the command handler object.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
-                    cmd_info (): The configuration information for the command
-                    callback (method): The method to call when a command is received
-                    mid (int): The cFE message id of the command
-                    cid (int): The cFE command code of the command
-                    size (int): The size of the data packet
+        Args:
+            node (rosnode): The ROS2 node
+            cmd_info (): The configuration information for the command
+            callback (method): The method to call when a command is received
+            mid (int): The cFE message id of the command
+            cid (int): The cFE command code of the command
+            size (int): The size of the data packet
         '''
         self._header_size = 7
         self._node = node
@@ -57,8 +57,8 @@ class CommandHandler():
         '''
         Handle callback holding ROS2 command.
 
-            Parameters:
-                    msg (): The ROS2 message containing the command data
+        Args:
+            msg (): The ROS2 message containing the command data
         '''
         for t in msg.__dir__():
             if isinstance(getattr(msg, t), CFEMSGCommandHeader):

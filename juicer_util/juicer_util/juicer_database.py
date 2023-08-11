@@ -6,6 +6,7 @@
 
 """
 
+
 import sqlite3
 from sqlite3 import Error
 from juicer_util.juicer_fields import JuicerFieldEntry
@@ -46,7 +47,7 @@ class JuicerDatabase():
     mark_cmd_tlm_symbols():
         Mark all symbols that are either telemetry or command data types.
     mark_output_symbol(symbol):
-        Mark this symbol as one that should be written to a message file and mark each of its fields.
+        Mark this symbol as one that should be written to a msg file and mark each of its fields.
     get_symbol_name_map():
         Return the symbol list as a map of symbol name to symbol object.
     get_field_name_map():
@@ -61,9 +62,9 @@ class JuicerDatabase():
         '''
         Initializes the attributes for the object.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
-                    db_file (str): The name of the sqlite file
+        Args:
+            node (rosnode): The ROS2 node
+            db_file (str): The name of the sqlite file
         '''
         self._node = node
         self._node.get_logger().debug("Loading message data from Juicer SQLite databases")
@@ -77,11 +78,11 @@ class JuicerDatabase():
         Create a database connection to the SQLite database
             specified by the db_file
 
-            Parameters:
-                    db_file (str): database file name
+        Args:
+            db_file (str): database file name
 
-            Returns:
-                    conn (sqlite connection): Connection object or None
+        Returns:
+            conn (sqlite connection): Connection object or None
         '''
         conn = None
         try:
@@ -95,8 +96,8 @@ class JuicerDatabase():
         '''
         Query all rows in the symbols table
 
-            Returns:
-                    symbol_id_map (dict): A mapping of symbol name to symbol object
+        Returns:
+            symbol_id_map (dict): A mapping of symbol name to symbol object
         '''
         cur = self._conn.cursor()
         cur.execute("SELECT * FROM symbols")
@@ -114,8 +115,8 @@ class JuicerDatabase():
         '''
         Query all rows in the fields table
 
-            Returns:
-                    field_name_map (dict): A mapping of field name to field object
+        Returns:
+            field_name_map (dict): A mapping of field name to field object
         '''
         cur = self._conn.cursor()
         cur.execute("SELECT * FROM fields")
@@ -200,11 +201,11 @@ class JuicerDatabase():
         '''
         Find a symbol to replace the empty symbol that may be a typedef.
 
-            Parameters:
-                    empty_symbol (symbol): The empty symbol to be replaced
+        Args:
+            empty_symbol (symbol): The empty symbol to be replaced
 
-            Returns:
-                    symbol (symbol): The replacement symbol or None
+        Returns:
+            symbol (symbol): The replacement symbol or None
         '''
         for key in self._symbol_name_map.keys():
             symbol = self._symbol_name_map[key]
@@ -237,10 +238,10 @@ class JuicerDatabase():
 
     def mark_output_symbol(self, symbol):
         '''
-        Mark this symbol as one that should be written to a message file and mark each of its fields.
+        Mark this symbol as one that should be written to a msg file and mark each of its fields.
 
-            Parameters:
-                    symbol (symbol): The symbol to mark
+        Args:
+            symbol (symbol): The symbol to mark
         '''
         symbol.set_should_output(True)
         byte_size = symbol.get_size()
@@ -261,8 +262,8 @@ class JuicerDatabase():
         '''
         Return the symbol list as a map of symbol name to symbol object.
 
-            Returns:
-                    symbol_name_map (dict): A dictionary of symbols.
+        Returns:
+            symbol_name_map (dict): A dictionary of symbols.
         '''
         return self._symbol_name_map
 
@@ -270,8 +271,8 @@ class JuicerDatabase():
         '''
         Return the field list as a map of field name to field object.
 
-            Returns:
-                    field_name_map (dict): A dictionary of fields.
+        Returns:
+            field_name_map (dict): A dictionary of fields.
         '''
         return self._field_name_map
 
@@ -288,8 +289,8 @@ class JuicerDatabase():
         '''
         Rename all fields that have the given name.
 
-            Parameters:
-                    symbol (symbol): A symbol with a name that isn't unique
+        Args:
+            symbol (symbol): A symbol with a name that isn't unique
         '''
         v_names = {}
 

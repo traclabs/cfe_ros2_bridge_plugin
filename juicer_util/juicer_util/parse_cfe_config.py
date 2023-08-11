@@ -40,10 +40,10 @@ class ParseCFEConfig():
         '''
         Initializes the attributes for this object.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
-                    command_params (list): The list of parameters to read for each command object
-                    telemetry_params (list): The list of parameters to read for each telemetry object
+        Args:
+            node (rosnode): The ROS2 node
+            command_params (list): The list of parameters to read for each command object
+            telemetry_params (list): The list of parameters to read for each telemetry object
         '''
         self._node = node
         self._command_dict = {}
@@ -126,11 +126,11 @@ class ParseCFEConfig():
         '''
         Parse a parameter for the command/telemetry entry.
 
-            Parameters:
-                    p (): The parameter to parse
+        Args:
+            p: The parameter to parse
 
-            Returns:
-                    value ():  The value of the parameter
+        Returns:
+            value:  The value of the parameter
         '''
         if p.type_ == Parameter.Type.STRING:
             return p.get_parameter_value().string_value
@@ -154,8 +154,8 @@ class ParseCFEConfig():
         '''
         Return the command object dictionary
 
-            Returns:
-                    command_dict (dict): The dictionary of command objects
+        Returns:
+            command_dict (dict): The dictionary of command objects
         '''
         return self._command_dict
 
@@ -163,7 +163,7 @@ class ParseCFEConfig():
         '''
         Return the telemetry object dictionary
 
-            Returns:
-                    telemetry_dict (dict): The dictionary of telemetry objects
+        Returns:
+            telemetry_dict (dict): The dictionary of telemetry objects
         '''
         return self._telemetry_dict
