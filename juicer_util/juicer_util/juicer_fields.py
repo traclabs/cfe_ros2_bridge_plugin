@@ -82,16 +82,16 @@ class JuicerFieldEntry():
         '''
         Initializes the field attributes for this object.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
-                    my_id (str): A unique id for this field
-                    symbol (int): The id of the symbol that contains this field
-                    name (str): The name of this field
-                    byte_offset (int): The byte offset for this field in the structure
-                    my_type (int): The id of the symbol for the data type of this field
-                    little_endian (bool): Is this data stored as little endian
-                    bit_size (int): Field from database that is not used
-                    bit_offset (int): Field from database that is not used
+        Args:
+            node (rosnode): The ROS2 node
+            my_id (str): A unique id for this field
+            symbol (int): The id of the symbol that contains this field
+            name (str): The name of this field
+            byte_offset (int): The byte offset for this field in the structure
+            my_type (int): The id of the symbol for the data type of this field
+            little_endian (bool): Is this data stored as little endian
+            bit_size (int): Field from database that is not used
+            bit_offset (int): Field from database that is not used
         '''
         self._node = node
         self._my_id = my_id
@@ -110,8 +110,8 @@ class JuicerFieldEntry():
         '''
         Return the name of this field.
 
-            Returns:
-                    name (str): The name of this field
+        Returns:
+            name (str): The name of this field
         '''
         return self._name
 
@@ -119,8 +119,8 @@ class JuicerFieldEntry():
         '''
         Return the id of the symbol that contains this field.
 
-            Returns:
-                    symbol (int): The id of the symol that contains this field
+        Returns:
+            symbol (int): The id of the symol that contains this field
         '''
         return self._symbol
 
@@ -128,8 +128,8 @@ class JuicerFieldEntry():
         '''
         Return the unique id of this field.
 
-            Returns:
-                    my_id (str): The unique id of this field
+        Returns:
+            my_id (str): The unique id of this field
         '''
         return self._my_id
 
@@ -137,8 +137,8 @@ class JuicerFieldEntry():
         '''
         Return the id of the symbol for the data type of this field.
 
-            Returns:
-                    my_type (int): The id of the symbol for the data type of this field
+        Returns:
+            my_type (int): The id of the symbol for the data type of this field
         '''
         return self._my_type
 
@@ -146,8 +146,8 @@ class JuicerFieldEntry():
         '''
         Return the ROS2 style name for this field.
 
-            Returns:
-                    ros_name (str): The ROS2 style name for this field
+        Returns:
+            ros_name (str): The ROS2 style name for this field
         '''
         return self._ros_name
 
@@ -155,8 +155,8 @@ class JuicerFieldEntry():
         '''
         Return the byte offset for this field.
 
-            Returns:
-                    byte_offset (int): The byte offset for this field
+        Returns:
+            byte_offset (int): The byte offset for this field
         '''
         return self._byte_offset
 
@@ -164,8 +164,8 @@ class JuicerFieldEntry():
         '''
         Return the ROS2 name for this field as used in a msg file.
 
-            Returns:
-                    type_name (str): The ROS2 name for this field
+        Returns:
+            type_name (str): The ROS2 name for this field
         '''
         is_array, length = self.get_is_array()
         symbol = self.get_type_symbol()
@@ -182,9 +182,9 @@ class JuicerFieldEntry():
         '''
         Return if this field is an array and its length.
 
-            Returns:
-                    is_array (bool): If this field is an array
-                    length (int): The length of the array
+        Returns:
+            is_array (bool): If this field is an array
+            length (int): The length of the array
         '''
         retval = False
         symbol = self.get_type_symbol()
@@ -201,8 +201,8 @@ class JuicerFieldEntry():
         '''
         Sets type_symbol to symbol.
 
-            Parameters:
-                    symbol (symbol): The symbol for the data type of this field
+        Args:
+            symbol (symbol): The symbol for the data type of this field
         '''
         self._type_symbol = symbol
 
@@ -210,8 +210,8 @@ class JuicerFieldEntry():
         '''
         Returns the symbol type of this field.
 
-            Returns:
-                    type_symbol (symbol): The symbol for the data type of this field
+        Returns:
+            type_symbol (symbol): The symbol for the data type of this field
         '''
         symbol = self._type_symbol
         if symbol.get_alternative():
@@ -222,8 +222,8 @@ class JuicerFieldEntry():
         '''
         Returns TRUE if this field is little endian.
 
-            Returns:
-                    little_endian (bool): If this field is little endian
+        Returns:
+            little_endian (bool): If this field is little endian
         '''
         return self._little_endian
 
@@ -231,8 +231,8 @@ class JuicerFieldEntry():
         '''
         Sets the endian value for this field.
 
-            Parameters:
-                    endian (bool): True if this field is little endian
+        Args:
+            endian (bool): True if this field is little endian
         '''
         self._little_endian = endian
 
@@ -240,8 +240,8 @@ class JuicerFieldEntry():
         '''
         Return the byte length of this field.
 
-            Returns:
-                    byte_length (int): The length in bytes of this field
+        Returns:
+            byte_length (int): The length in bytes of this field
         '''
         return self._byte_length
 
@@ -249,8 +249,8 @@ class JuicerFieldEntry():
         '''
         Set the byte length of this field.
 
-            Parameters:
-                    length (int): The length in bytes of this field
+        Args:
+            length (int): The length in bytes of this field
         '''
         self._byte_length = length
 
@@ -258,21 +258,20 @@ class JuicerFieldEntry():
         '''
         Set the ROS2 name of this field to name.
 
-            Parameters:
-                    name (str): The ROS2 name of this field
+        Args:
+            name (str): The ROS2 name of this field
         '''
         self._ros_name = name
-
 
     def generate_ros_field_name(self, name):
         '''
         Generate a ROS2 style field name based on input name.
 
-            Parameters:
-                    name (str): The cFS name of the field
+        Args:
+            name (str): The cFS name of the field
 
-            Returns:
-                    ros_name (str): The ROS2 style name of the field
+        Returns:
+            ros_name (str): The ROS2 style name of the field
         '''
         retval = name
 
@@ -305,16 +304,15 @@ class JuicerFieldEntry():
 
         return self.replace_keywords(retval)
 
-
     def replace_keywords(self, name):
         '''
         Replace common keywords with ROS2 style versions in name.
 
-            Parameters:
-                    name (str): A keyword for possible replacement
+        Args:
+            name (str): A keyword for possible replacement
 
-            Returns:
-                    name (str): The possibly replaced keyword
+        Returns:
+            name (str): The possibly replaced keyword
         '''
         if name == "virtual":
             return "virt"

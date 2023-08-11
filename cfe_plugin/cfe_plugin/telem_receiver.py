@@ -65,12 +65,12 @@ class TelemReceiver():
         '''
         Initializes the attributes of the telem receiver object.
 
-            Parameters:
-                    node (rosnode): The ROS2 node
-                    msg_pkg (str): The ROS2 package containing the message structures
-                    port (int): The port number to listen on
-                    telem_info (): The telemetry configuration information
-                    juicer_interface (JuicerInterface): The interface to the Juicer database
+        Args:
+            node (rosnode): The ROS2 node
+            msg_pkg (str): The ROS2 package containing the message structures
+            port (int): The port number to listen on
+            telem_info (): The telemetry configuration information
+            juicer_interface (JuicerInterface): The interface to the Juicer database
         '''
         node.get_logger().debug(f"TelemReceiver(telem_info[{str(len(telem_info))})")
         self._node = node
@@ -124,8 +124,8 @@ class TelemReceiver():
         '''
         Process an incoming data packet.
 
-            Parameters:
-                    datagram (bytearray): The incoming cFE data packet
+        Args:
+            datagram (bytearray): The incoming cFE data packet
         '''
         packet_id = self.get_pkt_id(datagram)
         if packet_id in self._tlm_map:
@@ -179,8 +179,8 @@ class TelemReceiver():
                     key (str): The key for the telemetry
                     clear (bool): If queue should be cleared
 
-            Returns:
-                    current_value (): The telemetry value for the key
+        Returns:
+            current_value (): The telemetry value for the key
         '''
         retval = None
         if key in self._latest_values:
@@ -194,11 +194,11 @@ class TelemReceiver():
         '''
         Return the packet id for the cFE data packet.
 
-            Parameters:
-                    datagram (bytearray): The cFE data packet
+        Args:
+            datagram (bytearray): The cFE data packet
 
-            Returns:
-                    pkt_id (int): The packet id of the data packet
+        Returns:
+            pkt_id (int): The packet id of the data packet
         '''
         streamid = unpack(">H", datagram[:2])
         return hex(streamid[0])
@@ -208,11 +208,11 @@ class TelemReceiver():
         '''
         Return the sequence count for the cFE data packet.
 
-            Parameters:
-                    datagram (bytearray): The cFE data packet
+        Args:
+            datagram (bytearray): The cFE data packet
 
-            Returns:
-                    seq_count (int): The sequence count
+        Returns:
+            seq_count (int): The sequence count
         '''
         streamid = unpack(">H", datagram[2:4])
         return streamid[0] & 0x3FFF  # sequence count mask
