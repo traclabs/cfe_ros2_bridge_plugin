@@ -209,10 +209,10 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Sends the command packet to cFE.
 
-            Parameters:
-                    packet (bytearray): The data to send
-            Returns:
-                    success (bool): If the packet was sent successfully
+        Args:
+            packet (bytearray): The data to send
+        Returns:
+            success (bool): If the packet was sent successfully
         '''
         # send packet to cFE
         self._node.get_logger().info(f"Got packet to send to cFE! ({self._command_ip}, {self._command_port})")
@@ -249,9 +249,9 @@ class FSWPlugin(FSWPluginInterface):
         '''
         Return the latest value for the specified key.
 
-            Parameters:
-                    key (str): The ROS2 name of the telemetry wanted
-                    clear (bool): If queue should be cleared
+        Args:
+            key (str): The ROS2 name of the telemetry wanted
+            clear (bool): Flag indicating if data should be cleared once returned
 
         Returns:
             latest_data (): The value of the specified key
