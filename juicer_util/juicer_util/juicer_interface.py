@@ -191,7 +191,8 @@ class JuicerInterface():
                     aryval = []
                     size = fsym.get_size()
                     fmsg = MsgType()
-                    self._node.get_logger().debug("Got val from recursive call for " + debug_name + ", " + fsym.get_ros_name())
+                    self._node.get_logger().debug("Got val from recursive call for "
+                            + debug_name + ", " + fsym.get_ros_name())
                     for x in range(length):
                         val = self.parse_packet(datagram, offs + x * size, fsym.get_ros_name(),
                                                 fmsg, msg_pkg)
