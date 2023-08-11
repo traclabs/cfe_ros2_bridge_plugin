@@ -8,6 +8,7 @@
 
 from cfe_msgs.msg import CFEMSGCommandHeader
 
+
 class CommandHandler():
     """This class listens for commands from ROS2.
 
