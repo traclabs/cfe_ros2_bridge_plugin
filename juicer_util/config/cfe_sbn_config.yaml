@@ -11,7 +11,7 @@
           port: 1234
           cmd_code: 0
         CfdpCh2Dnlink:
-          cfe_mid: '0x08c4'
+          cfe_mid: '0x8c4'
           topic_name: /rosfsw/cfdp/pdu/entity1
           port: 1234
           cmd_code: 0
@@ -789,12 +789,12 @@
           topic_name: /sbn/robot_sim_state_tlm
           port: 1235
         CfdpCh0Uplink:
-          cfe_mid: '0x08c3'
+          cfe_mid: '0x8c3'
           topic_name: /rosfsw/cfdp/pdu/entity2
-          port: 1234
+          port: 1235
           cmd_code: 0
         CfdpCh2Uplink:
           cfe_mid: '0x18ca'
           topic_name: /rosfsw/cfdp/pdu/entity2
-          port: 1234
+          port: 1235
           cmd_code: 0

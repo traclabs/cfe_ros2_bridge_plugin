@@ -279,14 +279,31 @@ class JuicerInterface():
         self._seq = self._seq+1 # TODO: Is seq set on nominal commands being sent? Should this var be used to override if not?
 
         self._node.get_logger().info("mid is " + str(mid) +"="+ str(int(mid,0)) + f", seq={self._seq}, len={len(message.data)+8-7} from {len(message.data)}, code={code}")
+
+        mid=int(mid,0)
+        if (mid & 0x1000):
+            self._node.get_logger().info("Encoding as command")
         
-        hdr = struct.pack(">HHHh",
-                          int(mid,0) | 0x1800,
-                          self._seq, # VERIFY
-                          len(message.data)+8-7,
-                          code # function code,
-#                          0 # spare
-        )
+            hdr = struct.pack(">HHHh",
+                              mid | 0x800, # Set secondary hdr flag
+                              self._seq, # VERIFY
+                              len(message.data)+8-7,
+                              code # function code,
+                              #                          0 # spare
+                              )
+        else:
+            self._node.get_logger().info("Encoding as tlm")
+        
+            hdr = struct.pack(">HHHIHI",
+                              mid | 0x800,
+                              self._seq, # VERIFY
+                              len(message.data)+16-7,
+                              # NOTE: CCSDS Time Format may vary between Cfe Configs. This logic should come from juicer (TODO)
+                              0, # TODO: Seconds, 32-bit
+                              0, # TODO: Subseconds, 16-bit
+                              0, # 32-bit Spare
+                              )
+
 
         # Because python is so clear at binary data manipulation
         rtv = hdr + b''.join(message.data)
