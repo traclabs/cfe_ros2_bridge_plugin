@@ -1,4 +1,3 @@
-import threading
 import socket
 import rclpy
 import importlib
@@ -37,30 +36,26 @@ class TelemReceiver():
         self._recv_buff_size = 4096
 
         self._running = True
-        self._recv_thread = threading.Thread(target=self.receive_thread)
-
+        self._timer_period = 0.05
         self._logger.info("starting thread to receive CFS telemetry")
-        self._recv_thread.start()
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._sock.bind(("", self._port))
+        self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
         self._latest_values = {}
 
     def stop_thread(self):
         self._running = False
-        self._recv_thread.join()
+        self._recv_timer.shutdown();
 
-    def receive_thread(self):
-        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._sock.bind(("", self._port))
-        # self._sock = socket.create_server(("", self._port), socket.AF_INET, None, True)
-
-        self._socket_err_count = 0
-        while self._running:
+    def receive_callback(self):
+        if self._running:
             try:
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)
                 if len(datagram) < 6:
-                    continue
+                    return
 
                 self._logger.debug("Incoming data is length " + str(len(datagram)))
                 self.handle_packet(datagram)
