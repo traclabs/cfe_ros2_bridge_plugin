@@ -35,12 +35,15 @@ class TelemReceiver():
         self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
-        self._running = True
         self._timer_period = 0.05
-        self._logger.info("starting thread to receive CFS telemetry")
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
+        self._sock.setblocking(False)
+
+        self._logger.info("starting timer thread to receive CFS telemetry")
+        self._running = True
         self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
+
         self._latest_values = {}
 
     def stop_thread(self):
@@ -49,8 +52,9 @@ class TelemReceiver():
 
     def receive_callback(self):
         if self._running:
-            # self._logger.info("telem_reciever.callback() time: " + str(self._node.get_clock().now()))
             try:
+                self._logger.info("telem_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-6))
+
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
@@ -62,7 +66,8 @@ class TelemReceiver():
                 self.handle_packet(datagram)
 
             except socket.error:
-                self._logger.warn("Error receiving telemetry data.")
+                # self._logger.warn("Error receiving telemetry data.")
+                pass
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)

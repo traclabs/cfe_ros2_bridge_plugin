@@ -25,13 +25,16 @@ class CmdReceiver():
         self._logger.debug("command map is " + str(self._cmd_map))
         self._recv_buff_size = 4096
 
-        self._running = True
+
         self._timer_period = 0.05
-        self._logger.info("starting thread to receive CFS command")
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._logger.info("binding to port " + str(self._port))
         self._sock.bind(("", self._port))
+        self._sock.setblocking(False)
+
+        self._logger.info("starting thread to receive CFS command")
+        self._running = True
         self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
+
         self._latest_values = {}
 
     def stop_thread(self):
@@ -40,9 +43,10 @@ class CmdReceiver():
 
     def receive_callback(self):
         if self._running:
-            self._logger.info("cmd_reciever.callback() time: " + str(self._node.get_clock().now()))
             try:
-                # receive message
+                self._logger.info("cmd_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-9))
+
+                # # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)
@@ -52,7 +56,8 @@ class CmdReceiver():
                 self.handle_packet(datagram)
 
             except socket.error:
-                self._logger.warn("Error receiving command data.")
+                # self._logger.warn("Error receiving command data.")
+                pass
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
