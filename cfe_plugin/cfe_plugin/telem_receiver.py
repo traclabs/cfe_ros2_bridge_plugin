@@ -49,6 +49,7 @@ class TelemReceiver():
 
     def receive_callback(self):
         if self._running:
+            # self._logger.info("telem_reciever.callback() time: " + str(self._node.get_clock().now()))
             try:
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
