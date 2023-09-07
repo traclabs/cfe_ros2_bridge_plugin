@@ -44,9 +44,9 @@ class CmdReceiver():
     def receive_callback(self):
         if self._running:
             try:
-                self._logger.info("cmd_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-9))
+                # self._logger.info("cmd_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-9))
 
-                # # receive message
+                # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)

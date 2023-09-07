@@ -53,7 +53,7 @@ class TelemReceiver():
     def receive_callback(self):
         if self._running:
             try:
-                self._logger.info("telem_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-6))
+                # self._logger.info("telem_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-6))
 
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
