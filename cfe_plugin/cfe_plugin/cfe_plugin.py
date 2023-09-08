@@ -5,7 +5,6 @@ from juicer_util.juicer_interface import JuicerInterface
 from juicer_util.parse_cfe_config import ParseCFEConfig
 
 from cfe_plugin.telem_receiver import TelemReceiver
-from cfe_plugin.cmd_receiver import CmdReceiver
 from cfe_plugin.command_handler import CommandHandler
 
 from rcl_interfaces.msg import SetParametersResult
@@ -62,9 +61,6 @@ class FSWPlugin(FSWPluginInterface):
                                            self._telemetry_dict,
                                            self._juicer_interface)
             self._telem_receivers.append(telem_receiver)
-        # self._cmd_receiver = CmdReceiver(self._node, self._msg_pkg, self._command_port,
-        #                                      self._command_dict,
-        #                                      self._juicer_interface)
 
         self._command_info = self._juicer_interface.reconcile_command_info(self._command_info, self._command_dict)
         symbol_name_map = self._juicer_interface.get_symbol_ros_name_map()
