@@ -33,8 +33,8 @@ class TelemReceiver():
         self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
-        self._timer_period = 0.05  # as long as data from cFS is coming in,
-                                   # per MID, slower than 20hz, this should be ok
+        self._timer_period = 0.05  # as long as data from cFS is coming in, per MID,
+                                   # slower than 20hz, this should be ok
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
         self._sock.setblocking(False)
