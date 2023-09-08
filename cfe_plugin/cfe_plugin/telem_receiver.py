@@ -30,12 +30,11 @@ class TelemReceiver():
                 self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
                 self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
                 self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
-            # else:
-            #     self._node.get_logger().info("Skipping telem on port " + str(port) + " as we're listening to port " + str(self._port))
         self._logger.debug("telem map is " + str(self._tlm_map))
         self._recv_buff_size = 4096
 
-        self._timer_period = 0.05
+        self._timer_period = 0.05  # as long as data from cFS is coming in,
+                                   # per MID, slower than 20hz, this should be ok
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
         self._sock.setblocking(False)
@@ -48,13 +47,11 @@ class TelemReceiver():
 
     def stop_thread(self):
         self._running = False
-        self._recv_timer.shutdown();
+        self._recv_timer.shutdown()
 
     def receive_callback(self):
         if self._running:
             try:
-                # self._logger.info("telem_reciever.callback() time since last call: " + str(self._recv_timer.time_since_last_call() * 1e-6))
-
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
@@ -66,8 +63,7 @@ class TelemReceiver():
                 self.handle_packet(datagram)
 
             except socket.error:
-                # self._logger.warn("Error receiving telemetry data.")
-                pass
+                return
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
@@ -88,7 +84,6 @@ class TelemReceiver():
                 hdr = Header()
                 hdr.stamp = mytime
                 setattr(msg, "header", hdr)
-                # self._logger.info("Set the header time to " + str(mytime))
 
             self._juicer_interface.parse_packet(datagram, 0, self._tlm_map[packet_id], msg, self._msg_pkg)
             key = self._key_map[packet_id]
@@ -119,4 +114,4 @@ class TelemReceiver():
     @staticmethod
     def get_seq_count(datagram):
         streamid = unpack(">H", datagram[2:4])
-        return streamid[0] & 0x3FFF  # # sequence count mask
+        return streamid[0] & 0x3FFF  # sequence count mask
