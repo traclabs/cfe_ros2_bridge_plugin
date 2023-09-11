@@ -40,17 +40,25 @@ class TelemReceiver():
         self._sock.setblocking(False)
 
         self._logger.info("starting timer thread to receive CFS telemetry")
-        self._running = True
         self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
 
         self._latest_values = {}
 
-    def stop_thread(self):
-        self._running = False
+    def __del__(self):
         self._recv_timer.shutdown()
 
     def receive_callback(self):
-        if self._running:
+
+        # if it takes too long to process the socket buffer, it will slow down the
+        # thread updates.  This will give us a warning if that happens
+        time_since_last_call = self._recv_timer.time_since_last_call() * 1e-9
+        if time_since_last_call >= self._timer_period:
+            self._logger.warn("TelemReceiver update thread not able to process data within "
+                + str(1.0/self._timer_period)
+                + " Hz update rate, slow downs may occurr")
+
+        # while loop makes sure we process all the socket data before moving on
+        while True:
             try:
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
