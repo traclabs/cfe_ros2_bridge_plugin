@@ -54,7 +54,7 @@ class TelemReceiver():
         time_since_last_call = self._recv_timer.time_since_last_call() * 1e-9
         if time_since_last_call >= self._timer_period:
             self._logger.warn("TelemReceiver update thread not able to process data within "
-                + str(1.0/self._timer_period)
+                + str(1.0 / self._timer_period)
                 + " Hz update rate, slow downs may occurr")
 
         # while loop makes sure we process all the socket data before moving on
