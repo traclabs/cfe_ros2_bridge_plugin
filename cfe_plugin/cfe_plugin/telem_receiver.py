@@ -44,8 +44,6 @@ class TelemReceiver():
 
         self._latest_values = {}
 
-    def __del__(self):
-        self._recv_timer.shutdown()
 
     def receive_callback(self):
 
