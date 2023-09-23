@@ -1,4 +1,3 @@
-import threading
 import socket
 import rclpy
 import importlib
@@ -35,39 +34,46 @@ class TelemReceiver():
             # else:
             #     self._node.get_logger().info("Skipping telem on port " + str(port) + " as we're listening to port " + str(self._port))
         #self._logger.debug("telem map is " + str(self._tlm_map))
+
         self._recv_buff_size = 4096
 
-        self._running = True
-        self._recv_thread = threading.Thread(target=self.receive_thread)
-
-        self._logger.info("starting thread to receive CFS telemetry")
-        self._recv_thread.start()
-        self._latest_values = {}
-
-    def stop_thread(self):
-        self._running = False
-        self._recv_thread.join()
-
-    def receive_thread(self):
+        self._timer_period = 0.05  # as long as data from cFS is coming in, per MID,
+                                   # slower than 20hz, this should be ok
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.bind(("", self._port))
-        # self._sock = socket.create_server(("", self._port), socket.AF_INET, None, True)
+        self._sock.setblocking(False)
 
-        self._socket_err_count = 0
-        while self._running:
+        self._logger.info("starting timer thread to receive CFS telemetry")
+        self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
+
+        self._latest_values = {}
+
+
+    def receive_callback(self):
+
+        # if it takes too long to process the socket buffer, it will slow down the
+        # thread updates.  This will give us a warning if that happens
+        time_since_last_call = self._recv_timer.time_since_last_call() * 1e-9
+        if time_since_last_call >= self._timer_period:
+            self._logger.warn("TelemReceiver update thread not able to process data within "
+                + str(1.0 / self._timer_period)
+                + " Hz update rate, slow downs may occurr")
+
+        # while loop makes sure we process all the socket data before moving on
+        while True:
             try:
                 # receive message
                 datagram, host = self._sock.recvfrom(self._recv_buff_size)
 
                 # ignore data if not long enough (doesn't contain header)
                 if len(datagram) < 6:
-                    continue
+                    return
 
                 self._logger.debug("Incoming data is length " + str(len(datagram)))
                 self.handle_packet(datagram)
 
             except socket.error:
-                self._logger.warn("Error receiving telemetry data.")
+                return
 
     def handle_packet(self, datagram):
         packet_id = self.get_pkt_id(datagram)
@@ -104,7 +110,6 @@ class TelemReceiver():
                 hdr = Header()
                 hdr.stamp = mytime
                 setattr(msg, "header", hdr)
-                # self._logger.info("Set the header time to " + str(mytime))
 
             key = self._key_map[packet_id]
 
@@ -134,4 +139,4 @@ class TelemReceiver():
     @staticmethod
     def get_seq_count(datagram):
         streamid = unpack(">H", datagram[2:4])
-        return streamid[0] & 0x3FFF  # # sequence count mask
+        return streamid[0] & 0x3FFF  # sequence count mask

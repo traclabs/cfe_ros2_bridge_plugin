@@ -4,6 +4,7 @@ import subprocess
 
 # This script runs juicer over a list of input files.
 
+
 class RunMultipleFiles():
 
     def __init__(self):
