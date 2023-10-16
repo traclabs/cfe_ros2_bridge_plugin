@@ -1,3 +1,4 @@
+import os
 import socket
 from fsw_ros2_bridge.fsw_plugin_interface import FSWPluginInterface
 
@@ -28,11 +29,20 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
 
         self._node.declare_parameter('plugin_params.commandHost', '127.0.0.1')
-        self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
-            get_parameter_value().string_value
+        self._command_host = os.environ.get("FSW_IP")
+        if not self._command_host:
+            self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
+                get_parameter_value().string_value
         self._node.get_logger().info('commandHost: ' + str(self._command_host))
 
-        self._command_ports = {}
+        self._node.declare_parameter('plugin_params.commandPort', 1234)
+        self._command_port = os.environ.get("FSW_CMD_PORT")
+        if not self._command_port:
+            self._command_port = self._node.get_parameter('plugin_params.commandPort'). \
+                get_parameter_value().integer_value
+        else:
+            self._command_port = int(self._command_port)
+        self._node.get_logger().info('commandPort: ' + str(self._command_port))
 
         self._msg_pkg = "cfe_msgs"
 
@@ -97,7 +107,7 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
 
-        send_success = self.send_cmd_packet(packet, self._command_host, cmd_ids['port'])
+        send_success = self.send_cmd_packet(packet, self._command_host, self._command_port)
 
         if send_success:
             self._node.get_logger().info('Sent packet of size ' + str(len(packet)) + ' to cFE.\n' + str(packet))
@@ -107,20 +117,18 @@ class FSWPlugin(FSWPluginInterface):
     def send_cmd_packet(self, packet, cmd_host, cmd_port):
         # send packet to cFE
         self._node.get_logger().info('Got packet to send to cFE!')
-        if cmd_port in self._command_ports:
-            cmd_sock = self._command_ports.get(cmd_port)
-        else:
-            cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self._command_ports[cmd_port] = cmd_sock
-            cmd_sock.connect((cmd_host, cmd_port))
+
+        # TODO: If more than one receiver, match it with destination
+        cmd_sock = self._telem_receivers[0]._sock
+        
         send_worked = False
         try:
-            cmd_sock.sendall(packet)
+            cmd_sock.sendto(packet, (cmd_host, cmd_port))
             send_worked = True
             self._node.get_logger().debug('Sent command data.')
         except OSError as err:
             # TODO: assume socket closed and reopen
-            self._node.get_logger().warn('socket error: ' + err)
+            self._node.get_logger().warn('socket error: ' + str(err))
         return send_worked
 
     def get_telemetry_message_info(self):
