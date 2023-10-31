@@ -26,7 +26,6 @@ find_package(std_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/BinaryPktPayload.msg"
   "msg/CFEESAppInfo.msg"
   "msg/CFEESBlockStats.msg"
   "msg/CFEESMemPoolStats.msg"
