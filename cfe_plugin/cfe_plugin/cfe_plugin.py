@@ -32,10 +32,15 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('udp_send_port: ' + str(self._command_port))
 
-        self._node.declare_parameter('plugin_params.udp_ip', '127.0.0.1')
-        self._host_ip = self._node.get_parameter('plugin_params.udp_ip'). \
-            get_parameter_value().string_value
-        self._node.get_logger().info('udp_ip: ' + str(self._host_ip))
+        self._node.declare_parameter('plugin_params.udp_receive_ip', '127.0.0.1')
+        self._receive_ip = self._node.get_parameter('plugin_params.udp_receive_ip'). \
+             get_parameter_value().string_value
+        self._node.get_logger().info('udp_receive_ip: ' + str(self._receive_ip))
+
+        self._node.declare_parameter('plugin_params.udp_send_ip', '127.0.0.1')
+        self._send_ip = self._node.get_parameter('plugin_params.udp_send_ip'). \
+             get_parameter_value().string_value
+        self._node.get_logger().info('udp_send_ip: ' + str(self._send_ip))
 
         self._node.get_logger().info("Telemetry port: " + str(self._telemetry_port))
         self._node.get_logger().info("Command port: " + str(self._command_port))
@@ -58,7 +63,7 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
         self._telem_receivers = []
         telem_receiver = TelemReceiver(self._node, self._msg_pkg,
-                                       self._host_ip,
+                                       self._receive_ip,
                                        self._telemetry_port,
                                        self._telemetry_dict,
                                        self._juicer_interface)
@@ -83,7 +88,7 @@ class FSWPlugin(FSWPluginInterface):
             ci.set_callback_func(ch.process_callback)
 
         self._command_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._command_socket.connect((self._host_ip, self._command_port))
+        self._command_socket.connect((self._send_ip, self._command_port))
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 

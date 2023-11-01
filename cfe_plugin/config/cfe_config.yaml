@@ -3,6 +3,7 @@ cfe_bridge:
     plugin_name: cfe_plugin.cfe_plugin
     namespace: /groundsystem
     plugin_params:
-      udp_ip: "127.0.0.1"
+      udp_receive_ip: "127.0.0.1"
+      udp_send_ip: "127.0.0.1"
       udp_receive_port: 1235
       udp_send_port: 1234
