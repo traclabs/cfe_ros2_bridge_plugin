@@ -22,12 +22,12 @@ class FSWPlugin(FSWPluginInterface):
         resource_path = get_package_share_directory("cfe_plugin") + "/resource/"
         self._juicer_interface = JuicerInterface(self._node, resource_path)
 
-        self._node.declare_parameter('plugin_params.udp_receive_port', 6666)
+        self._node.declare_parameter('plugin_params.udp_receive_port', 1235)
         self._telemetry_port = self._node.get_parameter('plugin_params.udp_receive_port'). \
             get_parameter_value().integer_value
         self._node.get_logger().info('udp_receive_port: ' + str(self._telemetry_port))
 
-        self._node.declare_parameter('plugin_params.udp_send_port', 7777)
+        self._node.declare_parameter('plugin_params.udp_send_port', 1234)
         self._command_port = self._node.get_parameter('plugin_params.udp_send_port'). \
             get_parameter_value().integer_value
         self._node.get_logger().info('udp_send_port: ' + str(self._command_port))
