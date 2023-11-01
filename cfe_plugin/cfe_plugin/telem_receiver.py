@@ -10,11 +10,12 @@ from std_msgs.msg import Header
 from cfe_msgs.msg import BinaryPktPayload  # Default binary packet format
 
 class TelemReceiver():
-    def __init__(self, node, msg_pkg, port, telem_info, juicer_interface):
+    def __init__(self, node, msg_pkg, host_ip, port, telem_info, juicer_interface):
         self._node = node
         self._ros_topic_map = {}
         self._juicer_interface = juicer_interface
         self._port = port
+        self._host_ip = host_ip
         self._msg_pkg = msg_pkg
         self._tlm_map = {}
         self._key_map = {}
@@ -30,7 +31,7 @@ class TelemReceiver():
         self._timer_period = 0.05  # as long as data from cFS is coming in, per MID,
                                    # slower than 20hz, this should be ok
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._sock.bind(("", self._port))
+        self._sock.bind((self._host_ip, self._port))
         self._sock.setblocking(False)
 
         self._logger.info("starting timer thread to receive CFS telemetry")
