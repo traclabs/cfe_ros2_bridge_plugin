@@ -11,7 +11,6 @@ class ParseCFEConfig():
         self._node = node
         self._command_dict = {}
         self._telemetry_dict = {}
-        # self._telemetry_port = 0
 
         self._node.get_logger().info('parsing cFE config file...')
 

@@ -13,7 +13,6 @@ class CommandHandler():
         self._msg_length = size - self._header_size
 
     def process_callback(self, msg):
-
         for t in msg.__dir__():
             if isinstance(getattr(msg, t), CFEMSGCommandHeader):
                 cmd_header = getattr(msg, t, None)

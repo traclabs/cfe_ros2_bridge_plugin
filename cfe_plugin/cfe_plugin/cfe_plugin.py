@@ -22,46 +22,48 @@ class FSWPlugin(FSWPluginInterface):
         resource_path = get_package_share_directory("cfe_plugin") + "/resource/"
         self._juicer_interface = JuicerInterface(self._node, resource_path)
 
-        self._node.declare_parameter('plugin_params.telemetryPort', 0)
-        self._telemetry_port = self._node.get_parameter('plugin_params.telemetryPort'). \
+        self._node.declare_parameter('plugin_params.udp_receive_port', 6666)
+        self._telemetry_port = self._node.get_parameter('plugin_params.udp_receive_port'). \
             get_parameter_value().integer_value
-        self._node.get_logger().info('telemetryPort: ' + str(self._telemetry_port))
+        self._node.get_logger().info('udp_receive_port: ' + str(self._telemetry_port))
 
-        self._node.declare_parameter('plugin_params.commandHost', '127.0.0.1')
-        self._command_host = self._node.get_parameter('plugin_params.commandHost'). \
+        self._node.declare_parameter('plugin_params.udp_send_port', 7777)
+        self._command_port = self._node.get_parameter('plugin_params.udp_send_port'). \
+            get_parameter_value().integer_value
+        self._node.get_logger().info('udp_send_port: ' + str(self._command_port))
+
+        self._node.declare_parameter('plugin_params.udp_ip', '127.0.0.1')
+        self._command_host = self._node.get_parameter('plugin_params.udp_ip'). \
             get_parameter_value().string_value
-        self._node.get_logger().info('commandHost: ' + str(self._command_host))
+        self._node.get_logger().info('udp_ip: ' + str(self._command_host))
 
-        self._command_ports = {}
+        self._node.get_logger().info("Telemetry port: " + str(self._telemetry_port))
+        self._node.get_logger().info("Command port: " + str(self._command_port))
 
+        # msg info
         self._msg_pkg = "cfe_msgs"
-
         self._telem_info = self._juicer_interface.get_telemetry_message_info()
         self._command_info = self._juicer_interface.get_command_message_info()
 
-        command_params = ["structure", "cfe_mid", "cmd_code", "topic_name", "port"]
-        telemetry_params = ["structure", "cfe_mid", "topic_name", "port"]
+        command_params = ["structure", "cfe_mid", "cmd_code", "topic_name"]
+        telemetry_params = ["structure", "cfe_mid", "topic_name"]
         self._cfe_config = ParseCFEConfig(self._node, command_params, telemetry_params)
         self._cfe_config.print_commands()
         self._cfe_config.print_telemetry()
 
         self._command_dict = self._cfe_config.get_command_dict()
         self._telemetry_dict = self._cfe_config.get_telemetry_dict()
-        tlm_ports = []
-        for tlm in self._telemetry_dict:
-            port = self._telemetry_dict[tlm]['port']
-            if port not in tlm_ports:
-                tlm_ports.append(port)
-        self._node.get_logger().info("Telemetry ports: " + str(tlm_ports))
 
+        # set up telemetry receivers
         self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
         self._telem_receivers = []
-        for port in tlm_ports:
-            telem_receiver = TelemReceiver(self._node, self._msg_pkg, port,
-                                           self._telemetry_dict,
-                                           self._juicer_interface)
-            self._telem_receivers.append(telem_receiver)
+        telem_receiver = TelemReceiver(self._node, self._msg_pkg,
+                                       self._telemetry_port,
+                                       self._telemetry_dict,
+                                       self._juicer_interface)
+        self._telem_receivers.append(telem_receiver)
 
+        # set up command broadcasters
         self._command_info = self._juicer_interface.reconcile_command_info(self._command_info, self._command_dict)
         symbol_name_map = self._juicer_interface.get_symbol_ros_name_map()
         for ci in self._command_info:
@@ -73,21 +75,28 @@ class FSWPlugin(FSWPluginInterface):
                 # Special case: Default handler for binary command payload (with cfg defined MID + FC)
                 # We specify size of 0 to indicate dynamically sized message
                 msg_size = 0
-                self._node.get_logger().info('***DBG**: cmd with msg_size=0 (dynamic)')
+                self._node.get_logger().warn('cmd with msg_size=0 (dynamic)')
             else:
                 msg_size = symbol_name_map[ci.get_msg_type()].get_size()
             ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'], msg_size)
             ci.set_callback_func(ch.process_callback)
+
+        self._command_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._command_socket.connect((self._command_host, self._command_port))
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 
     def parameters_callback(self, params):
         self._node.get_logger().warn("param callback!")
         for param in params:
-            if param.name == "plugin_params.telemetryPort":
+            if param.name == "plugin_params.udp_receive_port":
                 self._telemetry_port = param.value
-                self._node.get_logger().info('Got a telemetryPort update: '
+                self._node.get_logger().info('Got a udp_receive_port update: '
                                              + str(self._telemetry_port))
+            if param.name == "plugin_params.udp_send_port":
+                self._command_port = param.value
+                self._node.get_logger().info('Got a udp_send_port update: '
+                                             + str(self._command_port))
         return SetParametersResult(successful=True)
 
     def command_callback(self, command_info, message):
@@ -97,25 +106,20 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('Cmd ids: ' + str(cmd_ids))
         packet = self._juicer_interface.parse_command(command_info, message, cmd_ids['cfe_mid'], cmd_ids['cmd_code'])
 
-        send_success = self.send_cmd_packet(packet, self._command_host, cmd_ids['port'])
+        send_success = self.send_cmd_packet(packet)
 
         if send_success:
-            self._node.get_logger().info('Sent packet of size ' + str(len(packet)) + ' to cFE.\n' + str(packet))
+            self._node.get_logger().debug('Sent packet of size ' + str(len(packet)) + ' to cFE.\n' + str(packet))
+            self._node.get_logger().info('Sent packet of size ' + str(len(packet)) + ' to cFE.')
         else:
             self._node.get_logger().warn('Failed to send packet to cFE!')
 
-    def send_cmd_packet(self, packet, cmd_host, cmd_port):
+    def send_cmd_packet(self, packet):
         # send packet to cFE
         self._node.get_logger().info('Got packet to send to cFE!')
-        if cmd_port in self._command_ports:
-            cmd_sock = self._command_ports.get(cmd_port)
-        else:
-            cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self._command_ports[cmd_port] = cmd_sock
-            cmd_sock.connect((cmd_host, cmd_port))
         send_worked = False
         try:
-            cmd_sock.sendall(packet)
+            self._command_socket.sendall(packet)
             send_worked = True
             self._node.get_logger().debug('Sent command data.')
         except OSError as err:

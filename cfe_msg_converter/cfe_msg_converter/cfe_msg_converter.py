@@ -95,6 +95,7 @@ class CfeMsgConverter(Node):
                 for ln in inf.readlines():
                     if ln == "# add dependencies here\n":
                         outf.write("rosidl_generate_interfaces(${PROJECT_NAME}\n")
+                        outf.write("  \"msg/BinaryPktPayload.msg\"\n")
 
                         self.get_logger().info("Adding Juicer Msgs to CMakeLists.txt")
                         for m in self._msgs_list:

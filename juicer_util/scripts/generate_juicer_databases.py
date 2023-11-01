@@ -4,15 +4,15 @@ import subprocess
 
 # This script runs juicer over a list of input files.
 
-
 class RunMultipleFiles():
 
     def __init__(self):
         self.files = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
                       'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
                       'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
-                      'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so']
-        self.fileDir = '/home/swhart/code/TL-cFS/build/exe/cpu1'
+                      'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so',
+                      'cf/cf.so']
+        self.fileDir = '/home/swhart/code/cFS/build/exe/cpu1'
         self.outDir = '/home/swhart/code/juicer/dbs'
         self.exeCmd = '/home/swhart/code/juicer/build/juicer'
 

@@ -21,19 +21,9 @@ class TelemReceiver():
         self._logger = self._node.get_logger()
         self._node.get_logger().debug("telem_receiver got "+str(len(telem_info))+" telemetry structs")
         for tlm in telem_info:
-            port = telem_info[tlm]['port']
-            if port == self._port:
-                #self._node.get_logger().debug("type: " + str(tlm))
-                #self._node.get_logger().debug("  structure: " + str(telem_info[tlm]['structure']))
-                #self._node.get_logger().debug("  cfe_mid: " + str(telem_info[tlm]['cfe_mid']))
-                #self._node.get_logger().debug("  topic_name: " + telem_info[tlm]['topic_name'])
-                #self._node.get_logger().debug("  port: " + str(telem_info[tlm]['port']))
-                self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
-                self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
-                self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
-            # else:
-            #     self._node.get_logger().info("Skipping telem on port " + str(port) + " as we're listening to port " + str(self._port))
-        #self._logger.debug("telem map is " + str(self._tlm_map))
+            self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
+            self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
+            self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
 
         self._recv_buff_size = 4096
 
@@ -103,13 +93,10 @@ class TelemReceiver():
             msg_attrs = dir(msg)
             if "seq" in msg_attrs:
                 setattr(msg, "seq", self.get_seq_count(datagram))
-#            else:
-#                self._logger.warn("Failed to find 'seq' in message.")
             if "header" in msg_attrs:
                 hdr = Header()
                 hdr.stamp = mytime
                 setattr(msg, "header", hdr)
-
             key = self._key_map[packet_id]
 
             # check to see if we have telem data for this key. if not create a new list

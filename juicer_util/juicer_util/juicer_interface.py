@@ -274,7 +274,7 @@ class JuicerInterface():
             return self.encode_binary_command(message, mid, code)
         self._node.get_logger().info("Handling command for " + command_info.get_key() +
                                       " of type " + command_info.get_msg_type())
-        self._node.get_logger().info("Message: " + str(message))
+        self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
         return packet
@@ -329,12 +329,12 @@ class JuicerInterface():
             fmsg = getattr(message, field.get_ros_name(), 0)
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
             if len(fsym.get_fields()) == 0:
-                self._node.get_logger().info("Storing concrete value for " + debug_name)
+                self._node.get_logger().debug("Storing concrete value for " + debug_name)
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
                 fpacket = self.encode_command(fsym, fmsg, mid, code)
-                self._node.get_logger().info("fpacket " + str(fpacket))
+                self._node.get_logger().debug("fpacket " + str(fpacket))
                 packet.extend(fpacket)
 
         return packet
