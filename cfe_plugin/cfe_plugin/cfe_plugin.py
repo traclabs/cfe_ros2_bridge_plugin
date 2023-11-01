@@ -32,15 +32,15 @@ class FSWPlugin(FSWPluginInterface):
             get_parameter_value().integer_value
         self._node.get_logger().info('udp_send_port: ' + str(self._command_port))
 
-        self._node.declare_parameter('plugin_params.udp_receive_ip', '127.0.0.1')
-        self._receive_ip = self._node.get_parameter('plugin_params.udp_receive_ip'). \
+        self._node.declare_parameter('plugin_params.udp_telemetry_ip', '127.0.0.1')
+        self._telemetry_ip = self._node.get_parameter('plugin_params.udp_telemetry_ip'). \
              get_parameter_value().string_value
-        self._node.get_logger().info('udp_receive_ip: ' + str(self._receive_ip))
+        self._node.get_logger().info('udp_telemetry_ip: ' + str(self._telemetry_ip))
 
-        self._node.declare_parameter('plugin_params.udp_send_ip', '127.0.0.1')
-        self._send_ip = self._node.get_parameter('plugin_params.udp_send_ip'). \
+        self._node.declare_parameter('plugin_params.udp_command_ip', '127.0.0.1')
+        self._command_ip = self._node.get_parameter('plugin_params.udp_command_ip'). \
              get_parameter_value().string_value
-        self._node.get_logger().info('udp_send_ip: ' + str(self._send_ip))
+        self._node.get_logger().info('udp_command_ip: ' + str(self._command_ip))
 
         self._node.get_logger().info("Telemetry port: " + str(self._telemetry_port))
         self._node.get_logger().info("Command port: " + str(self._command_port))
@@ -63,7 +63,7 @@ class FSWPlugin(FSWPluginInterface):
         self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
         self._telem_receivers = []
         telem_receiver = TelemReceiver(self._node, self._msg_pkg,
-                                       self._receive_ip,
+                                       self._telemetry_ip,
                                        self._telemetry_port,
                                        self._telemetry_dict,
                                        self._juicer_interface)
@@ -87,8 +87,10 @@ class FSWPlugin(FSWPluginInterface):
             ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'], msg_size)
             ci.set_callback_func(ch.process_callback)
 
-        self._command_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._command_socket.connect((self._send_ip, self._command_port))
+        if len(self._telem_receivers) > 0:
+            self._command_socket = self._telem_receivers[0].get_socket()
+        else:
+            self._command_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 
@@ -125,12 +127,12 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('Got packet to send to cFE!')
         send_worked = False
         try:
-            self._command_socket.sendall(packet)
+            self._command_socket.sendto(packet, (self._command_ip, self._command_port))
             send_worked = True
             self._node.get_logger().debug('Sent command data.')
         except OSError as err:
             # TODO: assume socket closed and reopen
-            self._node.get_logger().warn('socket error: ' + err)
+            self._node.get_logger().warn('socket error: ' + str(err))
         return send_worked
 
     def get_telemetry_message_info(self):

@@ -39,6 +39,9 @@ class TelemReceiver():
 
         self._latest_values = {}
 
+    def get_socket(self):
+        return self._sock
+
     def receive_callback(self):
 
         # if it takes too long to process the socket buffer, it will slow down the
