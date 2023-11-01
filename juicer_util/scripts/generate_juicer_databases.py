@@ -14,16 +14,16 @@ files_list = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
 
 class RunMultipleFiles():
 
-    def __init__(self, cfe_path, juicer_path):
+    def __init__(self, cfe_path, juicer_path, output_filename):
         self.files = files_list
         self.fileDir = cfe_path + '/build/exe/cpu1'
         self.outDir = juicer_path + '/dbs'
         self.exeCmd = juicer_path + '/build/juicer'
+        self.output = output_filename
 
         for name in self.files:
             fname = self.fileDir + "/" + name
-            # oname = self.outDir + "/" + name + ".sqlite"
-            oname = self.outDir + "/" + "combined" + ".sqlite"
+            oname = self.outDir + "/" + self.output + ".sqlite"
             runStr = self.exeCmd + ' --input ' + fname + \
                 ' --mode SQLITE --output ' + oname + ' -v4'
             print(runStr)
@@ -34,10 +34,11 @@ def main(argv):
 
     arg_cfe_path = ""
     arg_juicer_path = ""
-    arg_help = "{0} -c <cfe_path> -j <juicer_path>".format(argv[0])
+    arg_output_filename = "combined"
+    arg_help = "{0} -c <cfe_path> -j <juicer_path> -o <output_filename>".format(argv[0])
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hc:j:", ["help", "cfe_path=", "juicer_path="])
+        opts, args = getopt.getopt(argv[1:], "hc:j:", ["help", "cfe_path=", "juicer_path=", "output_filename="])
     except:
         print(arg_help)
         sys.exit(2)
@@ -50,6 +51,8 @@ def main(argv):
             arg_cfe_path = arg
         elif opt in ("-j", "--juicer_path"):
             arg_juicer_path = arg
+        elif opt in ("-o", "--output_filename"):
+            arg_output_filename = arg
 
     if not arg_cfe_path:
         print(arg_help)
@@ -61,7 +64,7 @@ def main(argv):
         print("please define the path of your juicer install")
         sys.exit(2)
 
-    RunMultipleFiles(arg_cfe_path, arg_juicer_path)
+    RunMultipleFiles(arg_cfe_path, arg_juicer_path, arg_output_filename)
 
 
 if __name__ == '__main__':
