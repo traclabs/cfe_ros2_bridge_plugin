@@ -42,8 +42,10 @@ class FSWPlugin(FSWPluginInterface):
              get_parameter_value().string_value
         self._node.get_logger().info('udp_command_ip: ' + str(self._command_ip))
 
-        self._node.get_logger().info("Telemetry port: " + str(self._telemetry_port))
-        self._node.get_logger().info("Command port: " + str(self._command_port))
+        # set up socket
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._sock.bind((self._telemetry_ip, self._telemetry_port))
+        self._sock.setblocking(False)
 
         # msg info
         self._msg_pkg = "cfe_msgs"
@@ -62,9 +64,9 @@ class FSWPlugin(FSWPluginInterface):
         # set up telemetry receivers
         self._telem_info = self._juicer_interface.reconcile_telem_info(self._telem_info, self._telemetry_dict)
         self._telem_receivers = []
-        telem_receiver = TelemReceiver(self._node, self._msg_pkg,
-                                       self._telemetry_ip,
-                                       self._telemetry_port,
+        telem_receiver = TelemReceiver(self._node,
+                                       self._msg_pkg,
+                                       self._sock,
                                        self._telemetry_dict,
                                        self._juicer_interface)
         self._telem_receivers.append(telem_receiver)
@@ -86,11 +88,6 @@ class FSWPlugin(FSWPluginInterface):
                 msg_size = symbol_name_map[ci.get_msg_type()].get_size()
             ch = CommandHandler(self._node, ci, self.command_callback, int(cmd_ids['cfe_mid'], 16), cmd_ids['cmd_code'], msg_size)
             ci.set_callback_func(ch.process_callback)
-
-        if len(self._telem_receivers) > 0:
-            self._command_socket = self._telem_receivers[0].get_socket()
-        else:
-            self._command_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self._node.add_on_set_parameters_callback(self.parameters_callback)
 
@@ -127,7 +124,7 @@ class FSWPlugin(FSWPluginInterface):
         self._node.get_logger().info('Got packet to send to cFE!')
         send_worked = False
         try:
-            self._command_socket.sendto(packet, (self._command_ip, self._command_port))
+            self._sock.sendto(packet, (self._command_ip, self._command_port))
             send_worked = True
             self._node.get_logger().debug('Sent command data.')
         except OSError as err:

@@ -10,12 +10,11 @@ from std_msgs.msg import Header
 from cfe_msgs.msg import BinaryPktPayload  # Default binary packet format
 
 class TelemReceiver():
-    def __init__(self, node, msg_pkg, host_ip, port, telem_info, juicer_interface):
+    def __init__(self, node, msg_pkg, sock, telem_info, juicer_interface):
         self._node = node
         self._ros_topic_map = {}
         self._juicer_interface = juicer_interface
-        self._port = port
-        self._host_ip = host_ip
+        self._sock = sock
         self._msg_pkg = msg_pkg
         self._tlm_map = {}
         self._key_map = {}
@@ -27,20 +26,13 @@ class TelemReceiver():
             self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
 
         self._recv_buff_size = 4096
-
         self._timer_period = 0.05  # as long as data from cFS is coming in, per MID,
                                    # slower than 20hz, this should be ok
-        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self._sock.bind((self._host_ip, self._port))
-        self._sock.setblocking(False)
 
         self._logger.info("starting timer thread to receive CFS telemetry")
         self._recv_timer = self._node.create_timer(self._timer_period, self.receive_callback)
 
         self._latest_values = {}
-
-    def get_socket(self):
-        return self._sock
 
     def receive_callback(self):
 
@@ -56,9 +48,7 @@ class TelemReceiver():
         while True:
             try:
                 # receive message
-                datagram, host = self._sock.recvfrom(self._recv_buff_size)
-
-                # ignore data if not long enough (doesn't contain header)
+                datagram, addr = self._sock.recvfrom(self._recv_buff_size)
                 if len(datagram) < 6:
                     return
 
