@@ -11,7 +11,6 @@ class ParseCFEConfig():
         self._node = node
         self._command_dict = {}
         self._telemetry_dict = {}
-        # self._telemetry_port = 0
 
         self._node.get_logger().info('parsing cFE config file...')
 
@@ -68,16 +67,16 @@ class ParseCFEConfig():
     def print_commands(self):
         self._node.get_logger().info('commands: ')
         for key in self._command_dict:
-            self._node.get_logger().info('  ' + key + ":")
+            self._node.get_logger().debug('  ' + key + ":")
             for pk, pv in self._command_dict[key].items():
-                self._node.get_logger().info('    ' + pk + ": " + str(pv))
+                self._node.get_logger().debug('    ' + pk + ": " + str(pv))
 
     def print_telemetry(self):
         self._node.get_logger().info('telemetry: ')
         for key in self._telemetry_dict:
-            self._node.get_logger().info('  ' + key + ":")
+            self._node.get_logger().debug('  ' + key + ":")
             for pk, pv in self._telemetry_dict[key].items():
-                self._node.get_logger().info('    ' + pk + ": " + str(pv))
+                self._node.get_logger().debug('    ' + pk + ": " + str(pv))
 
     def parse_parameter(self, p):
         if p.type_ == Parameter.Type.STRING:

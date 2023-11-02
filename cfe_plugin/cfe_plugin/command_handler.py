@@ -16,8 +16,9 @@ class CommandHandler():
         for t in msg.__dir__():
             if isinstance(getattr(msg, t), CFEMSGCommandHeader):
                 cmd_header = getattr(msg, t, None)
-                cmd_header.msg.ccsds.pri.stream_id = self._cfe_mid
-                cmd_header.msg.ccsds.pri.length = self._msg_length
-                cmd_header.sec.function_code = self._cmd_code
+                if cmd_header != None:
+                    cmd_header.msg.ccsds.pri.stream_id = self._cfe_mid
+                    cmd_header.msg.ccsds.pri.length = self._msg_length
+                    cmd_header.sec.function_code = self._cmd_code
                 break
         self._callback(self._cmd_info, msg)

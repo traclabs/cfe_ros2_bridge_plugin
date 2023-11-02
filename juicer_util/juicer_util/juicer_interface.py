@@ -1,4 +1,6 @@
 import os
+import struct
+import sys
 import importlib
 import codecs
 import copy
@@ -98,6 +100,7 @@ class JuicerInterface():
                     field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()
+        self._seq = 0 # Seq counter
 
     def get_telemetry_message_info(self):
         return self._telem_info
@@ -265,13 +268,58 @@ class JuicerInterface():
         return msg
 
     def parse_command(self, command_info, message, mid, code):
-        self._node.get_logger().debug("Handling command for " + command_info.get_key() +
+        if not command_info.get_msg_type():
+            self._node.get_logger().info("Handling command for " + command_info.get_key()
+                                         + " with generic Binary handler")
+            return self.encode_binary_command(message, mid, code)
+        self._node.get_logger().info("Handling command for " + command_info.get_key() +
                                       " of type " + command_info.get_msg_type())
         self._node.get_logger().debug("Message: " + str(message))
         symbol = self._symbol_ros_name_map[command_info.get_msg_type()]
         packet = self.encode_command(symbol, message, mid, code)
         return packet
 
+    def encode_binary_command(self, message, mid, code):
+        self._seq = self._seq+1 # TODO: Is seq set on nominal commands being sent? Should this var be used to override if not?
+
+        self._node.get_logger().info("mid is " + str(mid) +"="+ str(int(mid,0)) + f", seq={self._seq}, len={len(message.data)+8-7} from {len(message.data)}, code={code}")
+
+        mid=int(mid,0)
+        if (mid & 0x1000):
+            self._node.get_logger().info("Encoding as command")
+        
+            hdr = struct.pack(">HHHh",
+                              mid | 0x800, # Set secondary hdr flag
+                              self._seq, # VERIFY
+                              len(message.data)+8-7,
+                              code # function code,
+                              #                          0 # spare
+                              )
+        else:
+            self._node.get_logger().info("Encoding as tlm")
+        
+            hdr = struct.pack(">HHHIHI",
+                              mid | 0x800,
+                              self._seq, # VERIFY
+                              len(message.data)+16-7,
+                              # NOTE: CCSDS Time Format may vary between Cfe Configs. This logic should come from juicer (TODO)
+                              0, # TODO: Seconds, 32-bit
+                              0, # TODO: Subseconds, 16-bit
+                              0, # 32-bit Spare
+                              )
+
+
+        # Because python is so clear at binary data manipulation
+        rtv = hdr + b''.join(message.data)
+
+        self._node.get_logger().info("hdr    : " + hdr.hex() ) #str(hdr));
+        self._node.get_logger().info("sendbin: " + rtv.hex() ) #str(rtv)) )
+        #self._node.get_logger().info("data   : " + str(message.data) )
+        
+        return rtv
+
+        # QUESTION: If this fn builds packet /w header ... then why is mid/code not used in original encode_command?
+    
     def encode_command(self, symbol, message, mid, code):
         packet = bytearray()
         fields = symbol.get_fields()
@@ -281,12 +329,12 @@ class JuicerInterface():
             fmsg = getattr(message, field.get_ros_name(), 0)
             debug_name = field.get_ros_name() + "." + fsym.get_ros_name()
             if len(fsym.get_fields()) == 0:
-                self._node.get_logger().info("Storing concrete value for " + debug_name)
+                self._node.get_logger().debug("Storing concrete value for " + debug_name)
                 fpacket = self.encode_data(field, fsym, fmsg)
                 packet.extend(fpacket)
             else:
                 fpacket = self.encode_command(fsym, fmsg, mid, code)
-                self._node.get_logger().info("fpacket " + str(fpacket))
+                self._node.get_logger().debug("fpacket " + str(fpacket))
                 packet.extend(fpacket)
 
         return packet
