@@ -1,6 +1,9 @@
 cfe_bridge:
   ros__parameters:
     plugin_name: cfe_plugin.cfe_plugin
+    namespace: /groundsystem
     plugin_params:
-      commandHost: "127.0.0.1"
-      telemetryPort: 1235
+      udp_telemetry_ip: "0.0.0.0"
+      udp_command_ip: "127.0.0.1"
+      udp_receive_port: 1235
+      udp_send_port: 1234

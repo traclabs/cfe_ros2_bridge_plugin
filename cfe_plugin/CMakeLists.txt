@@ -20,7 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(rcl_interfaces REQUIRED)
-find_package(cfe_msgs REQUIRED)
+# find_package(cfe_msgs REQUIRED)
 
 set(common_ros_depends
   rcl_interfaces
@@ -34,22 +34,10 @@ ament_export_dependencies(
 )
 
 ament_python_install_package(${PROJECT_NAME})
-install(PROGRAMS
-  cfe_plugin/cfe_plugin.py
-  cfe_plugin/__init__.py
-  cfe_plugin/telem_receiver.py
-  DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
   config resource launch
   DESTINATION share/${PROJECT_NAME}/
 )
-
-# if(BUILD_TESTING)
-#   find_package(ament_cmake_ros REQUIRED)
-#   ament_add_ros_isolated_pytest_test(
-#     test_single_launch_test test/single_launch_test.py
-#     TIMEOUT 30)
-# endif()
 
 ament_package()

@@ -186,6 +186,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RobotSimHkTlmt.msg"
   "msg/RobotSimTlmStatet.msg"
   "msg/CFEMSGMessage.msg"
+  "msg/BinaryPktPayload.msg"
   DEPENDENCIES std_msgs
 )
 
