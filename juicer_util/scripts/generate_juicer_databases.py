@@ -38,7 +38,7 @@ def main(argv):
     arg_help = "{0} -c <cfe_path> -j <juicer_path> -o <output_filename>".format(argv[0])
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hc:j:", ["help", "cfe_path=", "juicer_path=", "output_filename="])
+        opts, args = getopt.getopt(argv[1:], "hc:j:o:", ["help", "cfe_path=", "juicer_path=", "output_filename="])
     except:
         print(arg_help)
         sys.exit(2)
