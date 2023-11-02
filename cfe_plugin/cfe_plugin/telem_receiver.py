@@ -11,6 +11,8 @@ from cfe_msgs.msg import BinaryPktPayload  # Default binary packet format
 
 class TelemReceiver():
     def __init__(self, node, msg_pkg, sock, telem_info, juicer_interface):
+        node.get_logger().debug(f"TelemReceiver(telem_info[{str(len(telem_info))})")
+        
         self._node = node
         self._ros_topic_map = {}
         self._juicer_interface = juicer_interface
@@ -19,7 +21,7 @@ class TelemReceiver():
         self._tlm_map = {}
         self._key_map = {}
         self._logger = self._node.get_logger()
-        self._node.get_logger().debug("telem_receiver got "+str(len(telem_info))+" telemetry structs")
+
         for tlm in telem_info:
             self._tlm_map[telem_info[tlm]['cfe_mid']] = telem_info[tlm]['structure']
             self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
