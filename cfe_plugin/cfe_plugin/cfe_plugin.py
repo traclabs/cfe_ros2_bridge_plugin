@@ -37,11 +37,13 @@ class FSWPlugin(FSWPluginInterface):
             self._command_port = int(self._command_port)
         self._node.get_logger().info('udp_send_port: ' + str(self._command_port))
 
-        self._node.declare_parameter('plugin_params.udp_telemetry_ip', '127.0.0.1')
+        # Bind address
+        self._node.declare_parameter('plugin_params.udp_telemetry_ip', '0.0.0.0')
         self._telemetry_ip = self._node.get_parameter('plugin_params.udp_telemetry_ip'). \
              get_parameter_value().string_value
         self._node.get_logger().info('udp_telemetry_ip: ' + str(self._telemetry_ip))
 
+        # Transmit Address
         self._node.declare_parameter('plugin_params.udp_command_ip', '127.0.0.1')
         self._command_ip = os.environ.get("FSW_IP")
         if not self._command_ip:
@@ -131,7 +133,7 @@ class FSWPlugin(FSWPluginInterface):
 
     def send_cmd_packet(self, packet):
         # send packet to cFE
-        self._node.get_logger().info('Got packet to send to cFE!')
+        self._node.get_logger().info(f"Got packet to send to cFE! ({self._command_ip}, {self._command_port})")
 
         send_worked = False
         try:
