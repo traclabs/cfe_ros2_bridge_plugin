@@ -87,7 +87,7 @@ class JuicerDatabase():
         try:
             conn = sqlite3.connect(db_file)
         except Error as e:
-            self._node.get_logger().error(e)
+            self._node.get_logger().error(str(e))
 
         return conn
 
