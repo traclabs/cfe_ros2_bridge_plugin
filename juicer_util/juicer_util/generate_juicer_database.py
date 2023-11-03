@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 
 from pathlib import Path
+import os
 import subprocess
 
 
@@ -45,6 +46,13 @@ class CreateMessageDatabase(Node):
         self.output_dir = self.juicer_path + '/dbs'
         self.juicer_cmd = self.juicer_path + '/build/juicer'
         self.output_full = self.output_dir + "/" + self.output
+
+        if not os.path.exists(self.cfs_binary_dir) :
+            self.get_logger().error("cFS path does not exist: " + self.cfs_binary_dir )
+            return
+        if not os.path.exists(self.output_dir) :
+            self.get_logger().error("Output path does not exist: " + self.output_dir )
+            return
 
         for name in self.files:
             fname = self.cfs_binary_dir + "/" + name
