@@ -17,10 +17,10 @@ class CreateMessageDatabase(Node):
         self.declare_parameter('juicer_path', "~/code/juicer")
         self.declare_parameter('output', "combined.sqlite")
         self.declare_parameter('files', ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
-                      'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
-                      'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
-                      'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so',
-                      'cf/cf.so'])
+                               'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
+                               'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
+                               'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so',
+                               'cf/cf.so'])
 
         self.cfs_path = self.get_parameter('cfs_path').value
         self.juicer_path = self.get_parameter('juicer_path').value
