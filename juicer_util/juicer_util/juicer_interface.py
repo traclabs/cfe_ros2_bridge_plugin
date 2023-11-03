@@ -39,9 +39,9 @@ class JuicerInterface():
         self._symbol_ros_name_map = dict()
         for db in self._juicer_db:
 
-            if '~' in db:
+            if db.startswith('~'):
                 db = os.path.expanduser(db)
-            else:
+            elif not db.startswith('/'):
                 db = database_path + db
 
             self._node.get_logger().debug("Parsing juicer db: " + db)
