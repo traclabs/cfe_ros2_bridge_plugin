@@ -54,8 +54,8 @@ class TelemReceiver():
         Starts the thread processing, listening for telemetry.
     handle_packet(datagram):
         Process an incoming data packet.
-    get_latest_data(key):
-        Returns the latest telemetry value for the given key.
+    get_buffered_data(key, clear):
+        Returns the buffered telemetry value for the given key.
     get_pkt_id(datagram):
         Return the packet id for the cFE data packet.
     get_seq_count(datagram):
