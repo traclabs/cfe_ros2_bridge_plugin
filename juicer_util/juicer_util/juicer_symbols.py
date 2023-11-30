@@ -127,6 +127,12 @@ def generate_ros_name(symbol_name):
     elif symbol_name == "CFE_TIME_ClockState_Enum_t":
         # not sure what this should be, but this is correct size
         n = 'uint16'
+    elif symbol_name == "CF_TransactionSeq_t":
+        n = 'uint32'
+    elif symbol_name == "CF_UnionArgs_Payload":
+        n = 'uint32'
+    elif symbol_name == "CF_EntityId_t":
+        n = 'uint32'
     n = n.replace("_", "")
     n = n.replace(" ", "")
     n = n.replace("*", "")
