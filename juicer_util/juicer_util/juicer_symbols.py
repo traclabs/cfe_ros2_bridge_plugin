@@ -14,7 +14,45 @@ class JuicerSymbolEntry():
         self._is_command = False
         self._is_telemetry = False
         self._should_output = False
-        self._ros_name = generate_ros_name(self._name)
+        self._nameMap = {
+                "...*": "uint64",
+                "CFE_ResourceId_t": "uint32",
+                "CFE_ES_MemOffset_t": "uint32",
+                "CFE_ES_MemAddress_t": "uint32",
+                "CFE_ES_TaskId_t": "uint32",
+                "CFE_ES_AppId_t": "uint32",
+                "CFE_SB_PipeId_t": "uint32",
+                "CFE_ES_MemHandle_t": "uint32",
+                "CFE_ES_ExceptionAction_Enum_t": "uint8",
+                "CFE_ES_TaskPriority_Atom_t": "uint16",
+                "CFE_SB_MsgId_Atom_t": "uint32",
+                "CFE_EVS_LogMode_Enum_t": "uint8",
+                "CFE_EVS_MsgFormat_Enum_t": "uint8",
+                "CFE_TIME_ClockState_Enum_t": "uint16",
+                "CF_TransactionSeq_t": "uint32",
+                "CF_UnionArgs_Payload": "uint32",
+                "CF_EntityId_t": "uint32"
+                }
+        self._lowerCaseMap = {
+                'char': 'string',
+                'uint64...': 'uint64',
+                'uint32...': 'uint32',
+                'uint16...': 'uint16',
+                'uint8...': 'uint8',
+                'int64...': 'int64',
+                'int32...': 'int32',
+                'int16...': 'int16',
+                'int8...': 'int8',
+                'float': 'float32',
+                'double': 'float64',
+                'padding8': 'uint8',
+                'padding16': 'uint16',
+                'padding24': 'string',
+                'padding32': 'uint32',
+                'padding64': 'uint64',
+                'padding...': 'char'
+                }
+        self._ros_name = self.generate_ros_name(self._name)
         if self._ros_name == "Bool":
             # not sure why other checks don't fix this
             self._ros_name = "bool"
@@ -89,103 +127,56 @@ class JuicerSymbolEntry():
         self._should_output = output
 
 
-def generate_ros_name(symbol_name):
-    n = symbol_name
-    if n.endswith('*'):
-        # indicates a pointer of size 8 bytes
-        n = 'uint64'
-    elif symbol_name == "CFE_ResourceId_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_MemOffset_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_MemAddress_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_TaskId_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_AppId_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_SB_PipeId_t":
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_MemHandle_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint32'
-    elif symbol_name == "CFE_ES_ExceptionAction_Enum_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint8'
-    elif symbol_name == "CFE_ES_TaskPriority_Atom_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint16'
-    elif symbol_name == "CFE_SB_MsgId_Atom_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint32'
-    elif symbol_name == "CFE_EVS_LogMode_Enum_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint8'
-    elif symbol_name == "CFE_EVS_MsgFormat_Enum_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint8'
-    elif symbol_name == "CFE_TIME_ClockState_Enum_t":
-        # not sure what this should be, but this is correct size
-        n = 'uint16'
-    elif symbol_name == "CF_TransactionSeq_t":
-        n = 'uint32'
-    elif symbol_name == "CF_UnionArgs_Payload":
-        n = 'uint32'
-    elif symbol_name == "CF_EntityId_t":
-        n = 'uint32'
-    n = n.replace("_", "")
-    n = n.replace(" ", "")
-    n = n.replace("*", "")
+    def generate_ros_name(self, symbol_name):
+        n = symbol_name
 
-    if n[0].islower():
-        n = handle_lower_case_name(n, symbol_name)
+        for key in self._nameMap:
+            value = self._nameMap[key]
+            if key.startswith("..."):
+                newkey = key.replace("...","")
+                if symbol_name.endswith(newkey):
+                    n = value
+                    break
+            elif key.endswith("..."):
+                newkey = key.replace("...","")
+                if symbol_name.startswith(newkey):
+                    n = value
+                    break
+            elif symbol_name == key:
+                n = value
+                break
 
-    return n
+        n = n.replace("_", "")
+        n = n.replace(" ", "")
+        n = n.replace("*", "")
+
+        if n[0].islower():
+            n = self.handle_lower_case_name(n)
+
+        return n
 
 
-def handle_lower_case_name(lc_name, symbol_name):
-    n = lc_name
-    # map simple types to ROS2 types
-    if n == 'char':  # indicates a char array, so make it a string
-        n = 'string'
-    elif n.startswith('uint64'):
-        n = 'uint64'
-    elif n.startswith('uint32'):
-        n = 'uint32'
-    elif n.startswith('uint16'):
-        n = 'uint16'
-    elif n.startswith('uint8'):
-        n = 'uint8'
-    elif n.startswith('int64'):
-        n = 'int64'
-    elif n.startswith('int32'):
-        n = 'int32'
-    elif n.startswith('int16'):
-        n = 'int16'
-    elif n.startswith('int8'):
-        n = 'int8'
-    elif n == 'float':
-        n = 'float32'
-    elif n == 'double':
-        n = 'float64'
-    elif n == 'padding8':
-        n = 'uint8'
-    elif n == 'padding16':
-        n = 'uint16'
-    elif n == 'padding24':
-        n = 'string'
-    elif n == 'padding32':
-        n = 'uint32'
-    elif n == 'padding64':
-        n = 'uint64'
-    elif n.startswith('padding'):
-        # how to handle this?
-        # print("Setting " + n + " to char")
-        n = 'char'
-    else:
-        n = n.capitalize()
-        # print("Capitalized " + n)
-    return n
+    def handle_lower_case_name(self, lc_name):
+        n = None
+        for key in self._lowerCaseMap:
+            value = self._lowerCaseMap[key]
+            if key.startswith("..."):
+                newkey = key.replace("...","")
+                if lc_name.endswith(newkey):
+                    n = value
+                    break
+            elif key.endswith("..."):
+                newkey = key.replace("...","")
+                if lc_name.startswith(newkey):
+                    n = value
+                    break
+            elif lc_name == key:
+                n = value
+                break
+        if n == None:
+            n = lc_name.capitalize()
+
+        return n
 
 
 def field_byte_order(field):
