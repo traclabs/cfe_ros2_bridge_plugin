@@ -1,0 +1,47 @@
+# This file serves to map cFE types that may be defined in typedefs
+# to be base types like uint32.  The converter will not handle these
+# unless they are included here.
+# Less likely to need to be modified is the lowercase_map that maps
+# cFE types to the approriate ROS2 type.
+# Any key that starts with ... will be compared using the "endsWith"
+# comparator and ones that end with ... will be compared using the
+# "startsWith" comparator.  Otherwise they will be compared using
+# the equivalency comparator.
+map_ros_name:
+  name_to_basetypes:
+    "...*": "uint64"
+    "CFE_ResourceId_t": "uint32"
+    "CFE_ES_MemOffset_t": "uint32"
+    "CFE_ES_MemAddress_t": "uint32"
+    "CFE_ES_TaskId_t": "uint32"
+    "CFE_ES_AppId_t": "uint32"
+    "CFE_SB_PipeId_t": "uint32"
+    "CFE_ES_MemHandle_t": "uint32"
+    "CFE_ES_ExceptionAction_Enum_t": "uint8"
+    "CFE_ES_TaskPriority_Atom_t": "uint16"
+    "CFE_SB_MsgId_Atom_t": "uint32"
+    "CFE_EVS_LogMode_Enum_t": "uint8"
+    "CFE_EVS_MsgFormat_Enum_t": "uint8"
+    "CFE_TIME_ClockState_Enum_t": "uint16"
+    "CF_TransactionSeq_t": "uint32"
+    "CF_UnionArgs_Payload": "uint32"
+    "CF_EntityId_t": "uint32"
+  lowercase_map:
+    'char': 'string'
+    'uint64...': 'uint64'
+    'uint32...': 'uint32'
+    'uint16...': 'uint16'
+    'uint8...': 'uint8'
+    'int64...': 'int64'
+    'int32...': 'int32'
+    'int16...': 'int16'
+    'int8...': 'int8'
+    'float': 'float32'
+    'double': 'float64'
+    'padding8': 'uint8'
+    'padding16': 'uint16'
+    'padding24': 'string'
+    'padding32': 'uint32'
+    'padding64': 'uint64'
+    'padding...': 'char'
+
