@@ -27,6 +27,9 @@ class JuicerSymbolEntry():
             for map_file in self._map_ros_name:
                 if map_file.startswith('~'):
                     map_file = os.path.expanduser(map_file)
+                elif not map_file.startswith('/'):
+                    # assume it is relative path
+                    map_file = os.path.join(os.getcwd(), map_file)
                 self._node.get_logger().debug("Parsing symbol config file " + map_file)
                 # populate name_map and lower_case_map
                 self.load_map_config(map_file)
