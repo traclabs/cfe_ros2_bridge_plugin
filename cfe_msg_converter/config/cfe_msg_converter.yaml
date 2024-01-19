@@ -3,3 +3,4 @@ cfe_msg_converter:
     cfs_root: ~/code/TL-cFS
     plugin_params:
       juicer_db: ["~/ros2/brash/src/cfe_ros2_bridge_plugin/cfe_plugin/resource/cfs_bootes-rc1-dev83_TL.sqlite"]
+      map_ros_name: ["~/ros2/brash/src/cfe_ros2_bridge_plugin/cfe_msg_converter/config/map_ros_name.yaml"]
