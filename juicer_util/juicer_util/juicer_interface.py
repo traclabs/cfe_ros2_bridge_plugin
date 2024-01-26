@@ -42,7 +42,12 @@ class JuicerInterface():
             if db.startswith('~'):
                 db = os.path.expanduser(db)
             elif not db.startswith('/'):
-                db = database_path + db
+                # need to use database_path or relative path
+                db2 = database_path + db
+                if not os.path.isfile(db2):
+                    db = os.path.join(os.getcwd(), db)
+                else:
+                    db = db2
 
             self._node.get_logger().debug("Parsing juicer db: " + db)
 

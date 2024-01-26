@@ -12,12 +12,6 @@ class CfeMsgConverter(Node):
     def __init__(self):
         super().__init__('cfe_msg_converter')
 
-        self.declare_parameter('cfs_root', 'cfe_msg_converter.cfs_root')
-        self._cfs_root = self.get_parameter('cfs_root').get_parameter_value().string_value
-        if '~' in self._cfs_root:
-            self._cfs_root = os.path.expanduser(self._cfs_root)
-        self.get_logger().info("cfs_root: " + self._cfs_root)
-
         self._cfs_msgs_dir = get_package_share_directory("cfe_msgs")
 
         self._msgs_src_dir = self.get_location()
