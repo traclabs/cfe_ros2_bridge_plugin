@@ -589,7 +589,7 @@
         CfdpHkTlm:
           structure: CFHkPacket
           cfe_mid: '0x8b0'
-          topic_name: /cfdp/cfdp_hk_tlm
+          topic_name: cfdp_hk_tlm
         CfdpCh0Dlink:
           cfe_mid: '0x8c2'
           topic_name: /cfdp/pdu
