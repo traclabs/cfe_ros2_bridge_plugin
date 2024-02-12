@@ -4,4 +4,7 @@
 std_msgs/Header header
 CFEMSGCommandHeader command_header
 uint32 packet_rate
-uint32 counter
+uint16[] message_buffer
+uint32[] counter
+uint16 payload_length
+uint16 spare0
