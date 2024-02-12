@@ -1,3 +1,10 @@
+"""
+.. module:: cfe_ros2_bridge_plugin.cfe_msg_converter.cfe_msg_converter
+   :synopsis: Tool to create ROS2 messages from juicer sql database
+
+.. moduleauthor:: Tod Milam
+
+"""
 import rclpy
 from rclpy.node import Node
 import os
@@ -9,7 +16,38 @@ from juicer_util.juicer_symbols import field_byte_order
 
 
 class CfeMsgConverter(Node):
+    """This class converts a juicer-generated sql database into ROS2 message files.
+
+    Attributes
+    ----------
+    cfs_root : str
+        the directory containing the cFS code
+    cfs_msgs_dir :
+        the top level directory where the ROS2 messages will be stored
+    msgs_src_dir :
+        the source directory where the ROS2 messages will be written
+    resource_path :
+        the directory where resource files will be found
+    juicer_interface :
+        the interface to the juicer sql database
+    symbol_name_map :
+        the list of data structures from the juicer database to be converted to ROS2 messages
+    msgs_list :
+        the list of ROS2 messages to write out
+
+    Methods
+    -------
+    create_messages(msgs_dir):
+        Creates the message files.
+    output_msg_file(symbol, msgs_dir):
+        Writes a message file.
+    get_location():
+        Creates and returns the directory to write the messages file.
+    """
     def __init__(self):
+        '''
+        Initializes the attributes and calls other methods to generate the messages.
+        '''
         super().__init__('cfe_msg_converter')
 
         self._cfs_msgs_dir = get_package_share_directory("cfe_msgs")
@@ -28,6 +66,15 @@ class CfeMsgConverter(Node):
         self._msgs_list = self.create_messages(self._msgs_src_dir)
 
     def create_messages(self, msgs_dir):
+        '''
+        Creates the message files.
+
+        Args:
+            msgs_dir (str): The directory to write the messages files in
+
+        Returns:
+            msg_list (list): The list of ROS2 message names written to file
+        '''
         for key in self._symbol_name_map.keys():
             if self._symbol_name_map[key].get_should_output():
                 self.output_msg_file(self._symbol_name_map[key], msgs_dir)
@@ -42,6 +89,13 @@ class CfeMsgConverter(Node):
         return msg_list
 
     def output_msg_file(self, symbol, msgs_dir):
+        '''
+        Writes a message file.
+
+        Args:
+            symbol (JuicerSymbolEntry): The symbol to write
+            msgs_dir (str): The directory the file will be written in
+        '''
         if len(symbol.get_fields()) > 0:
             v_names = {}
             mn = symbol.get_ros_name()
@@ -76,6 +130,12 @@ class CfeMsgConverter(Node):
                 self.get_logger().error("error writing msg file: " + fn)
 
     def get_location(self):
+        '''
+        Creates and returns the directory to write the messages file.
+
+        Returns:
+            msgs_src_dir (str): The name of the directory where the messages files will be written
+        '''
         mpkg_name = "src/cfe_ros2_bridge_plugin/"
         pkg_name = "cfe_msgs/"
         p_up = "/../../../../"
