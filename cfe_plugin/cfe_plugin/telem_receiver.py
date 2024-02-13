@@ -61,7 +61,7 @@ class TelemReceiver():
     get_seq_count(datagram):
         Return the sequence count for the cFE data packet.
     """
-    def __init__(self, node, msg_pkg, port, telem_info, juicer_interface):
+    def __init__(self, node, msg_pkg, sock, telem_info, juicer_interface):
         '''
         Initializes the attributes of the telem receiver object.
 
