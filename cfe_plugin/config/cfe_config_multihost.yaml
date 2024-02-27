@@ -1,0 +1,9 @@
+cfe_bridge:
+  ros__parameters:
+    plugin_name: cfe_plugin.cfe_plugin
+    namespace: /groundsystem
+    plugin_params:
+      udp_telemetry_ip: "0.0.0.0"
+      udp_command_ip: "10.5.0.3" # IP for fsw machine. 127.0.0.1 for singlehost setup, 10.5.0.3 for multihost setup 
+      udp_receive_port: 1235
+      udp_send_port: 1235       # 1234 for cpu1 (singlehost setup), 1235 for cpu2 (multihost setup)
