@@ -11,7 +11,8 @@ def generate_launch_description():
   cfs_path = LaunchConfiguration('cfs_path')
   juicer_path = LaunchConfiguration('juicer_path')
   output_db = LaunchConfiguration('output_db')
-  
+  input_list = LaunchConfiguration('input_list')
+    
   cfs_path_arg = DeclareLaunchArgument(
     'cfs_path',
     default_value='~/code/cFS')
@@ -21,13 +22,15 @@ def generate_launch_description():
   output_db_arg = DeclareLaunchArgument(
     'output_db',
     default_value='combined.sqlite')
-
-  # Files within ${cfs_path}/build/exe/cpu1
-  input_list = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
+  input_list_arg = DeclareLaunchArgument(
+    'input_list',
+    description="Files within ${cfs_path}/build/exe/cpu1",
+    default_value=['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
                'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
                'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
                'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so',
-               'cf/cf.so']
+               'cf/cf.so'])
+
 
 
   # Generate Message node
@@ -49,6 +52,7 @@ def generate_launch_description():
       cfs_path_arg,
       juicer_path_arg,
       output_db_arg,
+      input_list_arg,
       # Juicer message generator
       generate_juicer_db
     ])
