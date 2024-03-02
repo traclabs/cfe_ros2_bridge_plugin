@@ -1,10 +1,11 @@
 /**:
   ros__parameters:
     plugin_params:
-      juicer_db: ["cfs_bootes-rc1-dev83_TL.sqlite"]
+#      juicer_db: ["cfs_bootes-rc1-dev83_TL.sqlite"]
+      juicer_db: ["/code/juicer/dbs/rover_all.sqlite"]        
       map_ros_name: ["src/cfe_ros2_bridge_plugin/cfe_msg_converter/config/map_ros_name.yaml"]
-      commands: ["CPU1CFEESStopAppCmd", "CPU1CFEESRestartAppCmd", "CPU1CFEESQueryOneCmd", "CPU1CFEESDeleteCDSCmd", "CPU1CFEESDumpCDSRegistryCmd", "CPU1CFEESQueryAllCmd", "CPU1CFEESQueryAllTasksCmd", "CPU1CFEESWriteSysLogCmd", "CPU1CFEESWriteERLogCmd", "CPU1CFEESNoopCmd", "CPU1CFEESResetCountersCmd", "CPU1CFEESClearSysLogCmd", "CPU1CFEESClearERLogCmd", "CPU1CFEESResetPRCountCmd", "CPU1CFEESOverWriteSysLogCmd", "CPU1CFEESReloadAppCmd", "CPU1CFEESRestartCmd", "CPU1CFEESSendMemPoolStatsCmd", "CPU1CFEESSetMaxPRCountCmd", "CPU1CFEESSetPerfFilterMaskCmd", "CPU1CFEESSetPerfTriggerMaskCmd", "CPU1CFEESStartApp", "CPU1CFEESStartPerfDataCmd", "CPU1CFEESStopPerfDataCmd", "CPU1CFEEVSEnableAppEventTypeCmd", "CPU1CFEEVSDisableAppEventTypeCmd", "CPU1CFEEVSEnableAppEventsCmd", "CPU1CFEEVSDisableAppEventsCmd", "CPU1CFEEVSResetAppCounterCmd", "CPU1CFEEVSResetAllFiltersCmd", "CPU1CFEEVSResetFilterCmd", "CPU1CFEEVSDeleteEventFilterCmd", "CPU1CFEEVSAddEventFilterCmd", "CPU1CFEEVSSetFilterCmd", "CPU1CFEEVSEnablePortsCmd", "CPU1CFEEVSDisablePortsCmd", "CPU1CFEEVSEnableEventTypeCmd", "CPU1CFEEVSDisableEventTypeCmd", "CPU1CFEEVSNoopCmd", "CPU1CFEEVSResetCountersCmd", "CPU1CFEEVSClearLogCmd", "CPU1CFEEVSSetEventFormatModeCmd", "CPU1CFEEVSSetLogModeCmd", "CPU1CFEEVSWriteAppDataFileCmd", "CPU1CFEEVSWriteLogDataFileCmd", "CPU1CFESBEnableRouteCmd", "CPU1CFESBDisableRouteCmd", "CPU1CFESBNoopCmd", "CPU1CFESBResetCountersCmd", "CPU1CFESBEnableSubReportingCmd", "CPU1CFESBDisableSubReportingCmd", "CPU1CFESBSendSbStatsCmd", "CPU1CFESBSendPrevSubsCmd", "CPU1CFESBWriteRoutingInfoCmd", "CPU1CFESBWritePipeInfoCmd", "CPU1CFESBWriteMapInfoCmd", "CPU1CFETBLAbortLoadCmd", "CPU1CFETBLActivateCmd", "CPU1CFETBLDeleteCDSCmd", "CPU1CFETBLDumpCmd", "CPU1CFETBLDumpRegistryCmd", "CPU1CFETBLLoadCmd", "CPU1CFETBLNoopCmd", "CPU1CFETBLResetCountersCmd", "CPU1CFETBLSendRegistryCmd", "CPU1CFETBLValidateCmd", "CPU1CFETIMENoopCmd", "CPU1CFETIMEResetCountersCmd", "CPU1CFETIMESendDiagnosticCmd", "CPU1CFETIMEAdd1HZAdjustmentCmd", "CPU1CFETIMESub1HZAdjustmentCmd", "CPU1CFETIMESetLeapSecondsCmd", "CPU1CFETIMESetSignalCmd", "CPU1CFETIMESetSourceCmd", "CPU1CFETIMESetStateCmd", "CPU1CFETIMEAddDelayCmd", "CPU1CFETIMESubDelayCmd", "CPU1CFETIMESetMETCmd", "CPU1CFETIMESetSTCFCmd", "CPU1CFETIMEAddAdjustCmd", "CPU1CFETIMESubAdjustCmd", "CPU1CFETIMESetTimeCmd", "CPU1CILABNoArgsCmd", "CPU1ROSAPPNoArgsCmd", "CPU1SAMPLEAPPNoArgsCmd", "CPU1SCHLABStateEntry", "CPU1TOLABAddPacketCmd", "CPU1TOLABEnableOutputCmd", "CPU1TOLABNoopCmd", "CPU1TOLABResetCountersCmd", "CPU1TOLABRemoveAllCmd", "CPU1TOLABSendDataTypesCmd", "CPU1TOLABRemovePacketCmd", "CPU1RobotSimJointCmdt", "CfdpCh0Uplink", "CfdpCh2Uplink"]      
-      telemetry: ["CPU1CFEESOneAppTlm", "CPU1CFEESMemStatsTlm", "CPU1CFEESHousekeepingTlm", "CPU1CFEEVSLongEventTlm", "CPU1CFEEVSHousekeepingTlm", "CPU1CFEEVSShortEventTlm", "CPU1CFESBHousekeepingTlm", "CPU1CFESBStatsTlm", "CPU1CFESBAllSubscriptionsTlm", "CPU1CFESBSingleSubscriptionTlm", "CPU1CFETBLHousekeepingTlm", "CPU1CFETBLTableRegistryTlm", "CPU1CFETIMEHousekeepingTlm", "CPU1CFETIMEDiagnosticTlm", "CPU1CILABHkTlm", "CPU1SAMPLEAPPHkTlm", "CPU1TOLABHkTlm", "CPU1TOLABDataTypesTlm", "CPU1ROSAPPRosoutInfoTlmt", "CPU1ROSAPPRosoutWarnTlmt", "CPU1ROSAPPRosoutErrorTlmt", "CPU1ROSAPPRosoutDebugTlmt", "CPU1ROSAPPRosoutFatalTlmt", "CPU1RobotSimHkTlmt", "CPU1RobotSimStateTlmt", "CfdpCh0Dlink", "CfdpCh2Dlink", "CfdpHkTlm"]
+      commands: ["CPU1CFEESStopAppCmd", "CPU1CFEESRestartAppCmd", "CPU1CFEESQueryOneCmd", "CPU1CFEESDeleteCDSCmd", "CPU1CFEESDumpCDSRegistryCmd", "CPU1CFEESQueryAllCmd", "CPU1CFEESQueryAllTasksCmd", "CPU1CFEESWriteSysLogCmd", "CPU1CFEESWriteERLogCmd", "CPU1CFEESNoopCmd", "CPU1CFEESResetCountersCmd", "CPU1CFEESClearSysLogCmd", "CPU1CFEESClearERLogCmd", "CPU1CFEESResetPRCountCmd", "CPU1CFEESOverWriteSysLogCmd", "CPU1CFEESReloadAppCmd", "CPU1CFEESRestartCmd", "CPU1CFEESSendMemPoolStatsCmd", "CPU1CFEESSetMaxPRCountCmd", "CPU1CFEESSetPerfFilterMaskCmd", "CPU1CFEESSetPerfTriggerMaskCmd", "CPU1CFEESStartApp", "CPU1CFEESStartPerfDataCmd", "CPU1CFEESStopPerfDataCmd", "CPU1CFEEVSEnableAppEventTypeCmd", "CPU1CFEEVSDisableAppEventTypeCmd", "CPU1CFEEVSEnableAppEventsCmd", "CPU1CFEEVSDisableAppEventsCmd", "CPU1CFEEVSResetAppCounterCmd", "CPU1CFEEVSResetAllFiltersCmd", "CPU1CFEEVSResetFilterCmd", "CPU1CFEEVSDeleteEventFilterCmd", "CPU1CFEEVSAddEventFilterCmd", "CPU1CFEEVSSetFilterCmd", "CPU1CFEEVSEnablePortsCmd", "CPU1CFEEVSDisablePortsCmd", "CPU1CFEEVSEnableEventTypeCmd", "CPU1CFEEVSDisableEventTypeCmd", "CPU1CFEEVSNoopCmd", "CPU1CFEEVSResetCountersCmd", "CPU1CFEEVSClearLogCmd", "CPU1CFEEVSSetEventFormatModeCmd", "CPU1CFEEVSSetLogModeCmd", "CPU1CFEEVSWriteAppDataFileCmd", "CPU1CFEEVSWriteLogDataFileCmd", "CPU1CFESBEnableRouteCmd", "CPU1CFESBDisableRouteCmd", "CPU1CFESBNoopCmd", "CPU1CFESBResetCountersCmd", "CPU1CFESBEnableSubReportingCmd", "CPU1CFESBDisableSubReportingCmd", "CPU1CFESBSendSbStatsCmd", "CPU1CFESBSendPrevSubsCmd", "CPU1CFESBWriteRoutingInfoCmd", "CPU1CFESBWritePipeInfoCmd", "CPU1CFESBWriteMapInfoCmd", "CPU1CFETBLAbortLoadCmd", "CPU1CFETBLActivateCmd", "CPU1CFETBLDeleteCDSCmd", "CPU1CFETBLDumpCmd", "CPU1CFETBLDumpRegistryCmd", "CPU1CFETBLLoadCmd", "CPU1CFETBLNoopCmd", "CPU1CFETBLResetCountersCmd", "CPU1CFETBLSendRegistryCmd", "CPU1CFETBLValidateCmd", "CPU1CFETIMENoopCmd", "CPU1CFETIMEResetCountersCmd", "CPU1CFETIMESendDiagnosticCmd", "CPU1CFETIMEAdd1HZAdjustmentCmd", "CPU1CFETIMESub1HZAdjustmentCmd", "CPU1CFETIMESetLeapSecondsCmd", "CPU1CFETIMESetSignalCmd", "CPU1CFETIMESetSourceCmd", "CPU1CFETIMESetStateCmd", "CPU1CFETIMEAddDelayCmd", "CPU1CFETIMESubDelayCmd", "CPU1CFETIMESetMETCmd", "CPU1CFETIMESetSTCFCmd", "CPU1CFETIMEAddAdjustCmd", "CPU1CFETIMESubAdjustCmd", "CPU1CFETIMESetTimeCmd", "CPU1CILABNoArgsCmd", "CPU1ROSAPPNoArgsCmd", "CPU1SCHLABStateEntry", "CPU1TOLABAddPacketCmd", "CPU1TOLABEnableOutputCmd", "CPU1TOLABNoopCmd", "CPU1TOLABResetCountersCmd", "CPU1TOLABRemoveAllCmd", "CPU1TOLABSendDataTypesCmd", "CPU1TOLABRemovePacketCmd", "CPU1RobotSimJointCmdt", "CfdpCh0Uplink", "CfdpCh2Uplink", "RoverAppTwistCmd"]      
+      telemetry: ["CPU1CFEESOneAppTlm", "CPU1CFEESMemStatsTlm", "CPU1CFEESHousekeepingTlm", "CPU1CFEEVSLongEventTlm", "CPU1CFEEVSHousekeepingTlm", "CPU1CFEEVSShortEventTlm", "CPU1CFESBHousekeepingTlm", "CPU1CFESBStatsTlm", "CPU1CFESBAllSubscriptionsTlm", "CPU1CFESBSingleSubscriptionTlm", "CPU1CFETBLHousekeepingTlm", "CPU1CFETBLTableRegistryTlm", "CPU1CFETIMEHousekeepingTlm", "CPU1CFETIMEDiagnosticTlm", "CPU1CILABHkTlm", "CPU1TOLABHkTlm", "CPU1TOLABDataTypesTlm", "CPU1ROSAPPRosoutInfoTlmt", "CPU1ROSAPPRosoutWarnTlmt", "CPU1ROSAPPRosoutErrorTlmt", "CPU1ROSAPPRosoutDebugTlmt", "CPU1ROSAPPRosoutFatalTlmt", "CPU1RobotSimHkTlmt", "CPU1RobotSimStateTlmt", "CfdpCh0Dlink", "CfdpCh2Dlink", "CfdpHkTlm", "RoverAppHkTlm"]
       command_data:
         CfdpCh0Uplink:
           cfe_mid: '0x18c8'
@@ -434,11 +435,6 @@
           cfe_mid: '0x1896'
           cmd_code: 0
           topic_name: ros_app_no_args_cmd
-        CPU1SAMPLEAPPNoArgsCmd:
-          structure: SAMPLEAPPNoArgsCmdt
-          cfe_mid: '0x1882'
-          cmd_code: 0
-          topic_name: sample_app_no_args_cmd
         CPU1SCHLABStateEntry:
           structure: SCHLABStateEntryt
           cfe_mid: '0x1200'
@@ -484,6 +480,11 @@
           cfe_mid: '0x1817'
           cmd_code: 1
           topic_name: robot_sim_cmd
+        RoverAppTwistCmd:
+          structure: RoverAppTwistCmdt
+          cfe_mid: '0x1827'
+          cmd_code: 1
+          topic_name: rover_app_cmd          
 
       telemetry_data:
         CPU1CFEESOneAppTlm:
@@ -574,10 +575,6 @@
           structure: CILABHkTlmt
           cfe_mid: '0x884'
           topic_name: ci_lab_hk_tlm
-        CPU1SAMPLEAPPHkTlm:
-          structure: SAMPLEAPPHkTlmt
-          cfe_mid: '0x883'
-          topic_name: sample_app_hk_tlm
         CPU1TOLABHkTlm:
           structure: TOLABHkTlmt
           cfe_mid: '0x880'
@@ -596,3 +593,8 @@
         CfdpCh2Dlink:
           cfe_mid: '0x8c4'
           topic_name: /cfdp/pdu
+        RoverAppHkTlm:
+          structure: RoverAppHkTlmt
+          cfe_mid: '0x826'
+          topic_name: rover_app_hk_tlm          
+          

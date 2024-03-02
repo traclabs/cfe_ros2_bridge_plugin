@@ -3,4 +3,4 @@
 uint32 app_id
 uint16 app_message_sent_counter
 uint8 app_enable_status
-uint8 padding
+uint8 app_message_squelched_counter
