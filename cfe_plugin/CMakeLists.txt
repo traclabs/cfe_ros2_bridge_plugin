@@ -40,4 +40,11 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_ros REQUIRED)
+  ament_add_pytest_test(
+    test_telemetry_flow test/test_telemetry_flow.py
+    TIMEOUT 90)
+endif()
+
 ament_package()
