@@ -10,10 +10,10 @@ def generate_launch_description():
     
   cfs_path_arg = DeclareLaunchArgument(
     'cfs_path',
-    default_value='/code/cFS')
+    default_value='~/code/cFS')
   juicer_path_arg = DeclareLaunchArgument(
     'juicer_path',
-    default_value='/code/juicer')
+    default_value='~/code/juicer')
   output_db_arg = DeclareLaunchArgument(
     'output_db',
     default_value='combined.sqlite')
