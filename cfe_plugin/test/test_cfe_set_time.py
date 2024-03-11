@@ -84,21 +84,16 @@ class TestTelemetryFlow(unittest.TestCase):
    def test_flow(self):
       subscriber = ParticipantNode()
 
-      time.sleep(3)
-
       # Send the Set STCF (Spacecraft Time Correlation Factor) function.  This ensures that the Spacecraft Time is identical to the MET.
       subscriber.publish_set_stcf_cmd(0)
-
-      time.sleep(3)
 
       # Send the Set MET command.
       time_seconds = 200000
       subscriber.publish_set_met_cmd(time_seconds)
 
-      time.sleep(3)
-
-      # Wait for a message response.
-      rclpy.spin_once(subscriber, timeout_sec=30)
+      # Spin for a few messages to ensure we see fresh messages.
+      for i in range(10):
+         rclpy.spin_once(subscriber, timeout_sec=30)
 
       # Assert that we've heard a message and that the time in the secondary header corresponds to the new MET value.
       self.assertGreater(subscriber.get_messages_heard(), 0)
