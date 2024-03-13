@@ -45,6 +45,9 @@ if(BUILD_TESTING)
   ament_add_pytest_test(
     test_telemetry_flow test/test_telemetry_flow.py
     TIMEOUT 90)
-endif()
+  ament_add_pytest_test(
+    test_cfe_set_time test/test_cfe_set_time.py
+    TIMEOUT 90)
+  endif()
 
 ament_package()
