@@ -48,6 +48,9 @@ if(BUILD_TESTING)
   ament_add_pytest_test(
     test_cfe_set_time test/test_cfe_set_time.py
     TIMEOUT 90)
+  ament_add_pytest_test(
+    test_cfdp_gsw_to_cfe test/test_cfdp_gsw_to_cfe.py
+    TIMEOUT 90)
   endif()
 
 ament_package()
