@@ -134,7 +134,7 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
 
          # And assert that the file exists.
          # TODO Not quite working yet, but once things are working this assert should pass.
-         #self.assertTrue(os.path.exists("%s_from_rosfsw" % os.path.basename(fp.name)))
+         #self.assertTrue(os.path.exists("/code/brash/cfdp/rosgsw/%s_from_rosfsw" % os.path.basename(fp.name)))
 
       subscriber.destroy_node()
 
