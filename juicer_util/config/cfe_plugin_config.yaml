@@ -12,7 +12,7 @@
           cmd_code: 0
         CfdpCh2Uplink:
           cfe_mid: '0x18ca'
-          topic_name: /sbn/cfdp/pdu
+          topic_name: /flightsystem/cfdp/pdu
           cmd_code: 0
         CPU1CFEESStopAppCmd:
           structure: CFEESAppNameCmd
@@ -593,10 +593,10 @@
           topic_name: cfdp_hk_tlm
         CfdpCh0Dlink:
           cfe_mid: '0x8c2'
-          topic_name: /cfdp/pdu
+          topic_name: /groundsystem/cfdp/pdu
         CfdpCh2Dlink:
           cfe_mid: '0x8c4'
-          topic_name: /cfdp/pdu
+          topic_name: /cfe/cfdp/pdu
         RoverAppHkTlm:
           structure: RoverAppHkTlmt
           cfe_mid: '0x826'
