@@ -95,6 +95,10 @@ class JuicerInterface():
         self._juicer_db = self._node.get_parameter('plugin_params.juicer_db'). \
             get_parameter_value().string_array_value
 
+        self._node.declare_parameter('plugin_params.use_native_endian', False)
+        self._use_native_endian = self._node.get_parameter('plugin_params.use_native_endian').get_parameter_value().bool_value
+        self._node.get_logger().info("Using native endian: " + str(self._use_native_endian))
+
         self._telem_info = []
         self._command_info = []
         self._field_name_map = dict()
@@ -114,7 +118,7 @@ class JuicerInterface():
 
             self._node.get_logger().debug("Parsing juicer db: " + db)
 
-            self._db_data = JuicerDatabase(node, db)
+            self._db_data = JuicerDatabase(node, db, self._use_native_endian)
             self._db_data.load_data()
             db_field_name_map = self._db_data.get_field_name_map()
             db_symbol_name_map = self._db_data.get_symbol_name_map()

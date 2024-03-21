@@ -8,6 +8,7 @@
 
 
 import sqlite3
+import sys
 from sqlite3 import Error
 from juicer_util.juicer_fields import JuicerFieldEntry
 from juicer_util.juicer_symbols import JuicerSymbolEntry
@@ -58,13 +59,14 @@ class JuicerDatabase():
         Rename all fields that have the given name.
     """
 
-    def __init__(self, node, db_file):
+    def __init__(self, node, db_file, use_native_endian = False):
         '''
         Initializes the attributes for the object.
 
         Args:
             node (rosnode): The ROS2 node
             db_file (str): The name of the sqlite file
+            use_native_endian (bool): Use native endian rather than juicer value
         '''
         self._node = node
         self._node.get_logger().debug("Loading message data from Juicer SQLite databases")
@@ -72,6 +74,12 @@ class JuicerDatabase():
         self._field_name_map = dict()
         self._symbol_name_map = dict()
         self._symbol_id_map = dict()
+        self._use_native_endian = use_native_endian
+        if use_native_endian:
+            if sys.byteorder == 'little':
+                self._native_little_endian = True
+            else:
+                self._native_little_endian = False
 
     def create_connection(self, db_file):
         '''
@@ -127,6 +135,9 @@ class JuicerDatabase():
         for row in rows:
             my_field = JuicerFieldEntry(self._node, row[0], row[1], row[2], row[3],
                                         row[4], row[5], row[6], row[7])
+            if self._use_native_endian:
+                my_field.set_little_endian(self._native_little_endian)
+                self._node.get_logger().debug("Using native endian.")
             last_id = my_field.get_id()
             last_endian = my_field.get_endian()
             self._field_name_map[my_field.get_name()] = my_field
