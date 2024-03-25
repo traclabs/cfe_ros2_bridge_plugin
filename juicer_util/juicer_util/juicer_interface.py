@@ -169,6 +169,13 @@ class JuicerInterface():
             telem_sec_hdr = self._symbol_ros_name_map["CFEMSGTelemetrySecondaryHeadert"]
             if telem_sec_hdr is not None:
                 for field in telem_sec_hdr.get_fields():
+                    self._node.get_logger().info("Setting tlm secondary field " + field.get_name() + " to big endian.")
+                    field.set_little_endian(False)
+            # need to fix time field for CFEMSGCommandSecondaryHeadert
+            cmd_sec_hdr = self._symbol_ros_name_map["CFEMSGCommandSecondaryHeadert"]
+            if cmd_sec_hdr is not None:
+                for field in cmd_sec_hdr.get_fields():
+                    self._node.get_logger().info("Setting cmd secondary field " + field.get_name() + " to big endian.")
                     field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()

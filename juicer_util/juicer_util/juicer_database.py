@@ -137,7 +137,7 @@ class JuicerDatabase():
                                         row[4], row[5], row[6], row[7])
             if self._use_native_endian:
                 my_field.set_little_endian(self._native_little_endian)
-                self._node.get_logger().debug("Using native endian.")
+                self._node.get_logger().debug("Using native endian for field " + my_field.get_name() + ".")
             last_id = my_field.get_id()
             last_endian = my_field.get_endian()
             self._field_name_map[my_field.get_name()] = my_field
