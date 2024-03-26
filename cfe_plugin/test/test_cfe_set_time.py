@@ -42,14 +42,16 @@ class ParticipantNode(Node):
    # Function that sends a CFE Set STCF (Spacecraft Time Correlation Factor) message that sets the SCTF to the desired value.
    def publish_set_stcf_cmd(self, stcf):
       msg = CFETIMETimeCmd()
-      msg.payload.seconds = swap32(stcf)
+      #msg.payload.seconds = swap32(stcf)
+      msg.payload.seconds = stcf
       msg.payload.micro_seconds = 0
       self.set_stcf_publisher.publish(msg)
 
    # Function that sends a CFE Set MET command using time_seconds as the desired seconds value.
    def publish_set_met_cmd(self, time_seconds):
       msg = CFETIMETimeCmd()
-      msg.payload.seconds = swap32(time_seconds)
+      #msg.payload.seconds = swap32(time_seconds)
+      msg.payload.seconds = time_seconds
       msg.payload.micro_seconds = 0
       self.set_met_publisher.publish(msg)
 
@@ -62,7 +64,17 @@ class ParticipantNode(Node):
       self.last_cfe_met_sec_received = met_seconds
 
       # Generate a log message
-      self.get_logger().info('I heard something with met %d' % met_seconds)
+      #self.get_logger().info('I heard something with met %d' % met_seconds)
+      self.get_logger().info('I heard something from cfe_es_hk_tlm with met %d where the 6 bytes of time is [ %02x %02x %02x %02x %02x %02x ]' % 
+                             (met_seconds,
+                              msg.telemetry_header.sec.time[0],
+                              msg.telemetry_header.sec.time[1],
+                              msg.telemetry_header.sec.time[2],
+                              msg.telemetry_header.sec.time[3],
+                              msg.telemetry_header.sec.time[4],
+                              msg.telemetry_header.sec.time[5]
+                              ))
+      
 
    def get_messages_heard(self):
       return self.num_messages_received
