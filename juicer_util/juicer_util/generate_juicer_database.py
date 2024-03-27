@@ -14,14 +14,14 @@ class CreateMessageDatabase(Node):
 
         self.get_logger().info("CreateMessageDatabase() application to parse binaries and output an SQL Database with message structure information")
 
-        self.declare_parameter('cfs_path', "~/code/cFS")
-        self.declare_parameter('juicer_path', "~/code/juicer")
+        self.declare_parameter('cfs_path', "/code/cFS")
+        self.declare_parameter('juicer_path', "/code/juicer")
         self.declare_parameter('output', "combined.sqlite")
         self.declare_parameter('files', ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so',
                                'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so',
                                'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so',
                                'cf/sch_lab.so', 'cf/to_lab.so', 'cf/robot_sim.so',
-                               'cf/cf.so'])
+                                         'cf/cf.so', 'cf/sntp.so'])
 
         self.cfs_path = self.get_parameter('cfs_path').value
         self.juicer_path = self.get_parameter('juicer_path').value
