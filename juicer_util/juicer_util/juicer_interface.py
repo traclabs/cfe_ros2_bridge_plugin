@@ -19,6 +19,7 @@ from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
 
 from juicer_util.juicer_database import JuicerDatabase
+from juicer_util.juicer_database import Endianness
 
 
 class JuicerInterface():
@@ -95,9 +96,17 @@ class JuicerInterface():
         self._juicer_db = self._node.get_parameter('plugin_params.juicer_db'). \
             get_parameter_value().string_array_value
 
-        self._node.declare_parameter('plugin_params.use_native_endian', False)
-        self._use_native_endian = self._node.get_parameter('plugin_params.use_native_endian').get_parameter_value().bool_value
-        self._node.get_logger().info("Using native endian: " + str(self._use_native_endian))
+        self._node.declare_parameter('plugin_params.payload_endian', 'JUICER')
+        endian_type = self._node.get_parameter('plugin_params.payload_endian').get_parameter_value().string_value
+        if endian_type == 'NATIVE' :
+            self._payload_endian = Endianness.NATIVE
+        elif endian_type == 'BIG' :
+            self._payload_endian = Endianness.BIG
+        elif endian_type == 'LITTLE' :
+            self._payload_endian = Endianness.LITTLE
+        else :
+            self._payload_endian = Endianness.JUICER
+        self._node.get_logger().info("Using endian type: " + str(self._payload_endian))
 
         self._telem_info = []
         self._command_info = []
@@ -118,7 +127,7 @@ class JuicerInterface():
 
             self._node.get_logger().debug("Parsing juicer db: " + db)
 
-            self._db_data = JuicerDatabase(node, db, self._use_native_endian)
+            self._db_data = JuicerDatabase(node, db, self._payload_endian)
             self._db_data.load_data()
             db_field_name_map = self._db_data.get_field_name_map()
             db_symbol_name_map = self._db_data.get_symbol_name_map()
