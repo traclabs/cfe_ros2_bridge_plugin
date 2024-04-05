@@ -19,7 +19,7 @@ class TelemetryFlowSubscriber(Node):
 
    def listener_callback(self, msg):
       self.num_messages_received += 1
-      self.get_logger().info('I heard something')
+      self.get_logger().info('I heard some cfe_es_hk_tlm')
 
    def get_messages_heard(self):
       return self.num_messages_received
