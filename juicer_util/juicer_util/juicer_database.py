@@ -67,7 +67,7 @@ class JuicerDatabase():
         Rename all fields that have the given name.
     """
 
-    def __init__(self, node, db_file, payload_endian = Endianness.JUICER):
+    def __init__(self, node, db_file, payload_endian = Endianness.NATIVE):
         '''
         Initializes the attributes for the object.
 
