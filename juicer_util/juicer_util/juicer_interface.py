@@ -19,6 +19,7 @@ from fsw_ros2_bridge.telem_info import TelemInfo
 from fsw_ros2_bridge.command_info import CommandInfo
 
 from juicer_util.juicer_database import JuicerDatabase
+from juicer_util.juicer_database import Endianness
 
 
 class JuicerInterface():
@@ -95,6 +96,18 @@ class JuicerInterface():
         self._juicer_db = self._node.get_parameter('plugin_params.juicer_db'). \
             get_parameter_value().string_array_value
 
+        self._node.declare_parameter('plugin_params.payload_endian', 'JUICER')
+        endian_type = self._node.get_parameter('plugin_params.payload_endian').get_parameter_value().string_value
+        if endian_type == 'NATIVE' :
+            self._payload_endian = Endianness.NATIVE
+        elif endian_type == 'BIG' :
+            self._payload_endian = Endianness.BIG
+        elif endian_type == 'LITTLE' :
+            self._payload_endian = Endianness.LITTLE
+        else :
+            self._payload_endian = Endianness.JUICER
+        self._node.get_logger().info("Using endian type: " + str(self._payload_endian))
+
         self._telem_info = []
         self._command_info = []
         self._field_name_map = dict()
@@ -114,7 +127,7 @@ class JuicerInterface():
 
             self._node.get_logger().debug("Parsing juicer db: " + db)
 
-            self._db_data = JuicerDatabase(node, db)
+            self._db_data = JuicerDatabase(node, db, self._payload_endian)
             self._db_data.load_data()
             db_field_name_map = self._db_data.get_field_name_map()
             db_symbol_name_map = self._db_data.get_symbol_name_map()
@@ -165,6 +178,13 @@ class JuicerInterface():
             telem_sec_hdr = self._symbol_ros_name_map["CFEMSGTelemetrySecondaryHeadert"]
             if telem_sec_hdr is not None:
                 for field in telem_sec_hdr.get_fields():
+                    self._node.get_logger().info("Setting tlm secondary field " + field.get_name() + " to big endian.")
+                    field.set_little_endian(False)
+            # need to fix time field for CFEMSGCommandSecondaryHeadert
+            cmd_sec_hdr = self._symbol_ros_name_map["CFEMSGCommandSecondaryHeadert"]
+            if cmd_sec_hdr is not None:
+                for field in cmd_sec_hdr.get_fields():
+                    self._node.get_logger().info("Setting cmd secondary field " + field.get_name() + " to big endian.")
                     field.set_little_endian(False)
 
         self._msg_list = self.set_up_msg_list()

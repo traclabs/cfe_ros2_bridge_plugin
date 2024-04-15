@@ -8,10 +8,19 @@
 
 
 import sqlite3
+import sys
 from sqlite3 import Error
 from juicer_util.juicer_fields import JuicerFieldEntry
 from juicer_util.juicer_symbols import JuicerSymbolEntry
 from juicer_util.juicer_symbols import field_byte_order
+
+from enum import Enum
+
+class Endianness(Enum):
+    JUICER = 1
+    NATIVE = 2
+    BIG = 3
+    LITTLE = 4
 
 
 class JuicerDatabase():
@@ -58,13 +67,14 @@ class JuicerDatabase():
         Rename all fields that have the given name.
     """
 
-    def __init__(self, node, db_file):
+    def __init__(self, node, db_file, payload_endian = Endianness.NATIVE):
         '''
         Initializes the attributes for the object.
 
         Args:
             node (rosnode): The ROS2 node
             db_file (str): The name of the sqlite file
+            payload_endian (enum): Endianness type to use
         '''
         self._node = node
         self._node.get_logger().debug("Loading message data from Juicer SQLite databases")
@@ -72,6 +82,12 @@ class JuicerDatabase():
         self._field_name_map = dict()
         self._symbol_name_map = dict()
         self._symbol_id_map = dict()
+        self._payload_endian = payload_endian
+        if payload_endian == Endianness.NATIVE:
+            if sys.byteorder == 'little':
+                self._native_little_endian = True
+            else:
+                self._native_little_endian = False
 
     def create_connection(self, db_file):
         '''
@@ -127,6 +143,15 @@ class JuicerDatabase():
         for row in rows:
             my_field = JuicerFieldEntry(self._node, row[0], row[1], row[2], row[3],
                                         row[4], row[5], row[6], row[7])
+            if self._payload_endian == Endianness.NATIVE:
+                my_field.set_little_endian(self._native_little_endian)
+                self._node.get_logger().debug("Using native endian for field " + my_field.get_name() + ".")
+            elif self._payload_endian == Endianness.BIG:
+                my_field.set_little_endian(False)
+                self._node.get_logger().debug("Using big endian for field " + my_field.get_name() + ".")
+            elif self._payload_endian == Endianness.LITTLE:
+                my_field.set_little_endian(True)
+                self._node.get_logger().debug("Using little endian for field " + my_field.get_name() + ".")
             last_id = my_field.get_id()
             last_endian = my_field.get_endian()
             self._field_name_map[my_field.get_name()] = my_field

@@ -41,7 +41,7 @@ class ParticipantNode(Node):
       self.cfdp_pdus_from_cf_hk = msg.channel_hk[0].counters.recv.pdu
 
       # Generate a log message
-      self.get_logger().info('I heard something')
+      self.get_logger().info('I heard some cfdp pdu traffic')
 
    def get_messages_heard(self):
       return self.num_messages_received
@@ -119,12 +119,12 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
          for i in range(10):
             rclpy.spin_once(subscriber, timeout_sec=30)
 
-         # Verify that the CFE CF app saw a PDU. 
-         # Note right now we are checking that it is just greater than zero to make 
-         #   sure it has changed.  There may be a juicer issue that is causing endianness issues with the TLM value.
-         # TODO: Update so that it checks for the expected number of PDUs.
-         #self.assertEqual(subscriber.get_cfdp_pdus_from_cf_hk(), XYZ)
-         self.assertGreater(subscriber.get_cfdp_pdus_from_cf_hk(), 0)
+         # Verify that the CFE CF app saw the correct number of PDUS.
+         # For an unacknowledged (Class 1 CFDP) transfer, we expect 3 PDUs:
+         #    1) The TX Metadata PDU
+         #    2) The file data PDU
+         #    3) The TX EOF PDU 
+         self.assertEqual(subscriber.get_cfdp_pdus_from_cf_hk(), 3)
 
          # OK, now, let's transfer a file up to rosfsw and back down to us to verify that it is OK.
          subscriber.transfer_file_to_rosfsw(os.path.basename(fp.name))
