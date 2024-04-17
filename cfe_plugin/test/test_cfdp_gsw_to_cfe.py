@@ -3,6 +3,7 @@ import unittest
 import time
 import tempfile
 import datetime
+import pathlib
 
 import rclpy
 from rclpy.node import Node
@@ -104,9 +105,17 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
       self.assertGreater(subscriber.get_messages_heard(), 0)
 
       # Now, create a local temporary file.
-      # os.getcwd() returns /code/brash/build/cfe_plugin
-      # and we want the file to be put into /code/brash/cfdp/rosgsw
-      with tempfile.NamedTemporaryFile(dir="/code/brash/cfdp/rosgsw", delete=False) as fp:
+      # os.getcwd() returns {brash_workspace}/build/cfe_plugin
+      # and we want the file to be put into {brash_workspace}/cfdp/rosgsw
+      full_path = pathlib.Path(os.getcwd())
+      temp_dir_rosgsw = str(full_path.parents[1]) + "/cfdp/rosgsw"
+      temp_dir_rosfsw = str(full_path.parents[1]) + "/cfdp/rosfsw"
+      
+      # Create cfdp/rosgsw and cfdp/rosfsw if they do not exist yet
+      pathlib.Path(temp_dir_rosgsw).mkdir(parents=True, exist_ok=True)
+      #pathlib.Path(temp_dir_rosfsw).mkdir(parents=True, exist_ok=True)
+      
+      with tempfile.NamedTemporaryFile(dir=temp_dir_rosgsw, delete=False) as fp:
          s = 'Hello CFE world, greetings!  Time on GSW now is %s.\n' % str(datetime.datetime.now())
          fp.write(s.encode('utf-8'))
          fp.close()
@@ -134,7 +143,8 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
 
          # And assert that the file exists.
          # TODO Not quite working yet, but once things are working this assert should pass.
-         #self.assertTrue(os.path.exists("/code/brash/cfdp/rosgsw/%s_from_rosfsw" % os.path.basename(fp.name)))
+         file_from_rosfsw = temp_dir_rosgsw + "/" + os.path.basename(fp.name) + "_from_rosfsw"
+         self.assertTrue(os.path.exists(file_from_rosfsw))
 
       subscriber.destroy_node()
 
