@@ -10,10 +10,10 @@ def generate_launch_description():
     
   cfs_path_arg = DeclareLaunchArgument(
     'cfs_path',
-    default_value='~/code/cFS')
+    default_value='/code/cFS')
   juicer_path_arg = DeclareLaunchArgument(
     'juicer_path',
-    default_value='~/code/juicer')
+    default_value='/code/juicer')
   output_db_arg = DeclareLaunchArgument(
     'output_db',
     default_value='combined.sqlite')
@@ -26,7 +26,7 @@ def generate_launch_description():
   input_list = ['core-cpu1', 'cf/cfe_assert.so', 'cf/ci_lab.so', 
     'cf/ros_app.so', 'cf/sample_app.so', 'cf/sample_lib.so', 
     'cf/sbn_f_remap.so', 'cf/sbn.so', 'cf/sbn_udp.so', 'cf/sch_lab.so', 
-    'cf/to_lab.so', 'cf/robot_sim.so', 'cf/cf.so', 'cf/rover_app.so']
+    'cf/to_lab.so', 'cf/robot_sim.so', 'cf/cf.so', 'cf/sntp.so', 'cf/rover_app.so']
   
   # Generate Message node
   generate_juicer_db = Node(
