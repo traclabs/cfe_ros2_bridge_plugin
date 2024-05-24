@@ -31,7 +31,7 @@ def generate_launch_description():
   # Generate Message node
   generate_juicer_db = Node(
         package='juicer_util',
-        executable='generate_juicer_database',
+        executable='generate_juicer_database.py',
         output='screen',
         parameters=[
             {"cfs_path": cfs_path},
