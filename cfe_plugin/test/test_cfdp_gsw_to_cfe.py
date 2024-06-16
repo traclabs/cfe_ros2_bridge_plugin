@@ -112,14 +112,14 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
       full_path = pathlib.Path(os.getcwd())
       cls.dir_rosgsw = str(full_path.parents[1]) + "/cfdp/rosgsw"
       cls.dir_rosfsw = str(full_path.parents[1]) + "/cfdp/rosfsw"
-      cls.dir_fsw    = str(full_path.parents[1]) + "/cfdp/fsw"
+      cls.dir_fsw    = str(full_path.parents[1]) + "/../cFS/build/exe/cpu2/cf" # TODO: ENV variable to override if needed
       
       # Create cfdp/rosgsw and cfdp/rosfsw if they do not exist yet
       pathlib.Path(cls.dir_rosgsw).mkdir(parents=True, exist_ok=True)
       pathlib.Path(cls.dir_rosfsw).mkdir(parents=True, exist_ok=True)
 
-      # TODO: If dir_fsw does not exist, create symlink IF path is valid, else set self.dir_fsw to Nil and skip related checks
       if not os.path.exists(cls.dir_fsw):
+         #cls.subscriber.get_logger().info(f"NOT EXISTS: path {cls.dir_fsw}")
          # WARNING: Some tests may need to be skipped or altered in this case
          cls.dir_fsw = None
 
@@ -149,91 +149,89 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
 
    def test_trivial_file_to_cfe_noack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
-                       ack=False, cfe_expected_pdu_cnt=3,
-                       dst_base=self.dir_fsw)
+                       ack=False, cfe_expected_pdu_cnt=3)
 
    def test_trivial_file_to_cfe_ack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
-                       ack=True, cfe_expected_pdu_cnt=3,
-                       dst_base=self.dir_fsw)
+                       ack=True, cfe_expected_pdu_cnt=3)
 
    @unittest.skip(reason="FIXME: Large transfers failing without retries")
    def test_64k_file_to_cfe_noack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
                        ack=False, file_size=65536,
-                       dst_base=self.dir_fsw, cfe_check_file_size=True)
+                        cfe_check_file_size=True)
       
    @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_to_cfe_ack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
                        ack=True, file_size=65536,
-                       dst_base=self.dir_fsw, cfe_check_file_size=True)
+                       cfe_check_file_size=True)
 
    def test_trivial_file_to_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw,
                        ack=False,
-                       check_file_exists=True, dst_base=self.dir_rosfsw)
+                       check_file_exists=True)
 
    def test_trivial_file_to_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw,
                        ack=True,
-                       check_file_exists=True, dst_base=self.dir_rosfsw)
+                       check_file_exists=True)
 
    @unittest.skip(reason="FIXME")
    def test_64k_file_to_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw, 
                        ack=False, file_size=65536,
-                       check_file_exists=True, dst_base=self.dir_rosfsw)
+                       check_file_exists=True)
 
    @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_to_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw,
                        ack=True, file_size=65536,
-                       check_file_exists=True, dst_base=self.dir_rosfsw)
+                       check_file_exists=True)
 
    def test_trivial_file_from_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw,
                        ack=False,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_rosfsw)
+                       check_file_exists=True, src_base=self.dir_rosfsw)
 
    def test_trivial_file_from_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw,
                        ack=True,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_rosfsw)
+                       check_file_exists=True, src_base=self.dir_rosfsw)
       
    @unittest.skip(reason="FIXME")
    def test_64k_file_from_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw, 
                        ack=False, file_size=65536,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_rosfsw)
+                       check_file_exists=True, src_base=self.dir_rosfsw)
 
    @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_from_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw,
                        ack=True, file_size=65536,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_rosfsw)
+                       check_file_exists=True, src_base=self.dir_rosfsw)
 
    @unittest.skip(reason="FIXME: Juicer bug with fixed-length strings interferes with sending cmd")
    def test_trivial_file_from_fsw_noack(self):
       self.do_file_xfr(self.transfer_file_from_cfe,
                        ack=False,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_fsw)
+                       check_file_exists=True, src_base=self.dir_fsw)
    @unittest.skip(reason="FIXME: Juicer bug with fixed-length strings interferes with sending cmd")
    def test_trivial_file_from_fsw_ack(self):
       self.do_file_xfr(self.transfer_file_from_cfe,
                        ack=True,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_fsw)
+                       check_file_exists=True, src_base=self.dir_fsw)
       
    @unittest.skip(reason="FIXME: Juicer bug with fixed-length strings interferes with sending cmd")
    def test_trivial_file_from_fsw_to_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_from_cfe_to_rosfsw,
                        ack=False,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_fsw)
+                       check_file_exists=True, src_base=self.dir_fsw)
    @unittest.skip(reason="FIXME: Juicer bug with fixed-length strings interferes with sending cmd")
    def test_trivial_file_from_fsw_to_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_from_cfe_to_rosfsw,
                        ack=True,
-                       check_file_exists=True, dst_base=self.dir_rosgsw, src_base=self.dir_fsw)
+                       check_file_exists=True, src_base=self.dir_fsw)
       
       
    # If size is 0, generate a trivial text file, otherwise a random binary file of specified length
@@ -328,10 +326,11 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
    # cfe_check_file_size = If set, verify received PDU bytes matchees expected file size. This is mutually exclusive with cfe_expected_pdu_check.
    # file_size = If non-zero, the size of a non-trivial binary file to generate
    # src_base = Base directory for src file. If omitted, self.dir_rosgsw will be used
-   # dst_base = Base directory for dst file. If omitted, file verification will be skipped. @DEPRECATED?
+   # dst_base = Base directory for dst file. If omitted, file verification will be skipped. @DEPRECATED? in favor of xfr_fn return value
    def do_file_xfr(self, xfr_fn, ack=False,
                    cfe_expected_pdu_cnt=0, cfe_check_file_size=False, file_size=0,check_file_exists=False,
-                   src_base=None, dst_base=None):
+                   src_base=None
+                   ):
       if src_base is None:
          src_base=self.dir_rosgsw
 
@@ -370,7 +369,7 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
                break
 
          assert success
-               
+
          # Assert that destination file exists and matches input (if dst path is available)
          if rcv_path:
             #self.subscriber.get_logger().info(f"verify path {rcv_path}")

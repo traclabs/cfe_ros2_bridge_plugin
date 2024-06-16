@@ -42,6 +42,7 @@ install(DIRECTORY
 
 if(BUILD_TESTING)
   find_package(ament_cmake_ros REQUIRED)
+  set(pytest_env "PYTEST_ADDOPTS=-v")
   ament_add_pytest_test(
     test_telemetry_flow test/test_telemetry_flow.py
     TIMEOUT 90)
