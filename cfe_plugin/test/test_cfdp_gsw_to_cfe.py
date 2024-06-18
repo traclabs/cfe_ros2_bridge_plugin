@@ -153,15 +153,13 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
 
    def test_trivial_file_to_cfe_ack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
-                       ack=True, cfe_expected_pdu_cnt=3)
+                       ack=True, file_size=32, cfe_check_file_size=True)
 
-   @unittest.skip(reason="FIXME: Large transfers failing without retries")
    def test_64k_file_to_cfe_noack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
                        ack=False, file_size=65536,
                         cfe_check_file_size=True)
       
-   @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_to_cfe_ack(self):
       self.do_file_xfr(self.transfer_file_to_cfe,
                        ack=True, file_size=65536,
@@ -177,13 +175,11 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
                        ack=True,
                        check_file_exists=True)
 
-   @unittest.skip(reason="FIXME")
    def test_64k_file_to_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw, 
                        ack=False, file_size=65536,
                        check_file_exists=True)
 
-   @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_to_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_to_rosfsw,
                        ack=True, file_size=65536,
@@ -199,13 +195,11 @@ class TestGSWCFECFDPFlow(unittest.TestCase):
                        ack=True,
                        check_file_exists=True, src_base=self.dir_rosfsw)
       
-   @unittest.skip(reason="FIXME")
    def test_64k_file_from_rosfsw_noack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw, 
                        ack=False, file_size=65536,
                        check_file_exists=True, src_base=self.dir_rosfsw)
 
-   @unittest.skip(reason="FIXME: Results in retries and file mismatch")
    def test_64k_file_from_rosfsw_ack(self):
       self.do_file_xfr(self.transfer_file_from_rosfsw,
                        ack=True, file_size=65536,
