@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 project(cfe_msgs)
 
 # Default to C99
@@ -25,18 +25,17 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 
-FILE(GLOB MsgDefs msg/*.msg)
-# message(".msg Files: ${MsgDefs}")
+FILE(GLOB MSG_FILENAMES CONFIGURE_DEPENDS msg/*.msg)
 # Convert the absolute paths to relative paths
-foreach(MsgDef ${MsgDefs})
-    file(RELATIVE_PATH MsgDefRelative ${CMAKE_CURRENT_SOURCE_DIR} ${MsgDef})
-    list(APPEND MsgDefsRelative ${MsgDefRelative})
+foreach(MSG_FILENAME ${MSG_FILENAMES})
+    file(RELATIVE_PATH MSG_RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${MSG_FILENAME})
+    list(APPEND ALL_MSGS ${MSG_RELATIVE})
 endforeach()
 
-# Now MsgDefsRelative contains the relative paths
-message(STATUS "Relative MsgDefs: ${MsgDefsRelative}")
+# Now ALL_MSGS contains the relative paths
+message(STATUS "Message files: ${ALL_MSGS}")
 
-rosidl_generate_interfaces(${PROJECT_NAME} ${MsgDefsRelative}
+rosidl_generate_interfaces(${PROJECT_NAME} ${ALL_MSGS}
   DEPENDENCIES std_msgs
 )
 
