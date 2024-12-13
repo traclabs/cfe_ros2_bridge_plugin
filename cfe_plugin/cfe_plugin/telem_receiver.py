@@ -87,7 +87,7 @@ class TelemReceiver():
             self._key_map[telem_info[tlm]['cfe_mid']] = str(tlm)
             self._ros_topic_map[tlm] = telem_info[tlm]['topic_name']
 
-        self._recv_buff_size = 4096
+        self._recv_buff_size = 8192
         self._timer_period = 0.05  # as long as data from cFS is coming in, per MID,
                                    # slower than 20hz, this should be ok
 
